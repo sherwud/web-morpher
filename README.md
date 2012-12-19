@@ -1,3 +1,3 @@
-web-morpher
+Web Morpher
 ===========
 Давай по русски да!
