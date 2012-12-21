@@ -1,5 +1,2 @@
-/* 8
- *
- *
- *
-*/
+require('./web-morpher.js');
+//wm.start()
