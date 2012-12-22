@@ -15,8 +15,13 @@ version: 0.0.0.pre-alpha
 
     paths:<массив путей для поиска подключаемых модулей>
     port:<номер порта>
-    
 
+Примеры
+
+    node app
+    node app --port:9000
+    node app --config:newconfig.json
+    node app --port:9000 --config:newconfig.json
 
 Windows
 
