@@ -1,2 +1,3 @@
-require('./web-morpher.js');
-//wm.start()
+var wm = require('./web-morpher.js');
+console.log('Информация о сервере:');
+console.log(wm.info());
