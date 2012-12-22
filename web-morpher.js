@@ -1,7 +1,7 @@
 /*
-* Модуль сервера
-*/
-wm = {}
+ * Модуль сервера
+ */
+wm = {};
 module.exports = wmConstructor();
 function wmConstructor() {
    /* парсинг параметров запуска */
@@ -48,7 +48,7 @@ function wmConstructor() {
          version:packageInfo.version,
          versionName:packageInfo.versionName,
          author:packageInfo.author
-      }
+      };
       return info;
    }
    delete args;
