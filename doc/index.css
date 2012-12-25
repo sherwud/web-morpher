@@ -1,11 +1,23 @@
+.wm-elm {
+    outline: 1px solid #333333;
+}
+
 html {
    height: 100%;
    min-width: 800px;
    min-height: 400px;
 }
 body {
-   height: 100%;   
+   height: 100%;
    margin: 0;
+   font: 12px/18px Tahoma,Geneva,sans-serif;
+}
+a {
+   text-decoration: none;
+   outline: none;
+}
+a:hover {
+   text-decoration: underline;
 }
 #wm-body {
     height: 100%;
@@ -21,6 +33,7 @@ body {
 #wm-builder {
    position: fixed;
    bottom: 0; left: 0; right: 0;
+   border-top: 1px solid;
 }
 .wm-builder-btn,
 .wm-builder-btn a {
@@ -29,6 +42,8 @@ body {
 }
 .wm-builder-btn {
   margin: 3px;
+  border: 1px solid;
+  border-radius: 6px;
 }
 .wm-builder-btn a {
   display: block;
@@ -37,12 +52,13 @@ body {
    margin: 5px 3px;
 }
 #wm-header {
-   display: table;
+   float: left;
    height: 64px;
    width: 100%;
 }
 #wm-title {
    margin: 8px;
+   font-size: 24px;
    margin-right: -webkit-calc(50% - 75px);
    margin-right:    -moz-calc(50% - 75px);
    margin-right:      -o-calc(50% - 75px);
@@ -50,13 +66,22 @@ body {
 }
 #wm-pageName {
    margin: 24px 0 0 8px;
+   font-size: 18px;
+}
+#wm-menu {
+   list-style: none;
 }
 #wm-page {
-   min-height: -webkit-calc(100% - 138px);
-   min-height:    -moz-calc(100% - 138px);
-   min-height:      -o-calc(100% - 138px);
-   min-height:         calc(100% - 138px);
-   margin: 5px 156px;
+   min-height: -webkit-calc(100% - 136px);
+   min-height:    -moz-calc(100% - 136px);
+   min-height:      -o-calc(100% - 136px);
+   min-height:         calc(100% - 136px);
+   width: -webkit-calc(100% - 308px);
+   width:    -moz-calc(100% - 308px);
+   width:      -o-calc(100% - 308px);
+   width:         calc(100% - 308px); 
+   float: left;
+   margin: 5px 0;
 }
 #wm-footer {
     float: left;
@@ -68,12 +93,9 @@ body {
    width: 144px;
    margin: 5px;
 }
-#wm-aside-right {
-   float: right;
-}
 #wm-menu {
    padding: 0;
-   margin: 0 -8px;
+   margin: 0;
 }
 #wm-menu a{
    display: block;
@@ -83,24 +105,12 @@ body {
    width:         calc(100% - 16px);
    padding: 0 8px;
 }
-#wm-aside-left {
+.wm-l {
    float: left;
 }
-.wm-cnt {
-   margin:8px;
-}
-.wm-left {
-   float: left;
-}
-.wm-right {
+.wm-r {
    float: right;
 }
-.wm-glas.wm-aside .wm-cnt{
-   margin-bottom: 0;
-   margin-top: 4px;
-}
-.wm-bgglass {
-   float: left;
-   height: 6px;
-   width: 100%;
+.github-img {
+   background: url("/img/github.png") no-repeat center center transparent;
 }
