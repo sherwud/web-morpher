@@ -6,22 +6,21 @@ body {
 }
 /* Ссылки */
 a { 
-   color: #3377FF;
+   color: #3388FF;
    text-decoration: none;
    outline: none;
 }
 a:hover { 
-   color: #3399FF;
+   color: #33CC55;
    text-decoration: underline;
 }
-/* Билдер */
 #wm-builder {
    border-top: 1px solid #454545;
    background-color: inherit;
-   background: -webkit-linear-gradient(top , #1A1A1A 0%, #555555 50%, #454545 55%, #1A1A1A 100%);
-   background:    -moz-linear-gradient(top , #1A1A1A 0%, #555555 50%, #454545 55%, #1A1A1A 100%);
-   background:      -o-linear-gradient(top , #1A1A1A 0%, #555555 50%, #454545 55%, #1A1A1A 100%);
-   background:         linear-gradient(top , #1A1A1A 0%, #555555 50%, #454545 55%, #1A1A1A 100%);
+   background: -webkit-linear-gradient(top , #4A4A4A -1px, #1A1A1A 3px, #1A1A1A 26px, #4A4A4A 30px);
+   background:    -moz-linear-gradient(top , #4A4A4A -1px, #1A1A1A 3px, #1A1A1A 26px, #4A4A4A 30px);
+   background:      -o-linear-gradient(top , #4A4A4A -1px, #1A1A1A 3px, #1A1A1A 26px, #4A4A4A 30px);
+   background:         linear-gradient(top , #4A4A4A -1px, #1A1A1A 3px, #1A1A1A 26px, #4A4A4A 30px);
 }
 .wm-builder-btn {
   border: 1px solid #4A4A4A;
@@ -41,7 +40,6 @@ a:hover {
 .wm-builder-text {
    color: #777777;
 }
-/* Заголовок */
 #wm-pageName {
    font-size: 18px;
    text-shadow: 0 0 5px green;
@@ -50,15 +48,42 @@ a:hover {
    font-size: 24px;
    text-shadow: 0 0 5px green;
 }
-/* Подвал */
+#wm-menu {
+list-style: none;
+}
+#wm-page {
+   border: 1px solid #333333;
+}
 #wm-footer {
 color: #555555;
 }
-/* Класс определяющий элемент как объект wm-конструктора */
 .wm-elm {
-    outline: 1px solid #333333;
+    /*outline: 1px solid #333333;*/
 }
-/* картинки */
 .github-img {
    background: url("/img/github.png") no-repeat center center transparent;
+}
+.wm-glas {
+   background: -webkit-linear-gradient(top, #4A4A4A 1px, #1A1A1A 5px);
+   background:    -moz-linear-gradient(top, #4A4A4A 1px, #1A1A1A 5px);
+   background:      -o-linear-gradient(top, #4A4A4A 1px, #1A1A1A 5px);
+   background:         linear-gradient(top, #4A4A4A 1px, #1A1A1A 5px);
+}
+.wm-glas li:hover{
+   background: -webkit-linear-gradient(top, #1A1A1A 0%, #333333 50%, #1A1A1A 100%);
+   background:    -moz-linear-gradient(top, #1A1A1A 0%, #333333 50%, #1A1A1A 100%);
+   background:      -o-linear-gradient(top, #1A1A1A 0%, #333333 50%, #1A1A1A 100%);
+   background:         linear-gradient(top, #1A1A1A 0%, #333333 50%, #1A1A1A 100%);
+}
+.wm-glas li{
+    border-bottom: 1px solid #333333;
+}
+.wm-glas li:last-child{
+    border-bottom: none;
+}
+.wm-bgglass {
+   background: -webkit-linear-gradient(top, #1A1A1A 0px, #4A4A4A 6px);
+   background:    -moz-linear-gradient(top, #1A1A1A 0px, #4A4A4A 6px);
+   background:      -o-linear-gradient(top, #1A1A1A 0px, #4A4A4A 6px);
+   background:         linear-gradient(top, #1A1A1A 0px, #4A4A4A 6px);
 }

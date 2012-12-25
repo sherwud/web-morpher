@@ -8,25 +8,38 @@
    </head>
    <body>
       <section id="wm-body">
-         <header id="wm-header" class="wm-elm"><div class="wm-cnt">
+         <header id="wm-header" class="wm-glas wm-elm"><div class="wm-cnt">
             <div id="wm-title" class="wm-right">Web Morpher</div>
             <div id="wm-pageName" class="wm-left">Главная</div>
          </div></header>
-         <aside id="wm-aside-left" class="wm-elm wm-aside">
-            {aside-left}
-         </aside>
-         <aside id="wm-aside-right" class="wm-elm wm-aside">
+         <aside id="wm-aside-left" class="wm-elm wm-aside wm-glas"><div class="wm-cnt">
+            <ul id="wm-menu">
+               <li>
+                  <a href='#{page=home}'>Главная</a>
+               </li>
+               <li>
+                  <a href='#{page=purpose}'>Цели и задачи</a>
+               </li>
+               <li>
+                  <a href='#{page=install}'>Установка и запуск</a>
+               </li>
+               <li>
+                  <a href='#{page=about}'>О проекте</a>
+               </li>
+            </ul>
+         </div><div class="wm-bgglass"></div></aside>
+         <aside id="wm-aside-right" class="wm-elm wm-aside wm-glas"><div class="wm-cnt">
             {aside-right}
-         </aside>
-         <section id="wm-page" class="wm-elm">
+         </div><div class="wm-bgglass"></div></aside>
+         <section id="wm-page" class="wm-elm"><div class="wm-cnt">
             {wm-page}
-         </section>
+         </div></section>
          <footer id="wm-footer" class="wm-elm"><div class="wm-cnt">
             <div>Dr@KoN ©</div>
          </div></footer>
          <div id="wm-builder-bg"></div> 
       </section>
-      <section id="wm-builder">
+      <section id="wm-builder" class="wm-glas">
          <div class="wm-builder-btn wm-left">
             <a class="github-img" href="https://github.com/IDrakon/web-morpher" target="blank" title="На github"></a>
          </div>

@@ -7,12 +7,9 @@ body {
    height: 100%;   
    margin: 0;
 }
-/* Контент */
 #wm-body {
-    /*height: calc(100% - 49px);*/
     height: 100%;
 }
-/* Билдер */
 #wm-builder-bg,
 #wm-builder {
    height: 30px;
@@ -39,7 +36,6 @@ body {
 .wm-builder-text {
    margin: 5px 3px;
 }
-/* Заголовок */
 #wm-header {
    display: table;
    height: 64px;
@@ -55,41 +51,56 @@ body {
 #wm-pageName {
    margin: 24px 0 0 8px;
 }
-/* содержимое странички */
 #wm-page {
-   min-height: -webkit-calc(100% - 127px);
-   min-height:    -moz-calc(100% - 127px);
-   min-height:      -o-calc(100% - 127px);
-   min-height:         calc(100% - 127px);
-   margin: 0 144px;
+   min-height: -webkit-calc(100% - 138px);
+   min-height:    -moz-calc(100% - 138px);
+   min-height:      -o-calc(100% - 138px);
+   min-height:         calc(100% - 138px);
+   margin: 5px 156px;
 }
-/* Подвал */
 #wm-footer {
     float: left;
     width: 100%;
     height: 32px;
     text-align: center;
 }
-/*Общее для всех блоков */
 .wm-aside {
    width: 144px;
+   margin: 5px;
 }
-/* Правый блок */
 #wm-aside-right {
    float: right;
 }
-/* Левый блок */
+#wm-menu {
+   padding: 0;
+   margin: 0 -8px;
+}
+#wm-menu a{
+   display: block;
+   width: -webkit-calc(100% - 16px);
+   width:    -moz-calc(100% - 16px);
+   width:      -o-calc(100% - 16px);
+   width:         calc(100% - 16px);
+   padding: 0 8px;
+}
 #wm-aside-left {
    float: left;
 }
-/*контейнер для контролов*/
 .wm-cnt {
    margin:8px;
 }
-/* выравнивания */
 .wm-left {
    float: left;
 }
 .wm-right {
    float: right;
+}
+.wm-glas.wm-aside .wm-cnt{
+   margin-bottom: 0;
+   margin-top: 4px;
+}
+.wm-bgglass {
+   float: left;
+   height: 6px;
+   width: 100%;
 }
