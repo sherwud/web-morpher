@@ -33,6 +33,28 @@ a:hover {
 #wm-footer {
 color: #555555;
 }
+#wm-menu {
+   margin: 6px 0 0;
+}
+#wm-menu:after {
+   content: '<div class="wm-bgglass"></div>';
+}
+#wm-menu li:hover{
+   background: -webkit-linear-gradient(top, #1A1A1A 0%, #333333 50%, #1A1A1A 100%);
+   background:    -moz-linear-gradient(top, #1A1A1A 0%, #333333 50%, #1A1A1A 100%);
+   background:      -o-linear-gradient(top, #1A1A1A 0%, #333333 50%, #1A1A1A 100%);
+   background:         linear-gradient(top, #1A1A1A 0%, #333333 50%, #1A1A1A 100%);
+}
+
+
+.wm-aside {
+   background: -webkit-linear-gradient(top, #4A4A4A 1px, #1A1A1A 5px);
+   background:    -moz-linear-gradient(top, #4A4A4A 1px, #1A1A1A 5px);
+   background:      -o-linear-gradient(top, #4A4A4A 1px, #1A1A1A 5px);
+   background:         linear-gradient(top, #4A4A4A 1px, #1A1A1A 5px);
+}
+
+
 .wm-glas.wm-aside .wm-cnt{
    margin-bottom: 0;
    margin-top: 4px;
@@ -42,18 +64,7 @@ color: #555555;
    height: 6px;
    width: 100%;
 }
-.wm-glas {
-   background: -webkit-linear-gradient(top, #4A4A4A 1px, #1A1A1A 5px);
-   background:    -moz-linear-gradient(top, #4A4A4A 1px, #1A1A1A 5px);
-   background:      -o-linear-gradient(top, #4A4A4A 1px, #1A1A1A 5px);
-   background:         linear-gradient(top, #4A4A4A 1px, #1A1A1A 5px);
-}
-.wm-glas li:hover{
-   background: -webkit-linear-gradient(top, #1A1A1A 0%, #333333 50%, #1A1A1A 100%);
-   background:    -moz-linear-gradient(top, #1A1A1A 0%, #333333 50%, #1A1A1A 100%);
-   background:      -o-linear-gradient(top, #1A1A1A 0%, #333333 50%, #1A1A1A 100%);
-   background:         linear-gradient(top, #1A1A1A 0%, #333333 50%, #1A1A1A 100%);
-}
+
 .wm-glas li{
     border-bottom: 1px solid #333333;
 }
