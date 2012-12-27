@@ -113,6 +113,12 @@ a:hover {
 .github-img {
    background: url("/img/github.png") no-repeat center center transparent;
 }
+.zip-img {
+   background: url("/img/zip.png") no-repeat center center transparent;
+}
+.tar-img {
+   background: url("/img/tar.png") no-repeat center center transparent;
+}
 /* для тестов выравнивания */
 /*
 .wm-elm {
