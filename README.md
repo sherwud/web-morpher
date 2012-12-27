@@ -27,6 +27,10 @@ Windows
 
     restart.bat
 
+#Зависимости
+
+  - `doc/ext/jquery.js` >= 1.8.3 ([jquery.com](http://jquery.com/))
+
 -
 
 Copyright 2012 Dr@KoN
