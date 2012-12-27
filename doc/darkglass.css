@@ -8,7 +8,8 @@ a {
 a:hover { 
    color: #33CC55;
 }
-#wm-builder {
+#wm-builder,
+.wm-builder-btn{
    border-color: #454545;
 }
 .wm-builder-btn {
@@ -36,9 +37,6 @@ color: #555555;
 #wm-menu {
    margin: 6px 0 0;
 }
-#wm-menu:after {
-   content: '<div class="wm-bgglass"></div>';
-}
 #wm-menu li:hover{
    background: -webkit-linear-gradient(top, #1A1A1A 0%, #333333 50%, #1A1A1A 100%);
    background:    -moz-linear-gradient(top, #1A1A1A 0%, #333333 50%, #1A1A1A 100%);
@@ -46,7 +44,7 @@ color: #555555;
    background:         linear-gradient(top, #1A1A1A 0%, #333333 50%, #1A1A1A 100%);
 }
 
-
+#wm-header,
 .wm-aside {
    background: -webkit-linear-gradient(top, #4A4A4A 1px, #1A1A1A 5px);
    background:    -moz-linear-gradient(top, #4A4A4A 1px, #1A1A1A 5px);
