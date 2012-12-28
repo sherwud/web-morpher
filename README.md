@@ -29,7 +29,7 @@ Windows
 
 #Зависимости
 
-  - `doc/ext/jquery.js` >= 1.8.3 ([jquery.com](http://jquery.com/))
+  - `docs/ext/jquery.js` >= 1.8.3 ([jquery.com](http://jquery.com/))
 
 -
 
