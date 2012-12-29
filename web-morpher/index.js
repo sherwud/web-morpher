@@ -37,13 +37,21 @@ function wmConstructor(rootPath,configFile,port) {
       $wm.startArgs.config?$wm.startArgs.config:
       configFile?configFile:
       defaultConfigFile;
-   
    var configs = require(wm.wmPath+wm.configFile);
-   
-   
+   wm.node_modules =
+      configs.node_modules?configs.node_modules:
+      globalConfigs.node_modules?globalConfigs.node_modules:
+      [];
+   if (wm.node_modules instanceof Array) {
+      for (var i in wm.node_modules) {
+         module.paths.push(wm.node_modules[i]);
+      }
+   }
    wm.port =
       $wm.startArgs.port?$wm.startArgs.port:
       port?port:
+      configs.port?configs.port:
+      globalConfigs.port?globalConfigs.port:
       defaultPort;
    wm.start = wmStart;
    return wm;
