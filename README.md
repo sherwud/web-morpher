@@ -1,6 +1,6 @@
 Web Morpher
 =
-version: 0.0.0.pre-alpha
+**version: 0.0.0.pre-alpha**
 
 -
 
@@ -39,7 +39,7 @@ version: 0.0.0.pre-alpha
     node app --config:newconfig.json --port:9000
     node app --path:../docs/ --config:newconfig.json --port:9000
 
-Windows
+**Windows**
 
     restart.bat
 
