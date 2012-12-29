@@ -1,4 +1,4 @@
 *.log
 *local*.bat
 /ext/
-/doc/ext/
+/docs/ext/

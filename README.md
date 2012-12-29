@@ -8,8 +8,9 @@ version: 0.0.0.pre-alpha
 
 Параметры запуска
 
-    --port:<номер порта, по умолчанию 3000>
-    --config:<имя файла, по умолчанию config.json>
+    --port:<номер порта, по умолчанию `3000`>
+    --config:<имя файла, по умолчанию `./config.json`>
+    --path:<путь к корню сайта, по умолчанию `./demo/`>
 
 Параметры файла настроек
 
@@ -20,8 +21,9 @@ version: 0.0.0.pre-alpha
 
     node app
     node app --port:9000
-    node app --config:newconfig.json
-    node app --port:9000 --config:newconfig.json
+    node app --config:./newconfig.json
+    node app --port:9000 --config:./newconfig.json
+    node app --path:./docs/
 
 Windows
 
@@ -29,7 +31,7 @@ Windows
 
 #Зависимости
 
-  - `doc/ext/jquery.js` >= 1.8.3 ([jquery.com](http://jquery.com/))
+  - `docs/ext/jquery.js` >= 1.8.3 ([jquery.com](http://jquery.com/))
 
 -
 
