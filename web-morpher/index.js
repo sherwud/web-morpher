@@ -24,79 +24,66 @@ $wm.info.versionName = packageInfo.versionName;
 $wm.info.author = packageInfo.author;
 delete packageInfo;
 
-function wmConstructor(rootPath,configFile,port) {
+function wmConstructor(params) {
    var wm = {};
    var globalConfigs = require('./config.json');
+   params = params || {};
    wm.rootPath =
       $wm.startArgs.path?$wm.startArgs.path:
-      rootPath?rootPath:
+      params.path?params.path:
       defaultRootPath;
    if (wm.rootPath[wm.rootPath.length-1]!=='/') wm.rootPath+='/';
    wm.wmPath = wm.rootPath+'web-morpher/'
    wm.configFile =
       $wm.startArgs.config?$wm.startArgs.config:
-      configFile?configFile:
+      params.config?params.config:
       defaultConfigFile;
-   
    var configs = require(wm.wmPath+wm.configFile);
-   
-   
-   wm.port =
-      $wm.startArgs.port?$wm.startArgs.port:
-      port?port:
-      defaultPort;
-   wm.start = wmStart;
-   return wm;
-}
-
-function wmStart(){
-   console.log('Корень сайта: '+this.rootPath);
-   console.log('Сервер запущен на порту: '+this.port);
-}
-
-/*
-wm = {};
-module.exports = wmConstructor();
-function wmConstructorOLD() {
-
-
-   // параметры
-   var args = parseArgv();
-   var configs = require('./'+(args.config || 'config.json'));
-   if (configs.paths instanceof Array) {
-      for (var i in configs.paths) {
-         module.paths.push(configs.paths[i]);
+   wm.node_modules =
+      configs.node_modules?configs.node_modules:
+      globalConfigs.node_modules?globalConfigs.node_modules:
+      [];
+   if (wm.node_modules instanceof Array) {
+      for (var i in wm.node_modules) {
+         if (module.paths.indexOf(wm.node_modules[i]) === -1)
+            module.paths.push(wm.node_modules[i]);
       }
    }
-   var port = args.port || configs.port || 3000;
-   var packageInfo = require('./package.json');
-
-   // запуск сервера
-   var express = require('express');
-   var app = express();
-   app.use(express.logger());
-   app.use(app.router);
-   app.get('/', function(req, res, next){
-      res.send('hello world');
-   });   
-   app.listen(port);
-
-   // вывод
-   if (args.config)
-      console.log('Использован файл настроек: '+args.config);
-   console.log('Сервер запущен на порту: '+port);
-   wm.info = function(){
-      var info = {
-         name:packageInfo.name,
-         version:packageInfo.version,
-         versionName:packageInfo.versionName,
-         author:packageInfo.author
-      };
-      return info;
-   }
-   delete args;
-   delete configs;
-   delete packageInfo;
+   console.log(module.paths);
+   wm.port =
+      $wm.startArgs.port?$wm.startArgs.port:
+      params.port?params.port:
+      configs.port?configs.port:
+      globalConfigs.port?globalConfigs.port:
+      defaultPort;
+   wm.count = 0;
+   wm.start = wmStart;
+   
+   wm.express = require('express');
+   wm.app = wm.express();
    return wm;
 }
-*/
+function wmStart(){
+   var wm = this;
+   var express = wm.express;
+   var app = wm.app;
+   
+   
+   app.use(express.logger());
+   app.use(app.router);
+    
+   var oneYear = 31557600000;
+   app.use(express.static(wm.rootPath, { maxAge: oneYear }));
+   
+   app.get('/', function(req, res, next){
+      res.send('hello world: ' + wm.count);
+      wm.count++;
+   });
+   
+   
+   app.listen(wm.port);
+   console.log('__dirname');
+   console.log('Корень модуля: '+__dirname);
+   console.log('Корень сайта: '+wm.rootPath);
+   console.log('Сервер запущен на порту: '+wm.port);
+}

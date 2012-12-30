@@ -1,4 +1,4 @@
 {
-   "paths":["C:\\Program Files\\nodejs\\node_modules"],
-   "port":1313
+   "node_modules":["C:\\Program Files\\nodejs\\node_modules"],
+   "port":9000
 }

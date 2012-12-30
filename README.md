@@ -1,31 +1,45 @@
 Web Morpher
 =
-version: 0.0.0.pre-alpha
+**version: 0.0.0.pre-alpha**
 
 -
 
 #Запуск
 
-Параметры запуска
+**Параметры запуска**
 
+    --path:<путь к корню сайта, по умолчанию `../demo/`>
+    --config:<имя файла, по умолчанию `config.json`>
     --port:<номер порта, по умолчанию `3000`>
-    --config:<имя файла, по умолчанию `./config.json`>
-    --path:<путь к корню сайта, по умолчанию `./demo/`>
 
-Параметры файла настроек
+**Параметры файла настроек**
 
-    paths:<массив путей для поиска подключаемых модулей>
+    node_modules:<массив путей для поиска подключаемых модулей>
     port:<номер порта>
 
-Примеры
+**Наследование параметров**
+
+Параметры из файла в корне модуля заменяются параметрами из файла в корне сайта. Параметры отсутствующие в корне сайта берутся из корня модуля.
+
+Параметры по убыванию приоритета:
+
+    Из скрипта запуска `restart.bat`
+    Из файла `app.js`
+    Из конфига сайта `../demo/web-morpher/config.json`
+    Из глобального конфига `./config.json`
+    По умолчанию из `./index.js`
+
+параметры с более низким уровнем применяются если они не заданны в вышестоящих уровнях
+
+**Примеры**
 
     node app
     node app --port:9000
-    node app --config:./newconfig.json
-    node app --port:9000 --config:./newconfig.json
-    node app --path:./docs/
+    node app --config:newconfig.json
+    node app --config:newconfig.json --port:9000
+    node app --path:../docs/ --config:newconfig.json --port:9000
 
-Windows
+**Windows**
 
     restart.bat
 
