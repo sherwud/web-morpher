@@ -1,8 +1,10 @@
 /*
  * Модуль сервера
  */
+/* Необходимые модули */
+var path = require('path');
+var fs = require('fs');
 /* Параметры сервера по умолчанию */
-var defaultRootPath = '../demo/';
 var defaultConfigFile = 'config.json';
 var defaultPort = 3000;
 /* Конструктор */
@@ -28,12 +30,45 @@ function wmConstructor(params) {
    var wm = {};
    var globalConfigs = require('./config.json');
    params = params || {};
-   wm.rootPath =
+   /* Каталог откуда запускается модуль */
+   /* По факту это корень для расположения сайтов по умолчанию */
+   /* Относительные пути будут искаться от этого каталога */
+   wm.rootSites = path.normalize(path.dirname(module.parent.filename));
+   /* Каталог сайта */
+   wm.pathSite = path.normalize(
       $wm.startArgs.path?$wm.startArgs.path:
-      params.path?params.path:
-      defaultRootPath;
-   if (wm.rootPath[wm.rootPath.length-1]!=='/') wm.rootPath+='/';
-   wm.wmPath = wm.rootPath+'web-morpher/'
+      params.path?params.path:''
+   );
+   var str = path.join(wm.rootSites,wm.pathSite);
+   if (fs.existsSync(str)) {
+      wm.pathSite = path.join(wm.rootSites,wm.pathSite);
+   } else if (!fs.existsSync(wm.pathSite)) {
+      console.log('Неверный путь к сайту: '+wm.pathSite);
+      return false;
+   }
+   /* Каталог сайта с файлами WM */
+   /* Если каталога нет, то это обычный статический сайт */
+   wm.dataWM = {};
+   wm.dataWM.path = path.join(wm.pathSite,'web-morpher');
+   if (fs.existsSync(wm.dataWM.path)) {
+      
+   } else {
+      wm.typeSite = 0; 
+      console.log(' ');
+   }
+   
+   
+   
+   
+   
+   console.log('Корень: '+wm.rootSites);
+   console.log('Сайт: '+wm.pathSite);
+   console.log('Данные WM: '+wm.dataWM.path);
+   //console.log(module.parent.filename);
+   //console.log('--- '+params.path);
+   
+
+   
    wm.configFile =
       $wm.startArgs.config?$wm.startArgs.config:
       params.config?params.config:
@@ -82,8 +117,8 @@ function wmStart(){
    
    
    app.listen(wm.port);
-   console.log('__dirname');
-   console.log('Корень модуля: '+__dirname);
-   console.log('Корень сайта: '+wm.rootPath);
+  // console.log('__dirname');
+  // console.log('Корень модуля: '+__dirname);
+  // console.log('Корень сайта: '+wm.rootPath);
    console.log('Сервер запущен на порту: '+wm.port);
 }
