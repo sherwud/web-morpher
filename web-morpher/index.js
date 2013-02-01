@@ -4,9 +4,10 @@
 /* Необходимые модули */
 var path = require('path');
 var fs = require('fs');
-/* Параметры сервера по умолчанию */
-var defaultConfigFile = 'config.json';
+/* Порт по умолчанию */
 var defaultPort = 3000;
+/* время жизни статики по умолчанию 1 год */
+var lifetimeStatic = 31557600000;
 /* Конструктор */
 var $wm = exports = module.exports = wmConstructor;
 /* парсинг параметров запуска */
@@ -25,10 +26,9 @@ $wm.info.version = packageInfo.version;
 $wm.info.versionName = packageInfo.versionName;
 $wm.info.author = packageInfo.author;
 delete packageInfo;
-
+/* Конструктор объектов wm */
 function wmConstructor(params) {
    var wm = {};
-   var globalConfigs = require('./config.json');
    params = params || {};
    /* Каталог откуда запускается модуль */
    /* По факту это корень для расположения сайтов по умолчанию */
@@ -39,8 +39,8 @@ function wmConstructor(params) {
       $wm.startArgs.path?$wm.startArgs.path:
       params.path?params.path:''
    );
-   var str = path.join(wm.rootSites,wm.pathSite);
-   if (fs.existsSync(str)) {
+   var buffer = path.join(wm.rootSites,wm.pathSite);
+   if (fs.existsSync(buffer)) {
       wm.pathSite = path.join(wm.rootSites,wm.pathSite);
    } else if (!fs.existsSync(wm.pathSite)) {
       console.log('Неверный путь к сайту: '+wm.pathSite);
@@ -50,50 +50,38 @@ function wmConstructor(params) {
    /* Если каталога нет, то это обычный статический сайт */
    wm.dataWM = {};
    wm.dataWM.path = path.join(wm.pathSite,'web-morpher');
+   var localConfigs = {};
    if (fs.existsSync(wm.dataWM.path)) {
+      localConfigs = require(path.join(wm.dataWM.path,'config.json'));
       
+      // пока тип 1, потом будетеще
+      wm.typeSite = 1;
    } else {
-      wm.typeSite = 0; 
-      console.log(' ');
+      wm.dataWM = false;
+      wm.typeSite = 0;
    }
-   
-   
-   
-   
-   
-   console.log('Корень: '+wm.rootSites);
-   console.log('Сайт: '+wm.pathSite);
-   console.log('Данные WM: '+wm.dataWM.path);
-   //console.log(module.parent.filename);
-   //console.log('--- '+params.path);
-   
-
-   
-   wm.configFile =
-      $wm.startArgs.config?$wm.startArgs.config:
-      params.config?params.config:
-      defaultConfigFile;
-   var configs = require(wm.wmPath+wm.configFile);
-   wm.node_modules =
-      configs.node_modules?configs.node_modules:
-      globalConfigs.node_modules?globalConfigs.node_modules:
-      [];
-   if (wm.node_modules instanceof Array) {
-      for (var i in wm.node_modules) {
-         if (module.paths.indexOf(wm.node_modules[i]) === -1)
-            module.paths.push(wm.node_modules[i]);
+   var globalConfigs = require('./config.json');
+   /* Пути для поиска модулей */
+   if (globalConfigs.node_modules instanceof Array)
+      buffer = globalConfigs.node_modules;
+   else buffer = [];
+   if (localConfigs.node_modules instanceof Array)
+      buffer = buffer.concat(localConfigs.node_modules);
+   if (buffer instanceof Array) {
+      for (var i in buffer) {
+         if (module.paths.indexOf(buffer[i]) === -1)
+            module.paths.push(buffer[i]);
       }
    }
-   console.log(module.paths);
    wm.port =
       $wm.startArgs.port?$wm.startArgs.port:
       params.port?params.port:
-      configs.port?configs.port:
+      localConfigs.port?localConfigs.port:
       globalConfigs.port?globalConfigs.port:
       defaultPort;
-   wm.count = 0;
+
    wm.start = wmStart;
-   
+
    wm.express = require('express');
    wm.app = wm.express();
    return wm;
@@ -106,19 +94,28 @@ function wmStart(){
    
    app.use(express.logger());
    app.use(app.router);
-    
-   var oneYear = 31557600000;
-   app.use(express.static(wm.rootPath, { maxAge: oneYear }));
    
-   app.get('/', function(req, res, next){
-      res.send('hello world: ' + wm.count);
-      wm.count++;
-   });
-   
+   switch (wm.typeSite) {
+      case 1: /* Статика c ресурсами и конфигами WM */
+         __start1(wm); break;
+      case 0: /* Статика без ресурсов и конфигов WM */
+      default : __start0(wm);
+   }
    
    app.listen(wm.port);
-  // console.log('__dirname');
-  // console.log('Корень модуля: '+__dirname);
-  // console.log('Корень сайта: '+wm.rootPath);
-   console.log('Сервер запущен на порту: '+wm.port);
+   console.log('Сайт: '+wm.pathSite);
+   console.log('Запущен на порту: '+wm.port);
+}
+function __start0(wm) {
+   var express = wm.express;
+   var app = wm.app;
+   app.use(express.static(wm.pathSite, { maxAge: lifetimeStatic }));
+}
+function __start1(wm) {
+   var express = wm.express;
+   var app = wm.app;
+   app.get('/web-morpher/*', function(req, res){
+      res.send($wm.info);
+   });
+   app.use(express.static(wm.pathSite, { maxAge: lifetimeStatic }));
 }
