@@ -54,8 +54,7 @@ function wmConstructor(params) {
    if (fs.existsSync(wm.dataWM.path)) {
       localConfigs = require(path.join(wm.dataWM.path,'config.json'));
       
-      // пока тип 1, потом будетеще
-      wm.typeSite = 1;
+      wm.typeSite = localConfigs.typeSite?localConfigs.typeSite:1;
    } else {
       wm.dataWM = false;
       wm.typeSite = 0;
@@ -77,7 +76,6 @@ function wmConstructor(params) {
       $wm.startArgs.port?$wm.startArgs.port:
       params.port?params.port:
       localConfigs.port?localConfigs.port:
-      globalConfigs.port?globalConfigs.port:
       defaultPort;
 
    wm.start = wmStart;
