@@ -1,0 +1,126 @@
+html {
+   height: 100%;
+   min-width: 800px;
+   min-height: 400px;
+}
+body {
+   height: 100%;
+   margin: 0;
+   font: 12px/18px Tahoma,Geneva,sans-serif;
+}
+a {
+   text-decoration: none;
+   outline: none;
+}
+a:hover {
+   text-decoration: underline;
+}
+#wm-body {
+    height: 100%;
+}
+#wm-builder-bg,
+#wm-builder {
+   height: 30px;
+}
+#wm-builder-bg{
+   float: left;
+   width: 100%;
+}
+#wm-builder {
+   position: fixed;
+   bottom: 0; left: 0; right: 0;
+   border-top: 1px solid;
+}
+.wm-builder-btn,
+.wm-builder-btn a {
+  height: 22px;
+  width: 22px;
+}
+.wm-builder-btn {
+  margin: 3px;
+  border: 1px solid;
+  border-radius: 6px;
+}
+.wm-builder-btn a {
+  display: block;
+}
+.wm-builder-text {
+   margin: 5px 3px;
+}
+#wm-header {
+   float: left;
+   height: 64px;
+   width: 100%;
+}
+#wm-title {
+   margin: 8px;
+   font-size: 24px;
+   margin-right: -webkit-calc(50% - 75px);
+   margin-right:    -moz-calc(50% - 75px);
+   margin-right:      -o-calc(50% - 75px);
+   margin-right:         calc(50% - 75px);
+}
+#wm-pageName {
+   margin: 24px 0 0 8px;
+   font-size: 18px;
+}
+#wm-menu {
+   list-style: none;
+}
+#wm-page {
+   min-height: -webkit-calc(100% - 136px);
+   min-height:    -moz-calc(100% - 136px);
+   min-height:      -o-calc(100% - 136px);
+   min-height:         calc(100% - 136px);
+   width: -webkit-calc(100% - 308px);
+   width:    -moz-calc(100% - 308px);
+   width:      -o-calc(100% - 308px);
+   width:         calc(100% - 308px); 
+   float: left;
+   margin: 5px 0;
+}
+#wm-footer {
+    float: left;
+    width: 100%;
+    height: 32px;
+    text-align: center;
+}
+#wm-footer div {
+   margin: 6px 0;
+}
+.wm-aside {
+   width: 144px;
+   margin: 5px;
+}
+#wm-menu {
+   padding: 0;
+   margin: 0;
+}
+#wm-menu a{
+   display: block;
+   width: -webkit-calc(100% - 16px);
+   width:    -moz-calc(100% - 16px);
+   width:      -o-calc(100% - 16px);
+   width:         calc(100% - 16px);
+   padding: 0 8px;
+}
+.wm-l {
+   float: left;
+}
+.wm-r {
+   float: right;
+}
+.github-img {
+   background: url("/img/github.png") no-repeat center center transparent;
+}
+.zip-img {
+   background: url("/img/zip.png") no-repeat center center transparent;
+}
+.tar-img {
+   background: url("/img/tar.png") no-repeat center center transparent;
+}
+/* для тестов выравнивания */
+/*
+.wm-elm {
+    outline: 1px solid #333333;
+}*/
