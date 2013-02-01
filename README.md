@@ -53,8 +53,8 @@ Web Morpher
 
 #Зависимости
 
-  - `docs/ext/jquery.js` >= 1.8.3 ([jquery.com](http://jquery.com/))
   - `demo/ext/jquery.js` >= 1.8.3 ([jquery.com](http://jquery.com/))
+  - `docs/ext/jquery.js` >= 1.8.3 ([jquery.com](http://jquery.com/))
 
 -
 
