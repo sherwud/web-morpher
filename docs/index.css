@@ -73,7 +73,7 @@ a:hover {
 }
 #wm-header {
    float: left;
-   height: 64px;
+   height: 54px;
    width: 100%;
    margin-bottom: 0;
 }
@@ -90,18 +90,24 @@ a:hover {
 }
 #wm-menu {
    list-style: none;
+   margin-bottom: 0;
+}
+.nav-tabs > .active > a, 
+.nav-tabs > .active > a:hover {
+   background-color: #FDFDFD;
 }
 #wm-page {
-   min-height: -webkit-calc(100% - 138px);
-   min-height:    -moz-calc(100% - 138px);
-   min-height:      -o-calc(100% - 138px);
-   min-height:         calc(100% - 138px);
+   min-height: -webkit-calc(100% - 128px);
+   min-height:    -moz-calc(100% - 128px);
+   min-height:      -o-calc(100% - 128px);
+   min-height:         calc(100% - 128px);
    width: -webkit-calc(100% - 310px);
    width:    -moz-calc(100% - 310px);
    width:      -o-calc(100% - 310px);
    width:         calc(100% - 310px); 
    float: left;
    margin: 5px 0;
+   background-color: #F8F8F8;
 }
 #wm-footer {
     float: left;
@@ -117,12 +123,12 @@ a:hover {
    width: 143px;
    margin: 5px;
    min-height: 100px;
+   background-color: #F8F8F8;
 }
 #wm-page,
 #wm-aside-right {
    border: 1px solid #DDDDDD;
    border-radius: 4px;
-   background-color: #F8F8F8;
 }
 .wm-asid-header {
    text-align: center;
