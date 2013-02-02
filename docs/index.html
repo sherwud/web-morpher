@@ -14,13 +14,16 @@
    </head>
    <body>
       <section id="wm-body">
-         <header id="wm-header" class="wm-elm"><div class="wm-cnt">
-            <div id="wm-title" class="wm-r">Web Morpher</div>
-            <div id="wm-pageName" class="wm-l">Главная</div>
-         </div></header>
+         <header id="wm-header" class="navbar">
+            <div id="wm-title" class="navbar-inner">
+               <a href="/" class="brand">Web Morpher</a>
+               <div id="wm-pageName">Главная</div>
+            </div>
+         </header>
          <aside id="wm-aside-left" class="wm-aside wm-l wm-elm"></aside>
          <aside id="wm-aside-right" class="wm-aside wm-r wm-elm">
-            <div>Новости</div>
+            <div class="wm-asid-header">Новости</div>
+            <div id="wm-news"></div>
          </aside>
          <section id="wm-page" class="wm-elm">
             <div>Загрузка...</div>
@@ -30,7 +33,7 @@
          </footer>
          <div id="wm-builder-bg"></div> 
       </section>
-      <section id="wm-builder">
+      <section id="wm-builder" class="navbar navbar-inner">
          <div class="wm-builder-btn wm-l">
             <a class="github-img" href="https://github.com/PAfUS/web-morpher" target="blank" title="На github"></a>
          </div>

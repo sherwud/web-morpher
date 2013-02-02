@@ -13,11 +13,9 @@ $wm.loder = {
             $(container).html(data);
          }
       }); 
-      /*$.get(url,function(data){
-         $(container).html(data);
-      })*/
    }
 };
 $(window).bind('load', function(){
-   $wm.loder.html('#wm-aside-left','/html/menu.html')
+   $wm.loder.html('#wm-aside-left','/html/menu.html');
+   $wm.loder.html('#wm-news','/html/news.html');
 });
