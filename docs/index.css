@@ -18,6 +18,25 @@ a {
 a:hover {
    text-decoration: underline;
 }
+#wm-menu a{
+   padding: 4px;
+}
+.wm-sub-menu {
+   list-style: none;
+   margin: 0;
+}
+.wm-sub-menu li a {
+   display: block;
+   padding-left: 12px !important;
+   border: 1px solid #DDDDDD;
+   border-top: none;
+}
+.wm-sub-menu li a:hover {
+   text-decoration: none;
+}
+.wm-sub-menu .wm-sub-menu li a {
+   padding-left: 24px !important;
+}
 #wm-body {
     height: 100%;
 }
@@ -94,9 +113,6 @@ a:hover {
 .wm-aside {
    width: 144px;
    margin: 5px;
-}
-#wm-menu a{
-   padding: 4px;
 }
 .wm-l {
    float: left;
