@@ -92,10 +92,10 @@ a:hover {
    list-style: none;
 }
 #wm-page {
-   min-height: -webkit-calc(100% - 136px);
-   min-height:    -moz-calc(100% - 136px);
-   min-height:      -o-calc(100% - 136px);
-   min-height:         calc(100% - 136px);
+   min-height: -webkit-calc(100% - 138px);
+   min-height:    -moz-calc(100% - 138px);
+   min-height:      -o-calc(100% - 138px);
+   min-height:         calc(100% - 138px);
    width: -webkit-calc(100% - 310px);
    width:    -moz-calc(100% - 310px);
    width:      -o-calc(100% - 310px);
