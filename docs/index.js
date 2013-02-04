@@ -65,7 +65,7 @@ $wm.nav = {
    setActiveLink: function(name){
       $('li.active').removeClass('active');
       $('a.wm-nav-link.active').removeClass('active');
-      var a = $('a.wm-nav-link[href*="'+name+'"]');
+      var a = $('a.wm-nav-link[href*="\"'+name+'\""]');
       var li = a.parent();
       if (li.get(0).tagName === 'LI') {
          li.addClass('active');
@@ -76,9 +76,9 @@ $wm.nav = {
                i.css('display','block');
             i = i.parent();            
          }
-         var div = $('div',li);
+         var div = $('> div',li);
          div.css('display','block');
-         if (div.get(0).id.length > 0)
+         if (div.get(0).id.length > 0 && div.text()==='')
             $wm.loader.html(div,'/menu/'+div.get(0).id+'.html');
       } else {
          a.addClass('active');
