@@ -92,9 +92,17 @@ a:hover {
    list-style: none;
    margin-bottom: 0;
 }
-.nav-tabs > .active > a, 
-.nav-tabs > .active > a:hover {
+.nav-tabs .active > a, 
+.nav-tabs .active > a:hover{
    background-color: #FDFDFD;
+   color: #555555;
+   cursor: default;
+}
+#wm-news .active,
+#wm-news .active:hover{
+   color: #555555;
+   cursor: default;
+   text-decoration: none;
 }
 #wm-page {
    min-height: -webkit-calc(100% - 128px);
@@ -108,6 +116,10 @@ a:hover {
    float: left;
    margin: 5px 0;
    background-color: #F8F8F8;
+}
+.wm-html-error{
+   margin-top: 8px;
+   text-align: center;
 }
 #wm-footer {
     float: left;
