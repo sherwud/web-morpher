@@ -33,11 +33,15 @@ $wm.loader = {
          url: url,
          cache: $wm.globalCached,
          success: function(data){
-            $(container).html(data);
+            if (typeof container === 'string')
+               container = $(container);
+            container.html(data);
             if (typeof func === 'function') func(data);
          },
          error: function(data){
-            $(container).html($('<div class="wm-html-error">'+
+            if (typeof container === 'string')
+               container = $(container);
+            container.html($('<div class="wm-html-error">'+
                (data['status']||'404')+': '
                +(data['statusText']||'Not Found')+'<br>'+url
                +'</div>'));
@@ -65,6 +69,17 @@ $wm.nav = {
       var li = a.parent();
       if (li.get(0).tagName === 'LI') {
          li.addClass('active');
+         $('#wm-menu div').css('display','none');
+         var i = li;
+         while (i && i.get(0).id !== 'wm-menu') {
+            if (i.get(0).tagName === 'DIV')
+               i.css('display','block');
+            i = i.parent();            
+         }
+         var div = $('div',li);
+         div.css('display','block');
+         if (div.get(0).id.length > 0)
+            $wm.loader.html(div,'/menu/'+div.get(0).id+'.html');
       } else {
          a.addClass('active');
       }
@@ -72,7 +87,7 @@ $wm.nav = {
    }
 };
 $(window).bind('load', function(){
-   $wm.loader.html('#wm-aside-left','/html/menu.html',function(){
+   $wm.loader.html('#wm-aside-left','/menu/index.html',function(){
       $wm.loader.html('#wm-news','/html/news.html',function(){
          $wm.nav.apply();
       });
