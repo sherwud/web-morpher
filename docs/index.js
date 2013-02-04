@@ -50,18 +50,18 @@ $wm.nav = {
       var hash = $wm.hash.get();
       var page = hash['page'];
       if (page !== undefined) { 
-         $wm.loader.html('#wm-page','/html/'+page+'.html');
+         $wm.loader.html('#wm-page > .wm-html-padding','/html/'+page+'.html');
          $wm.nav.setActiveLink(page);
       } else {
-         $wm.loader.html('#wm-page','/html/index.html');
+         $wm.loader.html('#wm-page > .wm-html-padding','/html/index.html');
          $wm.nav.setActiveLink('index');
       }
       
    },
    setActiveLink: function(name){
       $('li.active').removeClass('active');
-      $('a.active').removeClass('active');
-      var a = $('a[href*="'+name+'"]');
+      $('a.wm-nav-link.active').removeClass('active');
+      var a = $('a.wm-nav-link[href*="'+name+'"]');
       var li = a.parent();
       if (li.get(0).tagName === 'LI') {
          li.addClass('active');

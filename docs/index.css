@@ -121,6 +121,9 @@ a:hover {
    margin-top: 8px;
    text-align: center;
 }
+.wm-html-padding {
+   padding: 4px;
+}
 #wm-footer {
     float: left;
     width: 100%;
