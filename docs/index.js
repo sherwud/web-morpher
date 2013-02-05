@@ -26,6 +26,21 @@ $wm.hash = {
       window.location.hash = '#'+JSON.stringify(hash);
    }
 };
+$wm.path = {
+   dir: function(path){
+      if (path === undefined || path === '')
+         return '';
+      if (path.search('/') === -1)
+         return path;
+      if (path[0]==='/')
+         path = path.substr(1,path.length-1);
+      if (path[path.length-1]==='/')
+         path = path.substr(0,path.length-1);
+      var p = path.split('/');
+      p.length -= 1;
+      return p.join('/');
+   }
+};
 $wm.loader = {
    html: function(container,url,func){
       $.ajax({
@@ -33,11 +48,15 @@ $wm.loader = {
          url: url,
          cache: $wm.globalCached,
          success: function(data){
-            $(container).html(data);
+            if (typeof container === 'string')
+               container = $(container);
+            container.html(data);
             if (typeof func === 'function') func(data);
          },
          error: function(data){
-            $(container).html($('<div class="wm-html-error">'+
+            if (typeof container === 'string')
+               container = $(container);
+            container.html($('<div class="wm-html-error">'+
                (data['status']||'404')+': '
                +(data['statusText']||'Not Found')+'<br>'+url
                +'</div>'));
@@ -50,21 +69,37 @@ $wm.nav = {
       var hash = $wm.hash.get();
       var page = hash['page'];
       if (page !== undefined) { 
-         $wm.loader.html('#wm-page','/html/'+page+'.html');
+         $wm.loader.html('#wm-page > .wm-html-padding','/html/'+page+'.html');
          $wm.nav.setActiveLink(page);
       } else {
-         $wm.loader.html('#wm-page','/html/index.html');
+         $wm.loader.html('#wm-page > .wm-html-padding','/html/index.html');
          $wm.nav.setActiveLink('index');
       }
       
    },
-   setActiveLink: function(name){
+   buildMenu: function(page){
+      
+   },
+   setActiveLink: function(page){
       $('li.active').removeClass('active');
-      $('a.active').removeClass('active');
-      var a = $('a[href*="'+name+'"]');
+      $('a.wm-nav-link.active').removeClass('active');
+      var a = $('a.wm-nav-link[href*="\"'+page+'\""]');
       var li = a.parent();
       if (li.get(0).tagName === 'LI') {
          li.addClass('active');
+         $('#wm-menu nav').css('display','none');
+         var i = li;
+         while (i && i.get(0).id !== 'wm-menu') {
+            if (i.get(0).tagName === 'NAV')
+               i.css('display','block');
+            i = i.parent();            
+         }
+         var div = $('> nav',li);
+         if (div.length > 0){
+            div.css('display','block');
+            if (div.text()==='')
+               $wm.loader.html(div,'/html/'+$wm.path.dir(page)+'/menu.html');
+         }
       } else {
          a.addClass('active');
       }
@@ -73,7 +108,7 @@ $wm.nav = {
 };
 $(window).bind('load', function(){
    $wm.loader.html('#wm-aside-left','/html/menu.html',function(){
-      $wm.loader.html('#wm-news','/html/news.html',function(){
+      $wm.loader.html('#wm-news','/html/news/menu.html',function(){
          $wm.nav.apply();
       });
    });
