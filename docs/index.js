@@ -26,6 +26,21 @@ $wm.hash = {
       window.location.hash = '#'+JSON.stringify(hash);
    }
 };
+$wm.path = {
+   dir: function(path){
+      if (path === undefined || path === '')
+         return '';
+      if (path.search('/') === -1)
+         return path;
+      if (path[0]==='/')
+         path = path.substr(1,path.length-1);
+      if (path[path.length-1]==='/')
+         path = path.substr(0,path.length-1);
+      var p = path.split('/');
+      p.length -= 1;
+      return p.join('/');
+   }
+};
 $wm.loader = {
    html: function(container,url,func){
       $.ajax({
@@ -62,24 +77,29 @@ $wm.nav = {
       }
       
    },
-   setActiveLink: function(name){
+   buildMenu: function(page){
+      
+   },
+   setActiveLink: function(page){
       $('li.active').removeClass('active');
       $('a.wm-nav-link.active').removeClass('active');
-      var a = $('a.wm-nav-link[href*="\"'+name+'\""]');
+      var a = $('a.wm-nav-link[href*="\"'+page+'\""]');
       var li = a.parent();
       if (li.get(0).tagName === 'LI') {
          li.addClass('active');
-         $('#wm-menu div').css('display','none');
+         $('#wm-menu nav').css('display','none');
          var i = li;
          while (i && i.get(0).id !== 'wm-menu') {
-            if (i.get(0).tagName === 'DIV')
+            if (i.get(0).tagName === 'NAV')
                i.css('display','block');
             i = i.parent();            
          }
-         var div = $('> div',li);
-         div.css('display','block');
-         if (div.get(0).id.length > 0 && div.text()==='')
-            $wm.loader.html(div,'/menu/'+div.get(0).id+'.html');
+         var div = $('> nav',li);
+         if (div.length > 0){
+            div.css('display','block');
+            if (div.text()==='')
+               $wm.loader.html(div,'/html/'+$wm.path.dir(page)+'/menu.html');
+         }
       } else {
          a.addClass('active');
       }
@@ -87,8 +107,8 @@ $wm.nav = {
    }
 };
 $(window).bind('load', function(){
-   $wm.loader.html('#wm-aside-left','/menu/index.html',function(){
-      $wm.loader.html('#wm-news','/html/news.html',function(){
+   $wm.loader.html('#wm-aside-left','/html/menu.html',function(){
+      $wm.loader.html('#wm-news','/html/news/menu.html',function(){
          $wm.nav.apply();
       });
    });
