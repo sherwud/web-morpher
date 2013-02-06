@@ -111,6 +111,7 @@ $wm.nav = {
             a.addClass('active');
          }
          $('#wm-pageName').text(a.text());
+         $('title').text('Web Morpher - '+a.text());
       };
       var buildMenu = function(root,page,func){
          var p = $wm.path.cutRoot(page);

@@ -19,7 +19,7 @@ a:hover {
    text-decoration: underline;
 }
 #wm-menu a{
-   padding: 4px;
+   padding: 4px 8px;
 }
 .wm-sub-menu {
    list-style: none;
@@ -27,7 +27,7 @@ a:hover {
 }
 .wm-sub-menu li a {
    display: block;
-   padding-left: 12px !important;
+   padding-left: 16px !important;
    border: 1px solid #DDDDDD;
    border-top: none;
 }
@@ -36,6 +36,9 @@ a:hover {
 }
 .wm-sub-menu .wm-sub-menu li a {
    padding-left: 24px !important;
+}
+.wm-sub-menu .wm-sub-menu .wm-sub-menu li a {
+   padding-left: 32px !important;
 }
 #wm-body {
     height: 100%;
@@ -122,7 +125,8 @@ a:hover {
    text-align: center;
 }
 .wm-html-padding {
-   padding: 4px;
+   padding: 4px 8px;
+   text-align: justify;
 }
 #wm-footer {
     float: left;
@@ -147,9 +151,6 @@ a:hover {
 }
 .wm-asid-header {
    text-align: center;
-   padding: 4px;
-}
-#wm-news {
    padding: 4px;
 }
 #wm-news a  {
