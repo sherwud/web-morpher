@@ -65,7 +65,7 @@ $wm.loader = {
          error: function(data){
             if (typeof container === 'string')
                container = $(container);
-            container.html($('<div class="wm-html-error">'+
+            container.html($('<div class="wm-html-info">'+
                (data['status']||'404')+': '
                +(data['statusText']||'Not Found')+'<br>'+url
                +'</div>'));
@@ -77,11 +77,13 @@ $wm.nav = {
    apply: function(){
       var hash = $wm.hash.get();
       var page = hash['page'];
+      var cnt = $('#wm-page > .wm-html-padding');
+      cnt.html('<div class="wm-html-info">Загрузка...</div>');
       if (page !== undefined) { 
-         $wm.loader.html('#wm-page > .wm-html-padding','/html/'+page+'.html');
+         $wm.loader.html(cnt,'/html/'+page+'.html');
          $wm.nav.setActiveLink(page);
       } else {
-         $wm.loader.html('#wm-page > .wm-html-padding','/html/index.html');
+         $wm.loader.html(cnt,'/html/index.html');
          $wm.nav.setActiveLink('index');
       }
       
