@@ -125,8 +125,17 @@ a:hover {
    text-align: center;
 }
 .wm-html-padding {
-   padding: 4px 8px;
+   padding: 12px 16px;
    text-align: justify;
+}
+.wm-html-padding *:first-child {
+   margin-top: 0 !important;
+}
+.wm-html-padding *:last-child {
+   margin-bottom: 0 !important;
+}
+#wm-news {
+   padding: 4px 8px;
 }
 #wm-footer {
     float: left;
@@ -171,4 +180,10 @@ a:hover {
 }
 .tar-img {
    background: url("/img/tar.png") no-repeat center center transparent;
+}
+.wm-code{
+   background-color: #FFFFFF;
+   border: 1px solid #DDDDDD;
+   border-radius: 6px;
+   padding: 8px;
 }

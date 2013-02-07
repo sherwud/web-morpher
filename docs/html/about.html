@@ -1,3 +1,20 @@
+<h5>Web Morpher</h5>
+<p>
+ Это система управления сайтом с открытым исходным кодом.
+ Серверная часть реализована на Node.js, клиентская часть использует HTML5.
+ Представляет собой модуль, импортировав который можно запускать сайты,
+ передавай в качестве параметров путь к сайту и порт на котором он будет запущен.
+ 
+ <p class="wm-code">
+ var wmConstructor = require('./web-morpher');<br>
+ var demo = wmConstructor({path:'demo',port:778});<br>
+ demo.start();
+ </p>
+</p><p>
+ Модули Node.js используемые на сервере: express
+ <br>
+ На клиенте используются: jQuery, Twitter Bootstrap
+</p>
 <h5>Контакты</h5>
 <h6>Новожилов Игорь Александрович <span style="font-weight: normal;">(автор прокта)</span></h6>
 <i>никнейм:</i><span style="padding-left: 7px;"> Dr@KoN</span><br>
