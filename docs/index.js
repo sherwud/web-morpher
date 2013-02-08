@@ -80,10 +80,10 @@ $wm.nav = {
       var cnt = $('#wm-page > .wm-html-padding');
       cnt.html('<div class="wm-html-info">Загрузка...</div>');
       if (page !== undefined) { 
-         $wm.loader.html(cnt,'/html/'+page+'.html');
+         $wm.loader.html(cnt,'/html/'+page+'.html',$wm.syntaxHighlight);
          $wm.nav.setActiveLink(page);
       } else {
-         $wm.loader.html(cnt,'/html/index.html');
+         $wm.loader.html(cnt,'/html/index.html',$wm.syntaxHighlight);
          $wm.nav.setActiveLink('index');
       }
       
@@ -139,6 +139,47 @@ $wm.nav = {
       else
          buildMenu('',page,highlight);
    }
+};
+$wm.syntaxHighlight = function(){
+   var js = [
+      [/\n/g,'<br>'],
+      [/^<br>/g,''],
+      [/ /g,'&nbsp;'],
+      [/"([\s\S][^"]*)"/g,'<span class="comment">"$1"</span>'],
+      [/'([\s\S][^']*)'/g,'<span class="comment">\'$1\'</span>'],
+      [/(var)\s+(\w+)/g,'<span class="syntax">$1</span> <span class="var-key">$2</span>'],
+      [/(\w+)\s*\(/g,'<span class="func">$1</span>('],
+      [/(\w+)\s*\:/g,'<span class="obj-elm">$1</span>:'],
+      [/([0-9]+)(\.*)([0-9]+)/g,'<span class="num">$1$2$3</span>'],
+      [/\/\*([\s\S]*)\*\//g,'<span class="comment">\/\*$1\*\/</span>'],
+      [/\*\//g,'\*\/<br>']
+   ];
+   var json = [
+      [/\n/g,'<br>'],
+      [/^<br>/g,''],
+      [/ /g,'&nbsp;'],
+      [/"([\s\S][^"]*)":/g,'"<span class="obj-elm">$1</span>":']
+   ];
+   var http = [
+      [/"([\s\S][^"]*)":/g,'"<span class="obj-elm">$1</span>":'],
+      [/(http:\/\/\w+)/g,'<span class="comment">$1</span>'],
+      [/(#)/g,'<b>$1</b>']
+   ];
+   $('.wm-code.js').each(function(i, elem) {
+      for (var i in js) {
+         elem.innerHTML = elem.innerHTML.replace(js[i][0],js[i][1]);
+      }
+   });
+   $('.wm-code.json').each(function(i, elem) {
+      for (var i in json) {
+         elem.innerHTML = elem.innerHTML.replace(json[i][0],json[i][1]);
+      }
+   });
+   $('.wm-code.http').each(function(i, elem) {
+      for (var i in http) {
+         elem.innerHTML = elem.innerHTML.replace(http[i][0],http[i][1]);
+      }
+   });
 };
 $(window).bind('load', function(){
    $wm.loader.html('#wm-aside-left','/html/menu.html',function(){

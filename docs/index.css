@@ -162,7 +162,7 @@ a:hover {
    text-align: center;
    padding: 4px;
 }
-#wm-news a  {
+#wm-news a {
    display: block;
    padding: 1px 0;
 }
@@ -181,9 +181,10 @@ a:hover {
 .tar-img {
    background: url("/img/tar.png") no-repeat center center transparent;
 }
-.wm-code{
+i.mark {
    background-color: #FFFFFF;
-   border: 1px solid #DDDDDD;
-   border-radius: 6px;
-   padding: 8px;
+}
+a.more {
+   font-size: 11px;
+   padding-left: 4px;
 }
