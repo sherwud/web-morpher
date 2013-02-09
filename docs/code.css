@@ -1,8 +1,17 @@
 .wm-code {
-   background-color: #FFFFFF;
+   background-color: #F8F8F8;
    border: 1px solid #DDDDDD;
    border-radius: 6px;
    padding: 8px;
+   display: block;
+}
+span.wm-code {
+   margin-bottom: 8px;
+}
+span.wm-code.line {
+   margin-bottom: 0;
+   display: inline;
+   padding: 2px;
 }
 .wm-code > .syntax {
    color: blue;

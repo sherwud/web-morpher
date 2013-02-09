@@ -101,23 +101,24 @@ a:hover {
    color: #555555;
    cursor: default;
 }
-#wm-news .active,
-#wm-news .active:hover{
-   color: #555555;
-   cursor: default;
-   text-decoration: none;
-}
 #wm-page {
    min-height: -webkit-calc(100% - 128px);
    min-height:    -moz-calc(100% - 128px);
    min-height:      -o-calc(100% - 128px);
    min-height:         calc(100% - 128px);
-   width: -webkit-calc(100% - 310px);
-   width:    -moz-calc(100% - 310px);
-   width:      -o-calc(100% - 310px);
-   width:         calc(100% - 310px); 
+   width: -webkit-calc(100% - 160px/*310px*/);
+   width:    -moz-calc(100% - 160px/*310px*/);
+   width:      -o-calc(100% - 160px/*310px*/);
+   width:         calc(100% - 160px/*310px*/); 
    float: left;
    margin: 5px 0;
+   background-color: #FDFDFD;
+}
+.shadow {
+   box-shadow: 0 0 2px rgba(0,0,0,0.2);
+}
+.box {
+   margin-bottom: 8px;
    background-color: #F8F8F8;
 }
 .wm-html-info{
@@ -128,14 +129,11 @@ a:hover {
    padding: 12px 16px;
    text-align: justify;
 }
-.wm-html-padding *:first-child {
+.wm-html-padding h5:first-child {
    margin-top: 0 !important;
 }
 .wm-html-padding *:last-child {
    margin-bottom: 0 !important;
-}
-#wm-news {
-   padding: 4px 8px;
 }
 #wm-footer {
     float: left;
@@ -151,16 +149,24 @@ a:hover {
    width: 143px;
    margin: 5px;
    min-height: 100px;
-   background-color: #F8F8F8;
 }
 #wm-page,
-#wm-aside-right {
+#wm-news-cnt {
    border: 1px solid #DDDDDD;
    border-radius: 4px;
 }
 .wm-asid-header {
    text-align: center;
    padding: 4px;
+}
+#wm-news .active,
+#wm-news .active:hover{
+   color: #555555;
+   cursor: default;
+   text-decoration: none;
+}
+#wm-news {
+   padding: 4px 8px;
 }
 #wm-news a {
    display: block;
@@ -182,9 +188,29 @@ a:hover {
    background: url("/img/tar.png") no-repeat center center transparent;
 }
 i.mark {
-   background-color: #FFFFFF;
+   background-color: #EEEEEE;
 }
 a.more {
    font-size: 11px;
    padding-left: 4px;
 }
+a.no-radius{
+   -webkit-border-bottom-right-radius: 0 !important;
+   -webkit-border-bottom-left-radius: 0 !important;
+   -moz-border-radius-bottomright: 0 !important;
+   -moz-border-radius-bottomleft: 0 !important;
+   border-bottom-right-radius: 0 !important;
+   border-bottom-left-radius: 0 !important;
+}
+a.radius{
+   -webkit-border-bottom-right-radius: 4px !important;
+   -webkit-border-bottom-left-radius: 4px !important;
+   -moz-border-radius-bottomright: 4px !important;
+   -moz-border-radius-bottomleft: 4px !important;
+   border-bottom-right-radius: 4px !important;
+   border-bottom-left-radius: 4px !important;
+}
+hr {
+   margin: 8px 0; 
+}
+

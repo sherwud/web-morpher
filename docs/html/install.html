@@ -1,1 +1,38 @@
-инстал
+<h5>Установка</h5>
+<p>
+1) Качаем и устанавливаем Node.js. <a href='http://nodejs.org/download/' target="blank">Официальный сайт.</a><br>
+2) Устанавливаем через npm необходимые модули:<br>
+&nbsp;&nbsp;&nbsp;- express<br>
+Пример для windows
+<span class="wm-code cmd">
+cd /d C:\Program Files\nodejs
+npm install express
+</span>
+3) <a href='#{"page":"download"}'>Качаем Web Morpher</a>, копируем в любое удобное для вас место.<br>
+</p>
+<h5>Запуск</h5>
+<p>
+<b>Настройка</b><br>
+Необходимо задать следующие настройки<br>
+&nbsp;&nbsp;&nbsp;- "node_modules" - Путь к каталогу <i class="mark">node_modules</i>
+в корне каталога в который установлен Node.js.><br>
+Пример для windows (файл <i class="mark">&lt;Путь к скачанному модулю&gt;/web-morpher/config.json</i>)
+<span class="wm-code json">
+{
+  "node_modules":["C:\\Program Files\\nodejs\\node_modules"]
+}
+</span>
+<b>Запуск из файла <i class="mark">app.js</i></b><br>
+<span class="wm-code js">
+var wmConstructor = require('&lt;Путь к скачанному модулю&gt;/web-morpher');
+var wm = wmConstructor({path:'&lt;Путь к сайту&gt;',port:'&lt;Порт на котором будет запущен сайт&gt;'});
+wm.start();
+</span>
+<b>Запуск из консоли</b>
+<span class="wm-code cmd">
+node app --path:&lt;Путь к сайту&gt; --port:&lt;Порт на котором будет запущен сайт&gt;
+</span>
+<b>Важно</b><br>
+При запуске из консоли переданные настройки перекрывают настройки переданные в файле
+<i class="mark">app.js</i> в функции <span class="wm-code line js">wmConstructor()</span>.
+</p>

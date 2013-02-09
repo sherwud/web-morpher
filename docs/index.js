@@ -91,9 +91,14 @@ $wm.nav = {
    setActiveLink: function(page){
       $('li.active').removeClass('active');
       $('a.wm-nav-link.active').removeClass('active');
+      $('a.no-radius').removeClass('no-radius');
+      $('a.radius').removeClass('radius');
       var highlight = function(){
          var a = $('a.wm-nav-link[href*="\"'+page+'\""]');
          var li = a.parent();
+         var radius = function(){
+            $('a',$('#wm-menu nav[style*="block"]>ul>li:last-child').last()).addClass('radius');
+         }; 
          if (li.get(0).tagName === 'LI') {
             li.addClass('active');
             $('#wm-menu nav').css('display','none');
@@ -101,14 +106,17 @@ $wm.nav = {
             while (i && i.get(0).id !== 'wm-menu') {
                if (i.get(0).tagName === 'NAV')
                   i.css('display','block');
-               i = i.parent();            
+               if (i.get(0).tagName === 'LI' && $('nav',i).length > 0)
+                  $('a',i).addClass('no-radius');
+               i = i.parent();
             }
             var nav = $('> nav',li);
             if (nav.length > 0){
                nav.css('display','block');
                if (nav.text()==='')
-                  $wm.loader.html(nav,'/html/'+$wm.path.dir(page)+'/menu.html');
-            }
+                  $wm.loader.html(nav,'/html/'+$wm.path.dir(page)+'/menu.html',radius);
+               else radius();
+            } else radius();
          } else {
             a.addClass('active');
          }
@@ -165,6 +173,17 @@ $wm.syntaxHighlight = function(){
       [/(http:\/\/\w+)/g,'<span class="comment">$1</span>'],
       [/(#)/g,'<b>$1</b>']
    ];
+   var cmd = [
+      [/\n/g,'<br>'],
+      [/ /g,'&nbsp;'],
+      [/^<br>/g,''],
+      [/(\/\w+)/,'<span class="comment">$1</span>'],
+      [/(cd)([^\w])/g,'<span class="syntax">$1</span>$2'],
+      [/(npm)([^\w])/g,'<span class="syntax">$1</span>$2'],
+      [/(node)([^\w])/g,'<span class="syntax">$1</span>$2'],
+      [/(--\w+):/g,'<span class="obj-elm">$1</span>:']
+      
+   ];
    $('.wm-code.js').each(function(i, elem) {
       for (var i in js) {
          elem.innerHTML = elem.innerHTML.replace(js[i][0],js[i][1]);
@@ -180,9 +199,14 @@ $wm.syntaxHighlight = function(){
          elem.innerHTML = elem.innerHTML.replace(http[i][0],http[i][1]);
       }
    });
+   $('.wm-code.cmd').each(function(i, elem) {
+      for (var i in cmd) {
+         elem.innerHTML = elem.innerHTML.replace(cmd[i][0],cmd[i][1]);
+      }
+   });
 };
 $(window).bind('load', function(){
-   $wm.loader.html('#wm-aside-left','/html/menu.html',function(){
+   $wm.loader.html('#wm-menu-cnt','/html/menu.html',function(){
       $wm.loader.html('#wm-news','/html/news/menu.html',function(){
          $wm.nav.apply();
       });
