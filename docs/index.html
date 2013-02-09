@@ -11,37 +11,53 @@
       <!-- end ext lib -->
       <script type="text/javascript" src="/index.js"></script>
       <link rel="stylesheet" href="/index.css"/>
+      <link rel="stylesheet" href="/code.css"/>
    </head>
    <body>
       <section id="wm-body">
          <header id="wm-header" class="navbar">
-            <div id="wm-title" class="navbar-inner">
+            <div id="wm-title" class="navbar-inner shadow">
                <a href="/" class="brand">Web Morpher</a>
                <div id="wm-pageName">Главная</div>
             </div>
          </header>
-         <aside id="wm-aside-left" class="wm-aside wm-l wm-elm"></aside>
-         <aside id="wm-aside-right" class="wm-aside wm-r wm-elm">
-            <div class="wm-asid-header">Новости</div>
-            <div id="wm-news"></div>
+         <aside id="wm-aside-left" class="wm-aside wm-l wm-elm">
+            <div id="wm-menu-cnt" class="shadow box"></div>
+            <div id="wm-news-cnt" class="shadow box">
+               <div class="wm-asid-header">Новости Топ 10</div>
+               <div id="wm-news"></div>
+            </div>
          </aside>
-         <section id="wm-page" class="wm-elm">
+         <!--
+         <aside id="wm-aside-right" class="wm-aside wm-r shadow wm-elm">
+            
+         </aside>
+         -->
+         <section id="wm-page" class="shadow wm-elm">
             <div class="wm-html-padding"></div>
          </section>
          <footer id="wm-footer" class="wm-elm">
-            <div>icq: 363050792 e-mail: maildrakon@gmail.com</div>
+            <div>
+               <a href="http://nodejs.org/" target="blank">Node.js</a>
+               <span> | </span>
+               <a href="https://github.com/" target="blank">GitHub</a>
+               <span> | </span>
+               <a href="http://jquery.com/" target="blank">jQuery</a>
+               <span> | </span>
+               <a href="http://twitter.github.com/bootstrap/" target="blank">Bootstrap</a>
+            </div>
          </footer>
          <div id="wm-builder-bg"></div> 
       </section>
       <section id="wm-builder" class="navbar navbar-inner">
          <div class="wm-builder-btn wm-l">
-            <a class="github-img" href="https://github.com/PAfUS/web-morpher" target="blank" title="На github"></a>
+            <a class="github-img" href="https://github.com/IDrakon/web-morpher" target="blank" title="На github"></a>
          </div>
          <div class="wm-builder-btn wm-l">
-            <a class="zip-img" href="https://github.com/PAfUS/web-morpher/zipball/master" target="blank" title="Скачать zip архивом"></a>
+            <a class="zip-img" href="https://github.com/IDrakon/web-morpher/zipball/master" target="blank" title="Скачать zip архивом"></a>
          </div>
          <div class="wm-builder-btn wm-l">
-            <a class="tar-img" href="https://github.com/PAfUS/web-morpher/tarball/master" target="blank" title="Скачать tar архивом"></a>
+            <a class="tar-img" href="https://github.com/IDrakon/web-morpher/tarball/master" target="blank" title="Скачать tar архивом"></a>
          </div>
          <div class="wm-builder-text wm-r">
             <span>© Dr@KoN</span>

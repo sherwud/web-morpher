@@ -80,4 +80,4 @@ Web Morpher
 
 -
 
-Copyright 2012 Dr@KoN
+Copyright 2013 Dr@KoN
