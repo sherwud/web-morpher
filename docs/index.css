@@ -158,6 +158,7 @@ a:hover {
 .wm-asid-header {
    text-align: center;
    padding: 4px;
+   border-bottom: 1px solid #DDDDDD;
 }
 #wm-news .active,
 #wm-news .active:hover{
