@@ -45,8 +45,8 @@ a:hover {
 }
 #wm-builder-bg,
 #wm-builder {
-   height: 30px;
-   min-height: 30px;
+   height: 0/*30px*/;
+   min-height: 0/*30px*/;
    padding: 0;
 }
 #wm-builder-bg{
@@ -102,10 +102,10 @@ a:hover {
    cursor: default;
 }
 #wm-page {
-   min-height: -webkit-calc(100% - 128px);
-   min-height:    -moz-calc(100% - 128px);
-   min-height:      -o-calc(100% - 128px);
-   min-height:         calc(100% - 128px);
+   min-height: -webkit-calc(100% - 98px/*128px*/);
+   min-height:    -moz-calc(100% - 98px/*128px*/);
+   min-height:      -o-calc(100% - 98px/*128px*/);
+   min-height:         calc(100% - 98px/*128px*/);
    width: -webkit-calc(100% - 160px/*310px*/);
    width:    -moz-calc(100% - 160px/*310px*/);
    width:      -o-calc(100% - 160px/*310px*/);
