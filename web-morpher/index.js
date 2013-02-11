@@ -90,9 +90,18 @@ function wmStart(){
    var app = wm.app;
    
    
-   app.use(express.logger());
-   app.use(app.router);
+   //app.use(express.logger());
+   //app.use(app.router);
    
+   app.get('/web-morpher/ui/*', function(req, res){
+      var file = wm.rootSites+req.path;
+      fs.stat(file, function(err, stats){
+         if (!err && stats.isFile())
+            res.sendfile(file);
+         else
+            res.send(404, 'File not found');
+      });
+   });
    switch (wm.typeSite) {
       case 1: /* Статика c ресурсами и конфигами WM */
          __start1(wm); break;
