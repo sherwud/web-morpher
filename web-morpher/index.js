@@ -93,6 +93,14 @@ function wmStart(){
    //app.use(express.logger());
    //app.use(app.router);
    
+   app.get('/web-morpher/ui/version.js', function(req, res){
+      var ver = '$wm = $wm||{};';
+      ver += '$wm.version.name=\''+$wm.info.name+'\'';
+      ver += '$wm.version.version=\''+$wm.info.version+'\'';
+      ver += '$wm.version.versionName=\''+$wm.info.versionName+'\'';
+      ver += '$wm.version.author=\''+$wm.info.author+'\'';
+      res.send(200,ver);
+   });
    app.get('/web-morpher/ui/*', function(req, res){
       var file = wm.rootSites+req.path;
       fs.stat(file, function(err, stats){
