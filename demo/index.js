@@ -48,7 +48,7 @@ $wm.loader = {
 };
 $wm.nav = {
    apply: function(){
-      var hash = $wm.core.hash.get();
+      var hash = $wm.core.nav.hash.get();
       var page = hash['page'];
       var cnt = $('#wm-page > .wm-html-padding');
       cnt.html('<div class="wm-html-info">Загрузка...</div>');
