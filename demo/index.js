@@ -1,31 +1,4 @@
-$wm = {
-   version:'0.0.0',
-   versionName:'static pre-alpha',
-   globalCached:false
-};
-$wm.hash = {
-   get: function(){
-      var hash = window.location.hash;
-      try {
-         return JSON.parse(hash.replace('#','')||'{}');
-      } catch(e) {
-         console.error('Ошибка разбора строки hash. "$wm.hash.get"');
-         return {};
-      }
-   },
-   set: function(name,val){
-      var hash = $wm.hash.get();
-      if (typeof hash !== 'object') hash = {};
-      hash[name]=val;
-      window.location.hash = '#'+JSON.stringify(hash);
-   },
-   remove: function(name){
-      var hash = $wm.hash.get();
-      if (typeof hash !== 'object') hash = {};
-      (name!==undefined)?(delete hash[name]):(hash = {});
-      window.location.hash = '#'+JSON.stringify(hash);
-   }
-};
+$wm = (typeof $wm !== 'undefined' ? $wm : {});
 $wm.path = {
    __check: function(path){
       if (path === undefined || path.search('/') === -1)
@@ -75,7 +48,7 @@ $wm.loader = {
 };
 $wm.nav = {
    apply: function(){
-      var hash = $wm.hash.get();
+      var hash = $wm.core.hash.get();
       var page = hash['page'];
       var cnt = $('#wm-page > .wm-html-padding');
       cnt.html('<div class="wm-html-info">Загрузка...</div>');
