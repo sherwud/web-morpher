@@ -1,5 +1,5 @@
 $wm = (typeof $wm !== 'undefined' ? $wm : {});
-$wm.core = {};
+$wm.core = {version:'0.0.0'};
 $wm.core.nav = {};
 $wm.core.nav.hash = {
    get: function(name){

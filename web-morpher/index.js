@@ -4,6 +4,8 @@
 /* Необходимые модули */
 var path = require('path');
 var fs = require('fs');
+/* модули wm */
+var $parser = require('./ulib/parser.js');
 /* Порт по умолчанию */
 var defaultPort = 3000;
 /* время жизни статики по умолчанию 1 год */
@@ -93,14 +95,22 @@ function wmStart(){
    //app.use(express.logger());
    //app.use(app.router);
    
-   app.get('/web-morpher/ui/*', function(req, res){
-      var file = wm.rootSites+req.path;
-      fs.stat(file, function(err, stats){
-         if (!err && stats.isFile())
-            res.sendfile(file);
-         else
-            res.send(404, 'File not found');
-      });
+   app.get('/web-morpher/:libDir/*', function(req, res, next){
+      var libDir = req.params.libDir;
+      if (libDir==='ui' || libDir==='ulib') {
+         var file = wm.rootSites+req.path;
+         fs.stat(file, function(err, stats){
+            if (!err && stats.isFile())
+               res.sendfile(file);
+            else
+               res.send(404, 'File not found');
+         });
+      } else {
+         next();
+      }
+   });
+   app.get('/t',function(req, res){
+      res.send(404, $parser.build());
    });
    switch (wm.typeSite) {
       case 1: /* Статика c ресурсами и конфигами WM */
