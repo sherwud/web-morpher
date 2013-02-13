@@ -7,11 +7,12 @@ if (typeof window !== 'undefined') {
 }
 /* Версяи парсера */
 $wm.parser.version = '0.0.0';
+$wm.parser.i=0
 /*
  * data - данные json для преобразования
  */
 $wm.parser.build = function(data){
    if (typeof data === 'undefined' || !data instanceof Object) return undefined;
-   
-   return '';
+   $wm.parser.i+=1;
+   return String($wm.parser.i);
 };

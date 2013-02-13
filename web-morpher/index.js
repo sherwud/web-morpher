@@ -4,8 +4,6 @@
 /* Необходимые модули */
 var path = require('path');
 var fs = require('fs');
-/* модули wm */
-var $parser = require('./ulib/parser.js');
 /* Порт по умолчанию */
 var defaultPort = 3000;
 /* время жизни статики по умолчанию 1 год */
@@ -81,6 +79,8 @@ function wmConstructor(params) {
       defaultPort;
 
    wm.start = wmStart;
+   
+   wm.parser = require('./ulib/parser.js');
 
    wm.express = require('express');
    wm.app = wm.express();
@@ -110,7 +110,7 @@ function wmStart(){
       }
    });
    app.get('/t',function(req, res){
-      res.send(404, $parser.build());
+      res.send(404, wm.parser.build([1]));
    });
    switch (wm.typeSite) {
       case 1: /* Статика c ресурсами и конфигами WM */
