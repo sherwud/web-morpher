@@ -23,29 +23,6 @@ $wm.path = {
       return [p.shift(),p.join('/')];
    }
 };
-$wm.loader = {
-   html: function(container,url,func){
-      $.ajax({
-         type: 'GET',
-         url: url,
-         cache: $wm.globalCached,
-         success: function(data){
-            if (typeof container === 'string')
-               container = $(container);
-            container.html(data);
-            if (typeof func === 'function') func(data);
-         },
-         error: function(data){
-            if (typeof container === 'string')
-               container = $(container);
-            container.html($('<div class="wm-html-info">'+
-               (data['status']||'404')+': '
-               +(data['statusText']||'Not Found')+'<br>'+url
-               +'</div>'));
-         }
-      }); 
-   }
-};
 $wm.nav = {
    apply: function(){
       var hash = $wm.core.nav.hash.get();
@@ -53,10 +30,10 @@ $wm.nav = {
       var cnt = $('#wm-page > .wm-html-padding');
       cnt.html('<div class="wm-html-info">Загрузка...</div>');
       if (page !== undefined) { 
-         $wm.loader.html(cnt,'html/'+page+'.html',$wm.syntaxHighlight);
+         $wm.core.loader.html(cnt,'html/'+page+'.html',$wm.syntaxHighlight);
          $wm.nav.setActiveLink(page);
       } else {
-         $wm.loader.html(cnt,'html/index.html',$wm.syntaxHighlight);
+         $wm.core.loader.html(cnt,'html/index.html',$wm.syntaxHighlight);
          $wm.nav.setActiveLink('index');
       }
       
@@ -87,7 +64,7 @@ $wm.nav = {
             if (nav.length > 0){
                nav.css('display','block');
                if (nav.text()==='')
-                  $wm.loader.html(nav,'html/'+$wm.path.dir(page)+'/menu.html',radius);
+                  $wm.core.loader.html(nav,'html/'+$wm.path.dir(page)+'/menu.html',radius);
                else radius();
             } else radius();
          } else {
@@ -105,7 +82,7 @@ $wm.nav = {
             if (nav.length > 0){
                nav.css('display','block');
                if (nav.text()==='')
-                  $wm.loader.html(nav,'html/'+root+'/menu.html',function(){
+                  $wm.core.loader.html(nav,'html/'+root+'/menu.html',function(){
                      buildMenu(root,p[1],func);
                   });
                else func();
@@ -179,8 +156,8 @@ $wm.syntaxHighlight = function(){
    });
 };
 $(window).bind('load', function(){
-   $wm.loader.html('#wm-menu-cnt','html/menu.html',function(){
-      $wm.loader.html('#wm-news','html/news/menu.html',function(){
+   $wm.core.loader.html('#wm-menu-cnt','html/menu.html',function(){
+      $wm.core.loader.html('#wm-news','html/news/menu.html',function(){
          $wm.nav.apply();
       });
    });
