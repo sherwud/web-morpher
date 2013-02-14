@@ -214,4 +214,9 @@ a.radius{
 hr {
    margin: 8px 0; 
 }
-
+.wm-slogan {
+   display: block;
+   float: left;
+   font-size: 12px;
+   margin: -4px 8px;
+}
