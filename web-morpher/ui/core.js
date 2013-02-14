@@ -2,28 +2,27 @@ $wm = (typeof $wm !== 'undefined' ? $wm : {});
 $wm.core = {version:'0.0.0'};
 $wm.core.loader = {};
 $wm.core.loader.cached = {
-   htmlcssjs:true,
+   getHTML:true,
+   
    jsonhtml:true,
    jsonmethod:false
 };
-$wm.core.loader.html = function(container,url,func){
+$wm.core.loader.getHTML = function(url,cnt,fnc,efnc){
+   if (typeof cnt === 'string') cnt = $(cnt);
+   if (typeof cnt === 'function'){
+      efnc = fnc; fnc = cnt; cnt = false;
+   }
    $.ajax({
       type: 'GET',
       url: url,
-      cache: $wm.core.loader.cached.htmlcssjs,
-      success: function(data){
-         if (typeof container === 'string')
-            container = $(container);
-         container.html(data);
-         if (typeof func === 'function') func(data);
+      cache: $wm.core.loader.cached.getHTML,
+      success: function(data){ 
+         if (cnt!==false) cnt.html(data);
+         if (typeof fnc === 'function') fnc(data);
       },
       error: function(data){
-         if (typeof container === 'string')
-            container = $(container);
-         container.html($('<div class="wm-html-info">'+
-            (data['status']||'404')+': '
-            +(data['statusText']||'Not Found')+'<br>'+url
-            +'</div>'));
+         if (cnt!==false) cnt.html(data['status']+' '+data['statusText']+': '+url);
+         if (typeof efnc === 'function') efnc(data);
       }
    }); 
 };

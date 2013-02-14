@@ -30,10 +30,10 @@ $wm.nav = {
       var cnt = $('#wm-page > .wm-html-padding');
       cnt.html('<div class="wm-html-info">Загрузка...</div>');
       if (page !== undefined) { 
-         $wm.core.loader.html(cnt,'html/'+page+'.html',$wm.syntaxHighlight);
+         $wm.core.loader.getHTML('html/'+page+'.html',cnt,$wm.syntaxHighlight);
          $wm.nav.setActiveLink(page);
       } else {
-         $wm.core.loader.html(cnt,'html/index.html',$wm.syntaxHighlight);
+         $wm.core.loader.getHTML('html/index.html',cnt,$wm.syntaxHighlight);
          $wm.nav.setActiveLink('index');
       }
       
@@ -64,7 +64,7 @@ $wm.nav = {
             if (nav.length > 0){
                nav.css('display','block');
                if (nav.text()==='')
-                  $wm.core.loader.html(nav,'html/'+$wm.path.dir(page)+'/menu.html',radius);
+                  $wm.core.loader.getHTML('html/'+$wm.path.dir(page)+'/menu.html',nav,radius);
                else radius();
             } else radius();
          } else {
@@ -82,7 +82,7 @@ $wm.nav = {
             if (nav.length > 0){
                nav.css('display','block');
                if (nav.text()==='')
-                  $wm.core.loader.html(nav,'html/'+root+'/menu.html',function(){
+                  $wm.core.loader.getHTML('html/'+root+'/menu.html',nav,function(){
                      buildMenu(root,p[1],func);
                   });
                else func();
@@ -156,8 +156,8 @@ $wm.syntaxHighlight = function(){
    });
 };
 $(window).bind('load', function(){
-   $wm.core.loader.html('#wm-menu-cnt','html/menu.html',function(){
-      $wm.core.loader.html('#wm-news','html/news/menu.html',function(){
+   $wm.core.loader.getHTML('html/menu.html','#wm-menu-cnt',function(){
+      $wm.core.loader.getHTML('html/news/menu.html','#wm-news',function(){
          $wm.nav.apply();
       });
    });
