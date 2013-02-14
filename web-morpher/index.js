@@ -79,6 +79,8 @@ function wmConstructor(params) {
       defaultPort;
 
    wm.start = wmStart;
+   
+   wm.parser = require('./ulib/parser.js');
 
    wm.express = require('express');
    wm.app = wm.express();
@@ -90,9 +92,26 @@ function wmStart(){
    var app = wm.app;
    
    
-   app.use(express.logger());
-   app.use(app.router);
+   //app.use(express.logger());
+   //app.use(app.router);
    
+   app.get('/web-morpher/:libDir/*', function(req, res, next){
+      var libDir = req.params.libDir;
+      if (libDir==='ui' || libDir==='ulib') {
+         var file = wm.rootSites+req.path;
+         fs.stat(file, function(err, stats){
+            if (!err && stats.isFile())
+               res.sendfile(file);
+            else
+               res.send(404, 'File not found');
+         });
+      } else {
+         next();
+      }
+   });
+   app.get('/t',function(req, res){
+      res.send(404, wm.parser.build([1]));
+   });
    switch (wm.typeSite) {
       case 1: /* Статика c ресурсами и конфигами WM */
          __start1(wm); break;

@@ -78,6 +78,9 @@ Web Morpher
   - `docs/ext/jquery.js` >= 1.8.3 ([jquery.com](http://jquery.com/))
   - `docs/ext/bootstrap/` >= 2.2.2 ([twitter bootstrap](http://twitter.github.com/bootstrap/))
 
+#Заметки
+  - Попробовать ([AngularJS](http://angularjs.org/))
+
 -
 
 Copyright 2013 Dr@KoN
