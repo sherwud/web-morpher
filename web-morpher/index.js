@@ -109,8 +109,8 @@ function wmStart(){
          next();
       }
    });
-   app.get('/t',function(req, res){
-      res.send(404, wm.parser.build([1]));
+   app.get('/t/:file',function(req, res){
+      wm.parser.build([req.params.file],res);
    });
    switch (wm.typeSite) {
       case 1: /* Статика c ресурсами и конфигами WM */

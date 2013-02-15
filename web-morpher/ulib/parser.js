@@ -3,16 +3,18 @@ if (typeof window !== 'undefined') {
    $wm.parser = {};
 } else {
    $wm.parser = exports = module.exports;
-   $wm.loder = require('../lib/core.js');
+   $wm.loder = require('../lib/parserLoder.js');
 }
 /* Версяи парсера */
 $wm.parser.version = '0.0.0';
-$wm.parser.i=0
 /*
  * data - данные json для преобразования
+ * res - контейнер для ответа
+ * 
  */
-$wm.parser.build = function(data){
+$wm.parser.build = function(data,res){
    if (typeof data === 'undefined' || !data instanceof Object) return undefined;
-   $wm.parser.i+=1;
-   return String($wm.parser.i);
+   $wm.loder.getJSON(data[0],function(json){
+      res.send(json);
+   });
 };
