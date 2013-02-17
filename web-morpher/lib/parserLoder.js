@@ -2,6 +2,7 @@ var $loder = exports = module.exports;
 var fs = require('fs');
 var path = require('path');
 $loder.getJSON = function(name,callback){
+   /* добавить типы и загрузку из контролов и страниц */
    var fName = path.join(__dirname,'../ui/controls/',
       path.normalize(name)+'.json');
    fs.stat(fName, function(err, stats){
