@@ -88,5 +88,6 @@ function wmStart(){
    wm.core.start(wm);
    wm.app.listen(wm.port);
    console.log('Сайт: '+wm.pathSite);
+   console.log('Тип сайта: '+wm.typeSite);
    console.log('Запущен на порту: '+wm.port);
 }

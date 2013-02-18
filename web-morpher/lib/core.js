@@ -6,7 +6,14 @@ var lifetimeStatic = 31557600000;
 $core.start = function(wm){
    var express = wm.express;
    var app = wm.app;
-   var wmStatic = function(){
+   var wmParser = function(){
+      /*тестирование*/
+      app.get('/t/:file',function(req, res){
+         wm.parser.build([req.params.file],res);
+      });
+      /**/
+   };
+   var wmUILIB = function(){
       app.get('/web-morpher/:libDir/*', function(req, res, next){
          var libDir = req.params.libDir;
          if (libDir==='ui' || libDir==='ulib') {
@@ -31,15 +38,15 @@ $core.start = function(wm){
       });
    };
    switch (wm.typeSite) {
-      case 1: /* Статика c ресурсами и конфигами WM */
-         wmStatic();
+      case 1: /* Статика */
+         wmUILIB();
          wmInfo();
-      break;    
+      break;
+      case 2: /* Динамика */
+         wmUILIB();
+         wmParser();
+         wmInfo();
+      break;
    }
-   /*тестирование*/
-      app.get('/t/:file',function(req, res){
-         wm.parser.build([req.params.file],res);
-      });
-   /**/
    app.use(express.static(wm.pathSite, { maxAge: lifetimeStatic }));
 };
