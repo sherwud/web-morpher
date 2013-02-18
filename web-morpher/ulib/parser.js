@@ -14,6 +14,7 @@ $wm.parser.version = '0.0.0';
  */
 $wm.parser.build = function(data,res){
    if (typeof data === 'undefined' || !data instanceof Object) return undefined;
+   
    $wm.loder.getJSON(data[0],function(json){
       res.send(json);
    });

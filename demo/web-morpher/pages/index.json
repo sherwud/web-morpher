@@ -1,0 +1,6 @@
+{
+   "body": "{{html}}",
+   "title":"Web Morpher",
+   "script":["web-morpher/ui/ext/jquery.js"],
+   "css":["web-morpher/ui/ext/bootstrap/css/bootstrap.min.css"]
+}

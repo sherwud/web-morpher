@@ -1,4 +1,4 @@
 [
-   ["jquery.js","ui\ext\jquery.js"],
-   ["bootstrap","ui\ext\bootstrap\"]
+   ["jquery.js","ui/ext/jquery.js"],
+   ["bootstrap","ui/ext/bootstrap/"]
 ]

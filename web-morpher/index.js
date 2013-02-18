@@ -6,8 +6,6 @@ var path = require('path');
 var fs = require('fs');
 /* Порт по умолчанию */
 var defaultPort = 3000;
-/* время жизни статики по умолчанию 1 год */
-var lifetimeStatic = 31557600000;
 /* Конструктор */
 var $wm = exports = module.exports = wmConstructor;
 /* парсинг параметров запуска */
@@ -77,62 +75,18 @@ function wmConstructor(params) {
       params.port?params.port:
       localConfigs.port?localConfigs.port:
       defaultPort;
-
    wm.start = wmStart;
-   
+   wm.core = require('./lib/core.js')
    wm.parser = require('./ulib/parser.js');
-
+   wm.info = $wm.info;
    wm.express = require('express');
    wm.app = wm.express();
    return wm;
 }
 function wmStart(){
    var wm = this;
-   var express = wm.express;
-   var app = wm.app;
-   
-   
-   //app.use(express.logger());
-   //app.use(app.router);
-   
-   app.get('/web-morpher/:libDir/*', function(req, res, next){
-      var libDir = req.params.libDir;
-      if (libDir==='ui' || libDir==='ulib') {
-         var file = wm.rootSites+req.path;
-         fs.stat(file, function(err, stats){
-            if (!err && stats.isFile())
-               res.sendfile(file);
-            else
-               res.send(404, 'File not found');
-         });
-      } else {
-         next();
-      }
-   });
-   app.get('/t/:file',function(req, res){
-      wm.parser.build([req.params.file],res);
-   });
-   switch (wm.typeSite) {
-      case 1: /* Статика c ресурсами и конфигами WM */
-         __start1(wm); break;
-      case 0: /* Статика без ресурсов и конфигов WM */
-      default : __start0(wm);
-   }
-   
-   app.listen(wm.port);
+   wm.core.start(wm);
+   wm.app.listen(wm.port);
    console.log('Сайт: '+wm.pathSite);
    console.log('Запущен на порту: '+wm.port);
-}
-function __start0(wm) {
-   var express = wm.express;
-   var app = wm.app;
-   app.use(express.static(wm.pathSite, { maxAge: lifetimeStatic }));
-}
-function __start1(wm) {
-   var express = wm.express;
-   var app = wm.app;
-   app.get('/web-morpher/*', function(req, res){
-      res.send($wm.info);
-   });
-   app.use(express.static(wm.pathSite, { maxAge: lifetimeStatic }));
 }
