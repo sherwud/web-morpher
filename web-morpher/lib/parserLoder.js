@@ -9,6 +9,11 @@ $loder.getJSON = function(name,callback){
       if (!err && stats.isFile()){
          fs.readFile(fName,'utf-8', function (err, data) {
             if (!err){
+               try {
+                  data = JSON.parse(data);
+               } catch (e){
+                  data = {};
+               }
                callback(data);
             } else {
                callback({});

@@ -12,10 +12,20 @@ $wm.parser.version = '0.0.0';
  * res - контейнер для ответа
  * 
  */
-$wm.parser.build = function(data,res){
+$wm.parser.build = function(data,res,html){
    if (typeof data === 'undefined' || !data instanceof Object) return undefined;
+   if (typeof data.body !== 'string') return undefined;
+   var reg = /{(\w*){(\w+)}}/;
+   if (typeof html !== 'string') {
+      html = data.body;
+   }
+   reg.exec(data.body);
+   data.body = data.body.replace(reg,'1 ok')
    
-   $wm.loder.getJSON(data[0],function(json){
+   
+   res.send(html);
+   
+   $wm.loder.getJSON(data,function(json){
       res.send(json);
    });
 };

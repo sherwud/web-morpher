@@ -6,13 +6,6 @@ var lifetimeStatic = 31557600000;
 $core.start = function(wm){
    var express = wm.express;
    var app = wm.app;
-   var wmParser = function(){
-      /*тестирование*/
-      app.get('/t/:file',function(req, res){
-         wm.parser.build([req.params.file],res);
-      });
-      /**/
-   };
    var wmUILIB = function(){
       app.get('/web-morpher/:libDir/*', function(req, res, next){
          var libDir = req.params.libDir;
@@ -22,10 +15,46 @@ $core.start = function(wm){
                if (!err && stats.isFile())
                   res.sendfile(file);
                else
-                  res.send(404, 'File not found');
+                  res.send(404, 'Not found');
             });
          } else {
             next();
+         }
+      });
+   };
+   var wmParser = function(){
+      app.get('/*',function(req, res, next){
+         var file = req.path;
+         if (file[file.length-1] === '/') file += 'index.html';
+         var extname = path.extname(file);
+         if (extname === '') file += extname = '.html';
+         switch (extname) {
+            case '.html':
+               var jsonFile = path.join(
+                  wm.pathSite,
+                  'web-morpher','pages',
+                  path.dirname(file),
+                  path.basename(file,extname)+'.json'
+               );
+               fs.stat(jsonFile, function(err, stats){
+                  if (!err && stats.isFile())
+                     fs.readFile(jsonFile,'utf-8', function (err, data) {
+                        if (!err){
+                           try {
+                              data = JSON.parse(data);
+                           } catch (e){
+                              data = {};
+                           }
+                           wm.parser.build(data,res);
+                        } else {
+                           next();
+                        }
+                     });
+                  else
+                     next();
+               });
+            break;
+            default: next();
          }
       });
    };
@@ -48,5 +77,18 @@ $core.start = function(wm){
          wmInfo();
       break;
    }
+   app.get('/*',function(req, res, next){
+      var file = req.path;
+      if (file[file.length-1] === '/') file += 'index.html';
+      var extname = path.extname(file);
+      if (extname === '') file += extname = '.html';
+      file = path.join(wm.pathSite,file);
+      fs.stat(file, function(err, stats){
+         if (!err && stats.isFile())
+            next();
+         else
+            res.send(404, 'Not found');
+      });
+   });
    app.use(express.static(wm.pathSite, { maxAge: lifetimeStatic }));
 };
