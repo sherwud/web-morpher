@@ -34,7 +34,7 @@ $core.start = function(){
                wm.parser.build.call(wm,file,function(e,data){
                   if (e) {
                      console.log(e);
-                     res.send(500);
+                     res.send(e.HTTPCODE||500);
                   } else {
                      res.send(200,data);
                   }

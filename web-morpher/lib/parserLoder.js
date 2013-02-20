@@ -7,7 +7,11 @@ function readFile(file,callback){
          fs.readFile(file,'utf-8', function (e, data) {
             if (!e){ callback(0,data); } else { callback(e); }
          });
-      else callback(e||(file+' не является файлом'));
+      else {
+         e = e || {text:file+' не является файлом'};
+         e.HTTPCODE = 404;
+         callback(e);
+      }
    });
 };
 $loder.getPage = function(file,callback){
