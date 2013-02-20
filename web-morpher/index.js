@@ -85,7 +85,7 @@ function wmConstructor(params) {
 }
 function wmStart(){
    var wm = this;
-   wm.core.start(wm);
+   wm.core.start.call(wm);
    wm.app.listen(wm.port);
    console.log('Сайт: '+wm.pathSite);
    console.log('Тип сайта: '+wm.typeSite);

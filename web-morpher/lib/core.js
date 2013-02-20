@@ -3,7 +3,8 @@ var path = require('path');
 var fs = require('fs');
 /* время жизни статики по умолчанию 1 год */
 var lifetimeStatic = 31557600000;
-$core.start = function(wm){
+$core.start = function(){
+   var wm = this;
    var express = wm.express;
    var app = wm.app;
    var wmUILIB = function(){
@@ -15,7 +16,7 @@ $core.start = function(wm){
                if (!err && stats.isFile())
                   res.sendfile(file);
                else
-                  res.send(404, 'Not found');
+                  res.send(404);
             });
          } else {
             next();
@@ -30,28 +31,13 @@ $core.start = function(wm){
          if (extname === '') file += extname = '.html';
          switch (extname) {
             case '.html':
-               var jsonFile = path.join(
-                  wm.pathSite,
-                  'web-morpher','pages',
-                  path.dirname(file),
-                  path.basename(file,extname)+'.json'
-               );
-               fs.stat(jsonFile, function(err, stats){
-                  if (!err && stats.isFile())
-                     fs.readFile(jsonFile,'utf-8', function (err, data) {
-                        if (!err){
-                           try {
-                              data = JSON.parse(data);
-                           } catch (e){
-                              data = {};
-                           }
-                           wm.parser.build(data,res);
-                        } else {
-                           next();
-                        }
-                     });
-                  else
-                     next();
+               wm.parser.build.call(wm,file,function(e,data){
+                  if (e) {
+                     console.log(e);
+                     res.send(500);
+                  } else {
+                     res.send(200,data);
+                  }
                });
             break;
             default: next();
