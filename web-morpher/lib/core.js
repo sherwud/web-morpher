@@ -29,9 +29,11 @@ $core.start = function(){
          if (file[file.length-1] === '/') file += 'index.html';
          var extname = path.extname(file);
          if (extname === '') file += extname = '.html';
+         var params = {};
          switch (extname) {
             case '.html':
-               wm.parser.build.call(wm,file,function(e,data){
+               params.useTemplate = true;
+               wm.parser.build.call(wm,file,params,function(e,data){
                   if (e) {
                      console.log(e);
                      res.send(e.HTTPCODE||500);

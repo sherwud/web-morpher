@@ -3,9 +3,10 @@
       "cached":true,
       "template":{
          "name":"main",
-         "type":"system"
+         "type":"system",
+         "title":"Web Morpher"
       }
    },
-   "body": "hello world",
-   "title":"Web Morpher"
+   "body": "hello world {{name}}",
+   "name": "123"
 }

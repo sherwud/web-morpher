@@ -166,3 +166,18 @@ $(window).bind('load', function(){
 $(window).bind('hashchange', function(){
    $wm.nav.apply();
 });
+$wm.test = {
+   "config":{
+      "cached":true,
+      "template":{
+         "name":"main",
+         "type":"system",
+         "title":"Web Morpher"
+      }
+   },
+   "body": "{{qqq}}hello world name,{{name}}",
+   "name": "name1+{{name1}}",
+   "name1": "name2-{{name2}}",
+   "name2": "end",
+   "qqq":"start:"
+};

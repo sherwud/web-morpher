@@ -7,10 +7,10 @@
       {{script}}\
       {{style}}\
    </head>\
-   <body>{{page}}<body>\
+   <body>{%page%}<body>\
 </html>",
    "script":"<script type=\"text/javascript\" src=\"{{scripts}}\"></script>",
    "scripts":["web-morpher/ui/ext/jquery.js"],
    "style":"<link rel=\"stylesheet\" href=\"{{styles}}\"/>",
    "styles":["web-morpher/ui/ext/bootstrap/css/bootstrap.min.css"]
-}
+   }
