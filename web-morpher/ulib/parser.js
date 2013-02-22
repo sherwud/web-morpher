@@ -24,53 +24,32 @@ $wm.parser.build = function(path,params,callback){
       else {
          if (typeof data === 'string') callback(0,data);
          else { /* Парсинг страницы */
-            $wm.parser.buildPage(data,function(e,data){
+            $wm.parser.buildPage(data,function(e,html){
                if (e) { callback(e); }
                else {
-                  callback(0,data);
+                  var template = data.config.template;
+                  if (params.useTemplate && typeof template === 'object'){
+                     $wm.parser.setTemplate(template,html,callback);
+                  } else callback(0,html);
                }
             });
-            
-            /*
-            var template = data.config.template;
-            if (params.useTemplate && typeof template === 'object') {
-               $wm.parser.buildTemplate(template,function(e,data){
-                  if (e) { callback(e); }
-                  else {
-                     callback(0,data);
-                  }
-               })
-            } else {
-               callback('недописанно =)');
-            }
-            */
          }
       }
    });
 };
-$wm.parser.buildTemplate = function(data,callback){
-   if (typeof data.name !== 'string' || typeof callback !== 'function') {
-      callback('Ошибка вызова метода: parser.buildTemplate');
-      return;
-   }
-   $wm.parser.loder.getPage.call(this,path,function(e,data){
-      if (e) { callback(e); }
-      else {
-         if (typeof data === 'string') callback(0,data);
-         else { /* Парсинг страницы */
-            callback(0,data);
-         }
-      }
-   });
+/* Встраивает шаблон в страницу
+ * data - данные для шаблона из страницы
+ * html - html-код построенной страницы
+ * callback - функция для передачи результатов
+ */
+$wm.parser.setTemplate = function(data,html,callback){
+   callback(0,'С ШАБЛОНОМ "'+data.name+'"'+html)
 };
-
-
-/* Строит страницу
+/* Строит страницу или шаблон
  * data - данные json для преобразования
- * res - контейнер для ответа
+ * callback - функция для передачи результатов
  * 
  * Тестировать в интерфейсе:
- * 
  * $wm.parser.buildPage($wm.test,function(e,d){ console.log(e||d); })
  * 
  */
@@ -83,55 +62,27 @@ $wm.parser.buildPage = function(data,callback){
    if (typeof data.body !== 'string') 
       callback('parser.buildPage: data.body не является string');
    var reg = /{{(\w+)}}/;
-   var loopsChecker = [];
-   var replace = function (html,callback) {
-      var key = reg.exec(html);
-      if (key === null) { callback(0,html); }
+   var regAll = /{{(\w+)}}/g;
+   var replace = function (callback) {
+      var key = reg.exec(data.body);
+      if (key === null) { callback(0,data.body); }
       else {
-         if (loopsChecker.indexOf(key[1]) === -1) {loopsChecker.push(key[1])}
-         else { callback('parser.buildPage: цикл в ключе: '+key[1]); return; }
          var val = data[key[1]];
          switch (typeof val) {
             case 'string':
-               
-               replace(val,function(e,rhtml){
-                  if (e) { callback(e); }
-                  else {
-                     val = val.replace(reg,rhtml)
-                     callback(0,html.replace(reg,rhtml));
-                  }
-               });
-               
+               if (val.search(reg) !== -1)
+                  data[key[1]] = val = val.replace(regAll,'');
+               data.body = data.body.replace(reg,val);
+               replace(callback);
             break;
-            default: callback(0,'');
+            default:
+               data.body = data.body.replace(reg,'');
+               replace(callback);
          }
       }
    };
-   replace(data.body,function(e,html){
+   replace(function(e,html){
       if (e) { callback(e); }
       else { callback(0,html); }
    });
-   
-   
-   
-   /*
-  
-                 replace(val,function(e,rhtml){
-                  if (e) { callback(e); }
-                  else {
-                     html = html.replace(reg,rhtml);
-                     replace(html,function(e,rhtml){
-                        if (e) { callback(e); }
-                        else { callback(0,rhtml); }
-                     });
-                  }
-               });
-    */
-   
-   
-   //callback(0,html);
-   
-
-   //reg.exec(data.body);
-   //data.body = data.body.replace(reg,'1 ok')
 };

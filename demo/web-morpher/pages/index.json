@@ -7,6 +7,7 @@
          "title":"Web Morpher"
       }
    },
-   "body": "hello world {{name}}",
-   "name": "123"
+   "body": "hello {{name}}! {{hint}}",
+   "name": "123",
+   "hint": "hint"
 }

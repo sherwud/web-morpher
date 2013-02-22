@@ -176,8 +176,6 @@ $wm.test = {
       }
    },
    "body": "{{qqq}}hello world name,{{name}}",
-   "name": "name1+{{name1}}",
-   "name1": "name2-{{name2}}",
-   "name2": "end",
+   "name": "name1 sdfsd fsdf zcvbsfb zdf",
    "qqq":"start:"
 };
