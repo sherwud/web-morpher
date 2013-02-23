@@ -1,0 +1,13 @@
+{
+   "config":{
+      "cached":true,
+      "template":{
+         "name":"main",
+         "type":"system",
+         "title":"Web Morpher"
+      }
+   },
+   "body": "hello {{name}}! {{hint}}",
+   "name": "123",
+   "hint": "hint"
+}
