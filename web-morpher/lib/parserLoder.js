@@ -49,10 +49,10 @@ $loder.getPage = function(file,callback){
    
 };
 /* Читает шаблон 
-* так же, плюс
 * params - параметры для шаблона из страницы
+* callback - функция для передачи результатов
 */
-$loder.getTemplate = function(file,params,callback){
+$loder.getTemplate = function(params,callback){
    
 };
 /* > - */
