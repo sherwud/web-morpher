@@ -14,6 +14,13 @@ function readFile(file,callback){
       }
    });
 };
+/* Читает файл страцы из json, или из html, если страница кеширована
+* file - путь к странице
+* callback - функция для передачи результатов
+* callback(e,data)
+* e - ошибка, 0 если нет ошибки
+* data - данные для отправки
+*/
 $loder.getPage = function(file,callback){
    var wm = this;
    var htmlFile = path.join(wm.pathSite,file);
@@ -39,6 +46,13 @@ $loder.getPage = function(file,callback){
          readJSON();
       }
    });
+   
+};
+/* Читает шаблон 
+* так же, плюс
+* params - параметры для шаблона из страницы
+*/
+$loder.getTemplate = function(file,params,callback){
    
 };
 /* > - */
