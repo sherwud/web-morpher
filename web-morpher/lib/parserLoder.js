@@ -14,6 +14,18 @@ function readFile(file,callback){
       }
    });
 };
+function readJSON(file,callback){
+   readFile(file,function(e, data){
+      if (!e){
+         try {
+            /*для возможности хранения многострочного текста параметрах*/
+            data = data.replace(/\\\n/g,'');
+            callback(0,JSON.parse(data));
+         }
+         catch (e){ callback('ERROR: JSON.parse - '+file,{}); }
+      } else { callback(e); }
+   });      
+};
 /* Читает файл страцы из json, или из html, если страница кеширована
 * file - путь к странице
 * callback - функция для передачи результатов
@@ -30,52 +42,37 @@ $loder.getPage = function(file,callback){
       path.dirname(file),
       path.basename(file,path.extname(file))+'.json'
    );
-   var readJSON = function(){
-      readFile(jsonFile,function(e, data){
-         if (!e){
-            try { callback(0,JSON.parse(data)); }
-            catch (e){ callback('ERROR: JSON.parse',{}); }
-         } else { callback(e); }
-      });      
-   };
    readFile(htmlFile,function(e, data){
       if (!e){
-         /* добавить сравнение хеша из JSON и хранилища хешей страниц  */
+         /* добавить сравнение хеша из JSON и хранилища хешей страниц */
          callback(0,data);
       } else {
-         readJSON();
+         readJSON(jsonFile,callback);
       }
    });
-   
 };
 /* Читает шаблон 
 * params - параметры для шаблона из страницы
 * callback - функция для передачи результатов
 */
 $loder.getTemplate = function(params,callback){
-   
-};
-/* > - */
-$loder.getJSON = function(name,callback){
-   /* добавить типы и загрузку из контролов и страниц */
-   var fName = path.join(__dirname,'../ui/controls/',
-      path.normalize(name)+'.json');
-   fs.stat(fName, function(err, stats){
-      if (!err && stats.isFile()){
-         fs.readFile(fName,'utf-8', function (err, data) {
-            if (!err){
-               try {
-                  data = JSON.parse(data);
-               } catch (e){
-                  data = {};
-               }
-               callback(data);
-            } else {
-               callback({});
-            }
-          });
+   var wm = this;
+   var htmlFile = path.join(
+      wm.rootSites,
+      'web-morpher','interface','~cache','templates'
+      ,params.name+'.html'
+   );
+   var jsonFile = path.join(
+      wm.rootSites,
+      'web-morpher','interface','templates'
+      ,params.name+'.json'
+   );
+   readFile(htmlFile,function(e, data){
+      if (!e){
+         /* добавить сравнение хеша из JSON и хранилища хешей страниц */
+         callback(0,data);
       } else {
-         callback({});
+         readJSON(jsonFile,callback);
       }
    });
 };

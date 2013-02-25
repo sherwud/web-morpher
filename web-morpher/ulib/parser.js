@@ -15,7 +15,7 @@ $wm.parser.version = '0.0.0';
  *    data - данные для отправки
  */
 $wm.parser.build = function(path,params,callback){
-   if (typeof path !== 'string' || typeof callback !== 'function') {
+   if (typeof path !== 'string' || typeof callback !== 'function'){
       callback('Ошибка вызова метода: parser.build');
       return;
    }
@@ -23,7 +23,7 @@ $wm.parser.build = function(path,params,callback){
       if (e) { callback(e); }
       else {
          if (typeof data === 'string') callback(0,data);
-         else { /* Парсинг страницы */
+         else {
             $wm.parser.buildPage(data,function(e,html){
                if (e) { callback(e); }
                else {
@@ -46,7 +46,15 @@ $wm.parser.setTemplate = function(params,html,callback){
    $wm.parser.loder.getTemplate.call(this,params,function(e,data){
       if (e) { callback(e); }
       else {
-         callback(0,'С ШАБЛОНОМ "'+params.name+'"'+html)
+         if (typeof data === 'string') callback(0,data.replace(/{\$page\$}/,html));
+         else {
+            $wm.parser.buildPage(data,function(e,data){
+               if (e) { callback(e); }
+               else {
+                  callback(0,data.replace(/{\$page\$}/,html));
+               }
+            });
+         }
       }
    });
 };
