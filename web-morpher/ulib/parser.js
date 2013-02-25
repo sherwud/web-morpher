@@ -38,12 +38,17 @@ $wm.parser.build = function(path,params,callback){
    });
 };
 /* Встраивает шаблон в страницу
- * data - данные для шаблона из страницы
+ * params - данные для шаблона из страницы
  * html - html-код построенной страницы
  * callback - функция для передачи результатов
  */
-$wm.parser.setTemplate = function(data,html,callback){
-   callback(0,'С ШАБЛОНОМ "'+data.name+'"'+html)
+$wm.parser.setTemplate = function(params,html,callback){
+   $wm.parser.loder.getTemplate.call(this,params,function(e,data){
+      if (e) { callback(e); }
+      else {
+         callback(0,'С ШАБЛОНОМ "'+params.name+'"'+html)
+      }
+   });
 };
 /* Строит страницу или шаблон
  * data - данные json для преобразования
