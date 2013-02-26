@@ -30,6 +30,7 @@ $core.start = function(){
          var extname = path.extname(file);
          if (extname === '') file += extname = '.html';
          var params = {};
+         params.inputParams = req.query;
          switch (extname) {
             case '.html':
                params.useTemplate = true;

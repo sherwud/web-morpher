@@ -4,10 +4,23 @@
       "template":{
          "name":"main",
          "type":"system",
-         "title":"Web Morpher"
+         "input":{
+            "title":"Web Morpher"
+         }
       }
    },
-   "body": "<h3>hello {{name}}! {{hint}}</h3>",
-   "name": "123",
-   "hint": "hint"
+   "body":"{{trololo}}<h3>hello {{name}}! {{hint}}</h3>{{testInput}}\n\
+   <br>{{testInputNumber}}",
+   "name":"123",
+   "hint":"hint",
+   "testInput":{
+      "format":"input",
+      "type":"text",
+      "name":"t"
+   },
+   "testInputNumber":{
+      "format":"input",
+      "type":"number",
+      "name":"t"
+   }
 }
