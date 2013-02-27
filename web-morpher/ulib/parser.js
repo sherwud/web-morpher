@@ -20,7 +20,7 @@ $wm.parser.build = function(path,params,callback){
       callback('Ошибка вызова метода: parser.build');
       return;
    }
-   $wm.parser.loder.getPage.call(this,path,function(e,data){
+   $wm.parser.loder.getPage.call(this,path,function(e,data,cachePage){
       if (e) { callback(e); }
       else {
          if (typeof data === 'string') callback(0,data);
@@ -31,8 +31,19 @@ $wm.parser.build = function(path,params,callback){
                else {
                   var template = data.config.template;
                   if (params.useTemplate && typeof template === 'object'){
-                     $wm.parser.setTemplate(template,inputParams,html,callback);
-                  } else callback(0,html);
+                     $wm.parser.setTemplate(template,inputParams,html,
+                        function(e,data){
+                           if (e) { callback(e); }
+                           else {
+                              cachePage(data,'get');
+                              callback(0,data);
+                           }
+                        }
+                     );
+                  } else {
+                     cachePage(html,'post');
+                     callback(0,html);
+                  }
                }
             });
          }
