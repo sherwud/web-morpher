@@ -23,29 +23,27 @@ $core.start = function(){
          }
       });
    };
-   var wmParser = function(){
-      app.get('/*',function(req, res, next){
-         var file = req.path;
-         if (file[file.length-1] === '/') file += 'index.html';
-         var extname = path.extname(file);
-         if (extname === '') file += extname = '.html';
-         var params = {};
-         params.inputParams = req.query;
-         switch (extname) {
-            case '.html':
-               params.useTemplate = true;
-               wm.parser.build.call(wm,file,params,function(e,data){
-                  if (e) {
-                     console.log(e);
-                     res.send(e.HTTPCODE||500);
-                  } else {
-                     res.send(200,data);
-                  }
-               });
-            break;
-            default: next();
-         }
-      });
+   var wmParser = function(req, res, next){
+      var file = req.path;
+      if (file[file.length-1] === '/') file += 'index.html';
+      var extname = path.extname(file);
+      if (extname === '') file += extname = '.html';
+      var params = {};
+      params.inputParams = req.query;
+      switch (extname) {
+         case '.html':
+         params.httpMethod = req.route.method;
+            wm.parser.build.call(wm,file,params,function(e,data){
+               if (e) {
+                  res.send(e.HTTPCODE||500);
+                  console.log(e);
+               } else {
+                  res.send(200,data);
+               }
+            });
+         break;
+         default: next();
+      }
    };
    var wmInfo = function(){
       app.get('/web-morpher', function(req, res){
@@ -62,7 +60,8 @@ $core.start = function(){
       break;
       case 2: /* Динамика */
          wmUILIB();
-         wmParser();
+         app.get('/*',wmParser);
+         app.post('/*',wmParser);
          wmInfo();
       break;
    }
