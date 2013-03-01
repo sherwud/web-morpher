@@ -1,6 +1,6 @@
 *.log
 *local*.bat
 /ext/
-/demo/ext/
+/demo/web-morpher/~cache/
 /docs/ext/
 web-morpher/ui/ext/
