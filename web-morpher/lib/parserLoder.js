@@ -111,7 +111,7 @@ $loder.getPage = function(file,httpMethod,callback){
          htmlFile:htmlFile,
          httpMethod:httpMethod
       });
-   }
+   };
    readFile(htmlFile,function(e,data){
       if (!e){
          /* добавить сравнение хеша из JSON и хранилища хешей страниц */
