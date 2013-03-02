@@ -66,7 +66,7 @@ $wm.parser.setTemplate = function(params,inputParams,html,callback){
          else {
             if (typeof params.input === 'object')
                for (var i in params.input){
-                  inputParams[i] = params.input[i];  
+                  inputParams[i] = params.input[i];
                }
             $wm.parser.buildPage(data,inputParams,function(e,data){
                if (e) { callback(e); }

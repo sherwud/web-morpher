@@ -8,11 +8,11 @@ $core.start = function(){
    var express = wm.express;
    var app = wm.app;
    var wmUILIB = function(){
-      app.get('/web-morpher/:libDir/*', function(req, res, next){
+      app.get('/web-morpher/:libDir/*',function(req,res,next){
          var libDir = req.params.libDir;
-         if (libDir==='ui' || libDir==='ulib') {
+         if (libDir==='ui' || libDir==='ulib'){
             var file = path.join(wm.rootSites,req.path);
-            fs.stat(file, function(err, stats){
+            fs.stat(file,function(err,stats){
                if (!err && stats.isFile())
                   res.sendfile(file);
                else
@@ -23,7 +23,7 @@ $core.start = function(){
          }
       });
    };
-   var wmParser = function(req, res, next){
+   var wmParser = function(req,res,next){
       var file = req.path;
       if (file[file.length-1] === '/') file += 'index.html';
       var extname = path.extname(file);
@@ -34,7 +34,7 @@ $core.start = function(){
          case '.html':
          params.httpMethod = req.route.method;
             wm.parser.build.call(wm,file,params,function(e,data){
-               if (e) {
+               if (e){
                   res.send(e.HTTPCODE||500);
                   console.log(e);
                } else {
@@ -46,14 +46,14 @@ $core.start = function(){
       }
    };
    var wmInfo = function(){
-      app.get('/web-morpher', function(req, res){
+      app.get('/web-morpher',function(req,res){
          res.send(wm.info);
       });
-      app.get('/web-morpher/*', function(req, res){
+      app.get('/web-morpher/*',function(req,res){
          res.send(wm.info);
       });
    };
-   switch (wm.typeSite) {
+   switch (wm.typeSite){
       case 1: /* Статика */
          wmUILIB();
          wmInfo();
@@ -65,18 +65,18 @@ $core.start = function(){
          wmInfo();
       break;
    }
-   app.get('/*',function(req, res, next){
+   app.get('/*',function(req,res,next){
       var file = req.path;
       if (file[file.length-1] === '/') file += 'index.html';
       var extname = path.extname(file);
       if (extname === '') file += extname = '.html';
       file = path.join(wm.pathSite,file);
-      fs.stat(file, function(err, stats){
+      fs.stat(file,function(err,stats){
          if (!err && stats.isFile())
             next();
          else
-            res.send(404, 'Not found');
+            res.send(404,'Not found');
       });
    });
-   app.use(express.static(wm.pathSite, { maxAge: lifetimeStatic }));
+   app.use(express.static(wm.pathSite,{ maxAge: lifetimeStatic }));
 };
