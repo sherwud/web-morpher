@@ -2,8 +2,9 @@ var $loder = exports = module.exports;
 var fs = require('fs');
 var path = require('path');
 var crypto = require('crypto');
-var hash = crypto.createHash('sha256');
+var cache = {};
 function getHash(data){
+   var hash = crypto.createHash('sha256');
    hash.update(data,'utf8');
    return hash.digest('hex');
 }
@@ -27,21 +28,23 @@ function readFile(file,callback){
       }
    });
 };
-function readJSON(file,callback,cachePage){
-   readFile(file,function(e,data){
-      if (!e){
-         try {
-            /*для возможности хранения многострочного текста параметрах*/
-            data = data.replace(/\\\n/g,'');
-            var parse = JSON.parse(data);
-         } catch(e){
-            e = {e:e};
-            e.metodmessage = 'ERROR: JSON.parse - '+file;
-            callback('ERROR: JSON.parse - '+file);
-            return;
-         }
-         callback(0,parse,cachePage);
-      } else { callback(e); }
+function parseJSON(data,callback){
+   try {
+      /*для возможности хранения многострочного текста параметрах*/
+      data = data.replace(/\\\n/g,'');
+      var parse = JSON.parse(data);
+      callback(0,parse);
+   } catch(e){
+      e = {e:e};
+      e.metodmessage = 'ERROR: JSON.parse - '+data;
+      callback(e);
+   }
+}
+function readJSON(file,callback,jsonText){
+   if (typeof jsonText === 'string') parseJSON(jsonText,callback);
+   else readFile(file,function(e,data){
+      if (e){ callback(e); }
+      else { parseJSON(data,callback); }
    });      
 };
 function mkdir(dir,callback){
@@ -70,18 +73,30 @@ function writeFile(file,data){
 }
 /* Кеширует готовые html файлы
  * html - текст html файла
- * params - параметры файла
+ * htmlFile - путь к html файлу
+ * file - путь запрошенный клиентом
+ * hash - хеш от json файла страницы
  */
-$loder.cachePage = function(html,params){
-   console.log(params.htmlFile);
-   console.log(getHash(html));
-   writeFile(params.htmlFile,html);
+$loder.cachePage = function(html,htmlFile,file,hash){
+   cache[file]=hash;
+   console.log(file+': '+hash);
+   writeFile(htmlFile,html);
 };
 /* Проверяет актуальность кешированного файла
- * params - параметры файла
+ * file - запрашиваемый файла
+ * jsonFile - путь к json представлению файла
+ * callback - функция для передачи результатов
  */
-$loder.checkCache = function(params){
-
+$loder.checkCache = function(file,jsonFile,callback){
+   readFile(jsonFile,function(e,data){
+      if (e){ callback(e); }
+      else {
+         var hash = getHash(data)
+         var cached = false;
+         if (cache[file] === getHash(data)) cached = true;
+         callback(0,cached,data,hash);
+      }
+   });
 };
 /* Читает файл страцы из json, или из html, если страница кеширована
 * file - путь к странице
@@ -105,19 +120,25 @@ $loder.getPage = function(file,httpMethod,callback){
       path.dirname(file),
       path.basename(file,path.extname(file))+'.json'
    );
-   var cachePage = function(html){
-      $loder.cachePage(html,{
-         file:file,
-         htmlFile:htmlFile,
-         httpMethod:httpMethod
-      });
+   var JSONcallback = function(hash){
+      return function(e,data){
+         if (e){ callback(e); }
+         else {
+            callback(0,data,function(hmtl){
+               $loder.cachePage(hmtl,htmlFile,file,hash);
+            });
+         }
+      };
    };
-   readFile(htmlFile,function(e,data){
-      if (!e){
-         /* добавить сравнение хеша из JSON и хранилища хешей страниц */
-         callback(0,data);
-      } else {
-         readJSON(jsonFile,callback,cachePage);
+   $loder.checkCache(file,jsonFile,function(e,cached,jsonText,hash){
+      if (e){ callback(e); }
+      else {
+         if (cached) {
+            readFile(htmlFile,function(e,data){
+               if (!e){ callback(0,data); }
+               else { readJSON(jsonFile,JSONcallback(hash),jsonText); }
+            });
+         } else { readJSON(jsonFile,JSONcallback(hash),jsonText); }
       }
    });
 };
