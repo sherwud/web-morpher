@@ -3,14 +3,15 @@
       "cached":true,
       "template":{
          "name":"main",
-         "type":"system",
+         "system":true,
          "input":{
             "title":"Web Morpher"
          }
       }
    },
    "body":"{{trololo}}<h3>hello {{name}}! {{hint}}</h3>{{testInput}}\n\
-   <br>{{testInputNumber}}",
+   <br>{{testInputNumber}}\n\
+   <br>{{knopka1}}",
    "name":"123",
    "hint":"hint",
    "testInput":{
@@ -22,5 +23,16 @@
       "format":"input",
       "type":"number",
       "name":"t"
+   },
+   "knopka1":{
+      "ruName":"Кнопка 1",
+      "description":"Описание кнопки",
+      "format":"control",
+      "system":true,
+      "control":"button",
+      "input":{
+         "id":"newButton",
+         "text":"Пробник кнопки"
+      }
    }
 }

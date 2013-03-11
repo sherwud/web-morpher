@@ -17,7 +17,7 @@ $wm.parser.version = '0.0.0';
  */
 $wm.parser.build = function(path,params,callback){
    if (typeof path !== 'string' || typeof callback !== 'function'){
-      callback('Ошибка вызова метода: parser.build');
+      callback('parser.build - ошибка вызова метода');
       return;
    }
    var httpMethod = params.httpMethod;
@@ -68,6 +68,7 @@ $wm.parser.setTemplate = function(params,inputParams,html,callback){
                for (var i in params.input){
                   inputParams[i] = params.input[i];
                }
+            delete params.input;
             $wm.parser.buildPage(data,inputParams,function(e,data){
                if (e) { callback(e); }
                else {
@@ -90,11 +91,11 @@ $wm.parser.setTemplate = function(params,inputParams,html,callback){
 $wm.parser.buildPage = function(data,inputParams,callback){
    if (typeof data === 'undefined' || !data instanceof Object
          || typeof callback !== 'function') {
-      callback('Ошибка вызова метода: parser.buildPage');
+      callback('parser.buildPage - ошибка вызова метода');
       return;
    }
    if (typeof data.body !== 'string') 
-      callback('parser.buildPage: data.body не является string');
+      callback('parser.buildPage - data.body не является string');
    var reg = /{{(\w+)}}/;
    var regAll = /{{(\w+)}}/g;
    var removeKey = function (callback){
@@ -142,14 +143,23 @@ $wm.parser.buildPage = function(data,inputParams,callback){
  * callback - функция для передачи результатов
  */
 $wm.parser.buildObject = function(data,inputParams,callback){
-   if (typeof data.format === 'undefined' || typeof data.type === 'undefined'
-   || typeof data.name === 'undefined'){
-      callback('Ошибка вызова метода: parser.buildObject');
+   if (typeof data.format !== 'string'){
+      callback('parser.buildObject - не задан формат объекта');
       return;
    }
+   var mergeInputParams = function(){
+      if (typeof data.input === 'object' && !(data.input instanceof Array))
+         for (var i in data.input){
+            inputParams[i] = data.input[i];
+         }
+      delete data.input;
+   };
    var val = '';
    switch (data.format){
       case 'input':
+         if (typeof data.name !== 'string')
+            callback('parser.buildObject - не задано имя входного параметра');
+         data.type = data.type || 'text';
          val = inputParams[data.name];
          switch (data.type) {
             case 'text':
@@ -161,7 +171,12 @@ $wm.parser.buildObject = function(data,inputParams,callback){
             default: val = '';
          }
          callback(0,val);
-      break;      
+      break;
+      case 'control':
+         mergeInputParams();
+         val = 'control::'+data.control+'('+inputParams.text+')';
+         callback(0,val);
+      break;
       default: callback(0,val);
    }
 };

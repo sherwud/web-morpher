@@ -7,7 +7,7 @@
       {{script}}\n\
       {{style}}\n\
    </head>\n\
-   <body>{$page$}<body>\n\
+   <body>{$page$}</body>\n\
 </html>",
    "title":{
       "format":"input",
