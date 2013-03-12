@@ -31,7 +31,7 @@
       "system":true,
       "control":"button",
       "input":{
-         "id":"newButton",
+         "class":"newButton",
          "text":"Пробник кнопки"
       }
    }

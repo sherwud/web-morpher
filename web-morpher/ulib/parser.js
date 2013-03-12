@@ -154,13 +154,12 @@ $wm.parser.buildObject = function(data,inputParams,callback){
          }
       delete data.input;
    };
-   var val = '';
    switch (data.format){
       case 'input':
          if (typeof data.name !== 'string')
             callback('parser.buildObject - не задано имя входного параметра');
          data.type = data.type || 'text';
-         val = inputParams[data.name];
+         var val = inputParams[data.name];
          switch (data.type) {
             case 'text':
                val = String(val||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -174,9 +173,43 @@ $wm.parser.buildObject = function(data,inputParams,callback){
       break;
       case 'control':
          mergeInputParams();
-         val = 'control::'+data.control+'('+inputParams.text+')';
-         callback(0,val);
+         if (typeof data.system !== 'boolean') data.system = true;
+         $wm.parser.buildСontrol(data.control,data.system,inputParams,callback);
       break;
-      default: callback(0,val);
+      default: callback(0,'');
+   }
+};
+/* Хранилище контролов
+ * ключ - числовое значение флага system + имя контрола
+ * значение - json представление контрола
+ */
+$wm.parser.controls = {
+   '1button':{
+      'body':'<button{{id}} class="wm-button{{class}}">{{text}}</button>'
+   }
+};
+/* Строит контрол
+ * name - имя контрола
+ * system - тип контрола (true - системный,false - пользовательский)
+ * data - входные данные для контрола
+ * callback - функция для передачи результатов
+ */
+$wm.parser.buildСontrol = function(name,system,data,callback){
+   var reg = /{{(\w+)}}/g;
+   var key = Number(system)+name;
+   if (key in $wm.parser.controls) {
+      var ctrl = $wm.parser.controls[key];
+      var html = ctrl.body;
+      html = html.replace(reg,function(math){
+         math = math.replace(reg,'$1');
+         switch (math) {
+            case 'id': return data[math]?(' id="'+data[math]+'"'):''; break;
+            default: return data[math]?(' '+data[math]):'';
+         }
+      });
+      callback(0,html);
+      
+   } else {
+      callback('Реализовать загрузку из файла');
    }
 };

@@ -124,8 +124,8 @@ $loder.getPage = function(file,httpMethod,callback){
       return function(e,data){
          if (e){ callback(e); }
          else {
-            callback(0,data,function(hmtl){
-               $loder.cachePage(hmtl,htmlFile,file,hash);
+            callback(0,data,function(html){
+               $loder.cachePage(html,htmlFile,file,hash);
             });
          }
       };
