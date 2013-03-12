@@ -174,7 +174,7 @@ $wm.parser.buildObject = function(data,inputParams,callback){
       case 'control':
          mergeInputParams();
          if (typeof data.system !== 'boolean') data.system = true;
-         $wm.parser.buildСontrol(data.control,data.system,inputParams,callback);
+         $wm.parser.buildControl(data.control,data.system,inputParams,callback);
       break;
       default: callback(0,'');
    }
@@ -194,7 +194,7 @@ $wm.parser.controls = {
  * data - входные данные для контрола
  * callback - функция для передачи результатов
  */
-$wm.parser.buildСontrol = function(name,system,data,callback){
+$wm.parser.buildControl = function(name,system,data,callback){
    var reg = /{{(\w+)}}/g;
    var key = Number(system)+name;
    if (key in $wm.parser.controls) {
