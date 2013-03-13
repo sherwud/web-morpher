@@ -35,7 +35,8 @@
       "control":"button",
       "input":{
          "class":"btn",
-         "text":"Пробник кнопки<a>asd</a>"
+         "text":"Пробник кнопки<a>asd</a>",
+         "onclick":"$wm.core.loader.getHTML('/','body')"
       }
    }
 }

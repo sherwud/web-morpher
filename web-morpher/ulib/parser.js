@@ -185,10 +185,13 @@ $wm.parser.buildObject = function(data,inputParams,callback){
  */
 $wm.parser.controls = {
    '1button':{
-      'body':'<button{{id}} class="wm-button{{class}}">{{text}}</button>',
+      'body':'<button{{id}}{{onclick}} class="wm-button{{class}}">{{text}}</button>',
       'builders':{
          'text':function(k,d){return String(d[k])
-            .replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+            .replace(/</g,'&lt;').replace(/>/g,'&gt;');},
+         'onclick':function(k,d){
+            return d[k]?(' onclick="'+d[k]+'"'):'';
+         }
       }
    },
    '1scriptList':{
