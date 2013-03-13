@@ -185,7 +185,37 @@ $wm.parser.buildObject = function(data,inputParams,callback){
  */
 $wm.parser.controls = {
    '1button':{
-      'body':'<button{{id}} class="wm-button{{class}}">{{text}}</button>'
+      'body':'<button{{id}} class="wm-button{{class}}">{{text}}</button>',
+      'builders':{
+         'text':function(k,d){return String(d[k])
+            .replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+      }
+   },
+   '1scriptList':{
+      'body':'{{scripts}}',
+      'builders':{
+         'scripts':function(k,d){
+            var a = d[k]||[];
+            if (d['inputscripts'] instanceof Array)
+               a = a.concat(d['inputscripts']);
+            return '<script type=\"text/javascript\" src=\"'
+            + a.join('\"></script><script type=\"text/javascript\" src=\"')
+            + '\"></script>';
+         }
+      }
+   },
+   '1styleList':{
+      'body':'{{styles}}',
+      'builders':{
+         'styles':function(k,d){
+            var a = d[k]||[];
+            if (d['inputstyles'] instanceof Array)
+               a = a.concat(d['inputstyles']);
+            return '<link rel=\"stylesheet\" href=\"'
+            + a.join('\"/><link rel=\"stylesheet\" href=\"')
+            + '\"/>';
+         }
+      }
    }
 };
 /* Строит контрол
@@ -202,14 +232,17 @@ $wm.parser.buildControl = function(name,system,data,callback){
       var html = ctrl.body;
       html = html.replace(reg,function(math){
          math = math.replace(reg,'$1');
-         switch (math) {
-            case 'id': return data[math]?(' id="'+data[math]+'"'):''; break;
-            default: return data[math]?(' '+data[math]):'';
-         }
+         if (ctrl.builders && typeof ctrl.builders[math] === 'function') {
+            return ctrl.builders[math].call(ctrl,math,data);
+         } else
+            switch (math) {
+               case 'id': return data[math]?(' id="'+data[math]+'"'):''; break;
+               default: return data[math]?(' '+data[math]):'';
+            }
       });
       callback(0,html);
       
    } else {
-      callback('Реализовать загрузку из файла');
+      callback('Не найден: '+key+'. Реализовать загрузку контролов из файла.');
    }
 };

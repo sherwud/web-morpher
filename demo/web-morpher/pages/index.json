@@ -5,7 +5,10 @@
          "name":"main",
          "system":true,
          "input":{
-            "title":"Web Morpher"
+            "title":"Web Morpher",
+            "inputstyles":[
+               "code.css"
+            ]
          }
       }
    },
@@ -31,8 +34,8 @@
       "system":true,
       "control":"button",
       "input":{
-         "class":"newButton",
-         "text":"Пробник кнопки"
+         "class":"btn",
+         "text":"Пробник кнопки<a>asd</a>"
       }
    }
 }

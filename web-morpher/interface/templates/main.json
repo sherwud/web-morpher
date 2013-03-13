@@ -14,8 +14,26 @@
       "type":"text",
       "name":"title"
    },
-   "script":"<script type=\"text/javascript\" src=\"web-morpher/ui/ext/jquery.js\"></script>\
-<script type=\"text/javascript\" src=\"web-morpher/ui/core.js\"></script>\
-<script type=\"text/javascript\" src=\"web-morpher/ulib/parser.js\"></script>",
-   "style":"<link rel=\"stylesheet\" href=\"web-morpher/ui/ext/bootstrap/css/bootstrap.min.css\"/>"
+   "script":{
+      "format":"control",
+      "system":true,
+      "control":"scriptList",
+      "input":{
+         "scripts":[
+            "web-morpher/ui/ext/jquery.js",
+            "web-morpher/ui/core.js",
+            "web-morpher/ulib/parser.js"
+         ]
+      }
+   },
+   "style":{
+      "format":"control",
+      "system":true,
+      "control":"styleList",
+      "input":{
+         "styles":[
+            "web-morpher/ui/ext/bootstrap/css/bootstrap.min.css"
+         ]
+      }
+   }
 }
