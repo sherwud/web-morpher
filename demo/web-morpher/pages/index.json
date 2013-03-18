@@ -10,6 +10,11 @@
                "code.css"
             ]
          }
+      },
+      "control":"page",
+      "system":true,
+      "input":{
+         "id":"indexPage"
       }
    },
    "body":"{{trololo}}<h3>hello {{name}}! {{hint}}</h3>{{testInput}}\n\

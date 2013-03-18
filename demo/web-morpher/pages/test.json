@@ -3,10 +3,15 @@
       "cached":true,
       "template":{
          "name":"main",
-         "type":"system",
+         "system":true,
          "input":{
             "title":"Web Morpher - TEST"
          }
+      },
+      "control":"page",
+      "system":true,
+      "input":{
+         "id":"testPage"
       }
    },
    "body": "hello world! TEST"

@@ -1,12 +1,28 @@
 var $wm = (typeof $wm !== 'undefined' ? $wm : {});
 if (typeof window !== 'undefined') {
    $wm.parser = $wm.parser || {};
+   $wm.parser.server = false;
 } else {
    $wm.parser = exports = module.exports;
+   $wm.parser.server = true;
    $wm.parser.loder = require('../lib/parserLoder.js');
 }
 /* Версяи парсера */
 $wm.parser.version = '0.0.0';
+/* Генератор идентефикаторов элементов */
+$wm.parser.idGen = {
+   PID: 0,CID: 0,
+   getPID: function(){
+      var PID = $wm.parser.idGen.PID;
+      $wm.parser.idGen.PID+=1;
+      return String(Number($wm.parser.server))+PID;
+   },
+   getCID: function(){
+      var CID = $wm.parser.idGen.CID;
+      $wm.parser.idGen.CID+=1;
+      return String(Number($wm.parser.server))+CID;
+   }
+};
 /* Строит страницу по пути к файлу
  * path - путь к странице
  * params - входные параметры для построения страницы
@@ -134,7 +150,17 @@ $wm.parser.buildPage = function(data,inputParams,callback){
    };
    replaceKey(function(e,html){
       if (e) { callback(e); }
-      else { callback(0,html); }
+      else {
+         if (data.config) {
+            var nane = data.config.control||'page';
+            var system = data.config.system;
+            if (typeof system !== 'boolean') system = true;
+            var param = data.config.input||{};
+            param.html = html;
+            param.PID = $wm.parser.idGen.getPID();
+            $wm.parser.buildControl(nane,system,param,callback);
+         } else { callback(0,html); }
+      }
    });
 };
 /* Строит объекты описанные в параметрах страницы
@@ -184,6 +210,9 @@ $wm.parser.buildObject = function(data,inputParams,callback){
  * значение - json представление контрола
  */
 $wm.parser.controls = {
+   '1page':{
+      'body':'<section{{id}} class="wm-page{{class}}">{{html}}</section>'
+   },
    '1button':{
       'body':'<button{{id}}{{onclick}} class="wm-button{{class}}">{{text}}</button>',
       'builders':{
@@ -235,11 +264,21 @@ $wm.parser.buildControl = function(name,system,data,callback){
       var html = ctrl.body;
       html = html.replace(reg,function(math){
          math = math.replace(reg,'$1');
+         var str = '';
          if (ctrl.builders && typeof ctrl.builders[math] === 'function') {
             return ctrl.builders[math].call(ctrl,math,data);
          } else
             switch (math) {
-               case 'id': return data[math]?(' id="'+data[math]+'"'):''; break;
+               case 'id':
+                  if (data['PID'])
+                     str = ' pid="'+data['PID']+'"';
+                  else {
+                     str = ' cid="'+$wm.parser.idGen.getCID()+'"';
+                  }
+                  if (data[math])
+                     str = ' id="'+data[math]+'"'+str;
+                  return str;
+               break;
                default: return data[math]?(' '+data[math]):'';
             }
       });
