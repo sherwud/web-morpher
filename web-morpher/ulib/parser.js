@@ -297,7 +297,7 @@ $wm.parser.buildControl = function(name,system,data,callback){
          js = '';
          for (var i in data.handlers) {
             if (i in ctrl.handlers) {
-               js += "$('#"+cid+ctrl.handlers[i]+"')."
+               js += '$(\'[cid="'+cid+ctrl.handlers[i]+'"\').'
                   +i+"=function(){\n"+data.handlers[i]+'\n}\n';
             }
          }
