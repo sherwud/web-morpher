@@ -18,7 +18,7 @@
       "format":"control",
       "system":true,
       "control":"scriptList",
-      "input":{
+      "data":{
          "scripts":[
             "web-morpher/ui/ext/jquery.js",
             "web-morpher/ui/core.js",
@@ -30,7 +30,7 @@
       "format":"control",
       "system":true,
       "control":"styleList",
-      "input":{
+      "data":{
          "styles":[
             "web-morpher/ui/ext/bootstrap/css/bootstrap.min.css"
          ]

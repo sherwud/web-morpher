@@ -38,10 +38,13 @@
       "format":"control",
       "system":true,
       "control":"button",
-      "input":{
+      "data":{
          "class":"btn",
          "text":"Пробник кнопки<a>asd</a>",
-         "onclick":"$wm.core.loader.getHTML('/','body')"
+         "onclick":"alert('ok')",
+         "handlers":{
+            "click":"$wm.core.loader.getHTML('/','body')"
+         }
       }
    }
 }

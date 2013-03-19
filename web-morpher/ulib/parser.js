@@ -118,9 +118,10 @@ $wm.parser.buildPage = function(data,inputParams,callback){
       data.body = data.body.replace(reg,'');
       replaceKey(callback);
    };
+   var alljs = '';
    var replaceKey = function (callback) {
       var key = reg.exec(data.body);
-      if (key === null) { callback(0,data.body); }
+      if (key === null) { callback(0,data.body,alljs); }
       else {
          var val = data[key[1]];
          switch (typeof val) {
@@ -134,9 +135,10 @@ $wm.parser.buildPage = function(data,inputParams,callback){
                if (val instanceof Array) {
                   removeKey(callback);
                } else {
-                  $wm.parser.buildObject(val,inputParams,function(e,val){
+                  $wm.parser.buildObject(val,inputParams,function(e,val,js){
                      if (e) { callback(e); }
                      else {
+                        if (js) alljs+=js;
                         data[key[1]] = val;
                         data.body = data.body.replace(reg,val);
                         replaceKey(callback);
@@ -148,16 +150,19 @@ $wm.parser.buildPage = function(data,inputParams,callback){
          }
       }
    };
-   replaceKey(function(e,html){
+   replaceKey(function(e,html,js){
       if (e) { callback(e); }
       else {
          if (data.config) {
+            js = '$(document).ready(function(){\n'+js+'});';
+            /* js надо сохранить а pid передать наверх*/
+            console.log(js);
             var nane = data.config.control||'page';
             var system = data.config.system;
             if (typeof system !== 'boolean') system = true;
             var param = data.config.input||{};
             param.html = html;
-            param.PID = $wm.parser.idGen.getPID();
+            param.pid = $wm.parser.idGen.getPID();
             $wm.parser.buildControl(nane,system,param,callback);
          } else { callback(0,html); }
       }
@@ -174,9 +179,9 @@ $wm.parser.buildObject = function(data,inputParams,callback){
       return;
    }
    var mergeInputParams = function(){
-      if (typeof data.input === 'object' && !(data.input instanceof Array))
-         for (var i in data.input){
-            inputParams[i] = data.input[i];
+      if (typeof data.data === 'object' && !(data.data instanceof Array))
+         for (var i in data.data){
+            inputParams[i] = data.data[i];
          }
       delete data.input;
    };
@@ -221,6 +226,9 @@ $wm.parser.controls = {
          'onclick':function(k,d){
             return d[k]?(' onclick="'+d[k]+'"'):'';
          }
+      },
+      'handlers':{
+         'click':''
       }
    },
    '1scriptList':{
@@ -262,6 +270,7 @@ $wm.parser.buildControl = function(name,system,data,callback){
    if (key in $wm.parser.controls) {
       var ctrl = $wm.parser.controls[key];
       var html = ctrl.body;
+      var cid = false;
       html = html.replace(reg,function(math){
          math = math.replace(reg,'$1');
          var str = '';
@@ -270,10 +279,11 @@ $wm.parser.buildControl = function(name,system,data,callback){
          } else
             switch (math) {
                case 'id':
-                  if (data['PID'])
-                     str = ' pid="'+data['PID']+'"';
+                  if (data['pid'])
+                     str = ' pid="'+data['pid']+'"';
                   else {
-                     str = ' cid="'+$wm.parser.idGen.getCID()+'"';
+                     cid = $wm.parser.idGen.getCID();
+                     str = ' cid="'+cid+'"';
                   }
                   if (data[math])
                      str = ' id="'+data[math]+'"'+str;
@@ -282,8 +292,17 @@ $wm.parser.buildControl = function(name,system,data,callback){
                default: return data[math]?(' '+data[math]):'';
             }
       });
-      callback(0,html);
-      
+      var js = false;
+      if (data.handlers && ctrl.handlers && cid) {
+         js = '';
+         for (var i in data.handlers) {
+            if (i in ctrl.handlers) {
+               js += "$('#"+cid+ctrl.handlers[i]+"')."
+                  +i+"=function(){\n"+data.handlers[i]+'\n}\n';
+            }
+         }
+      }
+      callback(0,html,js);
    } else {
       callback('Не найден: '+key+'. Реализовать загрузку контролов из файла.');
    }
