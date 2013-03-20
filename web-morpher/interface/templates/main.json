@@ -22,7 +22,6 @@
       "control":"scriptList",
       "data":{
          "scripts":[
-            "web-morpher/ui/core.js",
             "web-morpher/ulib/parser.js"
          ]
       }

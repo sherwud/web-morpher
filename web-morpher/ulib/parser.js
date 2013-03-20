@@ -94,6 +94,7 @@ $wm.parser.setTemplate = function(params,inputParams,html,pid,callback){
                      '<script type="text/javascript" src="{{src}}"></script>';
                   data = data.replace(/{\$coreScript\$}/,
                      script.replace(/{{src}}/,'web-morpher/ui/ext/jquery.js')
+                    +script.replace(/{{src}}/,'web-morpher/ui/core.js')
                   );
                   if (pid)
                      data = data.replace(/{\$pageScript\$}/,
