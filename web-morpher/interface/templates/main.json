@@ -4,6 +4,8 @@
    <head>\n\
       <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n\
       <title>{{title}}</title>\n\
+      {$coreScript$}\n\
+      {$pageScript$}\n\
       {{script}}\n\
       {{style}}\n\
    </head>\n\
@@ -20,7 +22,6 @@
       "control":"scriptList",
       "data":{
          "scripts":[
-            "web-morpher/ui/ext/jquery.js",
             "web-morpher/ui/core.js",
             "web-morpher/ulib/parser.js"
          ]

@@ -61,14 +61,18 @@ function mkdir(dir,callback){
        } else { mkdir(parentDir,callback); }
    });   
 }
-function writeFile(file,data){
+function writeFile(file,data,callback){
    var dir = path.dirname(file);
    fs.exists(dir,function(exists){
       if (exists){
          fs.writeFile(file,data,'utf8',function(e){
-            if (e) console.log(e);
+            if (typeof callback === 'function') {
+               if (e) {console.log(e);callback(e);}
+               else callback(0);
+            } else
+               if (e) console.log(e);
          });
-      } else { mkdir(dir,function(){writeFile(file,data);}); }
+      } else { mkdir(dir,function(){writeFile(file,data,callback);}); }
    });
 }
 /* Кеширует готовые html файлы
@@ -77,7 +81,7 @@ function writeFile(file,data){
  * file - путь запрошенный клиентом
  * hash - хеш от json файла страницы
  */
-$loder.cachePage = function(html,htmlFile,file,hash){
+function cachePage(html,htmlFile,file,hash){
    cache[file]=hash;
    console.log(file+': '+hash);
    writeFile(htmlFile,html);
@@ -87,11 +91,11 @@ $loder.cachePage = function(html,htmlFile,file,hash){
  * jsonFile - путь к json представлению файла
  * callback - функция для передачи результатов
  */
-$loder.checkCache = function(file,jsonFile,callback){
+function checkCache (file,jsonFile,callback){
    readFile(jsonFile,function(e,data){
       if (e){ callback(e); }
       else {
-         var hash = getHash(data)
+         var hash = getHash(data);
          var cached = false;
          if (cache[file] === getHash(data)) cached = true;
          callback(0,cached,data,hash);
@@ -124,13 +128,19 @@ $loder.getPage = function(file,httpMethod,callback){
       return function(e,data){
          if (e){ callback(e); }
          else {
-            callback(0,data,function(html){
-               $loder.cachePage(html,htmlFile,file,hash);
-            });
+            callback(0,data,
+               function(html){
+                  cachePage(html,htmlFile,file,hash);
+               },
+               function(pid,js,callback){
+                  var jsFile = path.join(wm.pathSite,'js',pid+'.js');
+                  writeFile(jsFile,js,callback);
+               }
+            );
          }
       };
    };
-   $loder.checkCache(file,jsonFile,function(e,cached,jsonText,hash){
+   checkCache(file,jsonFile,function(e,cached,jsonText,hash){
       if (e){ callback(e); }
       else {
          if (cached) {

@@ -11,7 +11,7 @@
       "control":"page",
       "system":true,
       "input":{
-         "id":"testPage"
+         "wmname":"testPage"
       }
    },
    "body": "hello world! TEST"

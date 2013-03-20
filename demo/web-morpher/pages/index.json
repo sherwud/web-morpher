@@ -14,7 +14,7 @@
       "control":"page",
       "system":true,
       "input":{
-         "id":"indexPage"
+         "wmname":"indexPage"
       }
    },
    "body":"{{trololo}}<h3>hello {{name}}! {{hint}}</h3>{{testInput}}\n\
@@ -40,10 +40,11 @@
       "control":"button",
       "data":{
          "class":"btn",
+         "wmname":"appButton",
          "text":"Пробник кнопки<a>asd</a>",
-         "onclick":"alert('ok')",
+         "onclick":"alert('через html')",
          "handlers":{
-            "click":"$wm.core.loader.getHTML('/','body')"
+            "click":"alert('через js')"
          }
       }
    }

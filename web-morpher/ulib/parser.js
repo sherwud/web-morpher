@@ -15,12 +15,12 @@ $wm.parser.idGen = {
    getPID: function(){
       var PID = $wm.parser.idGen.PID;
       $wm.parser.idGen.PID+=1;
-      return String(Number($wm.parser.server))+PID;
+      return String(0+Number($wm.parser.server))+PID;
    },
    getCID: function(){
       var CID = $wm.parser.idGen.CID;
       $wm.parser.idGen.CID+=1;
-      return String(Number($wm.parser.server))+CID;
+      return String(2+Number($wm.parser.server))+CID;
    }
 };
 /* Строит страницу по пути к файлу
@@ -37,18 +37,19 @@ $wm.parser.build = function(path,params,callback){
       return;
    }
    var httpMethod = params.httpMethod;
-   $wm.parser.loder.getPage.call(this,path,httpMethod,function(e,data,cache){
+   $wm.parser.loder.getPage.call(this,path,httpMethod,
+         function(e,data,cache,setPageJS){
       if (e) { callback(e); }
       else {
          if (typeof data === 'string') callback(0,data);
          else {
             var inputParams = params.inputParams;
-            $wm.parser.buildPage(data,inputParams,function(e,html){
+            $wm.parser.buildPage(data,inputParams,function(e,html,pid){
                if (e) { callback(e); }
                else {
                   var tmpl = data.config.template;
                   if (httpMethod === 'get' && typeof tmpl === 'object'){
-                     $wm.parser.setTemplate(tmpl,inputParams,html,
+                     $wm.parser.setTemplate(tmpl,inputParams,html,pid,
                         function(e,data){
                            if (e) { callback(e); }
                            else {
@@ -62,7 +63,7 @@ $wm.parser.build = function(path,params,callback){
                      callback(0,html);
                   }
                }
-            });
+            },setPageJS);
          }
       }
    });
@@ -71,9 +72,10 @@ $wm.parser.build = function(path,params,callback){
  * params - данные для шаблона из страницы
  * inputParams - входные(пользовательские) параметры
  * html - html-код построенной страницы
+ * pid - идентификатор страницы
  * callback - функция для передачи результатов
  */
-$wm.parser.setTemplate = function(params,inputParams,html,callback){
+$wm.parser.setTemplate = function(params,inputParams,html,pid,callback){
    $wm.parser.loder.getTemplate.call(this,params,function(e,data){
       if (e) { callback(e); }
       else {
@@ -88,7 +90,19 @@ $wm.parser.setTemplate = function(params,inputParams,html,callback){
             $wm.parser.buildPage(data,inputParams,function(e,data){
                if (e) { callback(e); }
                else {
-                  callback(0,data.replace(/{\$page\$}/,html));
+                  var script =
+                     '<script type="text/javascript" src="{{src}}"></script>';
+                  data = data.replace(/{\$coreScript\$}/,
+                     script.replace(/{{src}}/,'web-morpher/ui/ext/jquery.js')
+                  );
+                  if (pid)
+                     data = data.replace(/{\$pageScript\$}/,
+                        script.replace(/{{src}}/,'js/'+pid+'.js')
+                           .replace(/(<script)/,'$1 id="pageScript"')
+                     );
+                  else data = data.replace(/{\$pageScript\$}/,'');
+                  data = data.replace(/{\$page\$}/,html);
+                  callback(0,data);
                }
             });
          }
@@ -98,13 +112,14 @@ $wm.parser.setTemplate = function(params,inputParams,html,callback){
 /* Строит страницу или шаблон
  * data - данные json для преобразования
  * inputParams - входные(пользовательские) параметры
+ * setPageJS - функция для сохранения js кода для страницы
  * callback - функция для передачи результатов
  * 
  * Тестировать в интерфейсе:
  * $wm.parser.buildPage($wm.test,function(e,d){ console.log(e||d); })
  * 
  */
-$wm.parser.buildPage = function(data,inputParams,callback){
+$wm.parser.buildPage = function(data,inputParams,callback,setPageJS){
    if (typeof data === 'undefined' || !data instanceof Object
          || typeof callback !== 'function') {
       callback('parser.buildPage - ошибка вызова метода');
@@ -154,16 +169,21 @@ $wm.parser.buildPage = function(data,inputParams,callback){
       if (e) { callback(e); }
       else {
          if (data.config) {
-            js = '$(document).ready(function(){\n'+js+'});';
-            /* js надо сохранить а pid передать наверх*/
-            console.log(js);
             var nane = data.config.control||'page';
             var system = data.config.system;
             if (typeof system !== 'boolean') system = true;
             var param = data.config.input||{};
             param.html = html;
-            param.pid = $wm.parser.idGen.getPID();
-            $wm.parser.buildControl(nane,system,param,callback);
+            var pid = param.pid = $wm.parser.idGen.getPID();
+            if (js) {
+               $wm.parser.buildControl(nane,system,param,function(e,html,pjs){
+                  js = '$(document).ready(function(){'+js+(pjs?pjs:'')+'});';
+                  setPageJS(pid,js,function(){
+                     callback(0,html,pid);
+                  });
+               });
+            } else
+               $wm.parser.buildControl(nane,system,param,callback);
          } else { callback(0,html); }
       }
    });
@@ -216,15 +236,15 @@ $wm.parser.buildObject = function(data,inputParams,callback){
  */
 $wm.parser.controls = {
    '1page':{
-      'body':'<section{{id}} class="wm-page{{class}}">{{html}}</section>'
+      'body':'<section class="wm-page{{class}}">{{html}}</section>'
    },
    '1button':{
-      'body':'<button{{id}}{{onclick}} class="wm-button{{class}}">{{text}}</button>',
+      'body':'<button {{onclick}} class="wm-button{{class}}">{{text}}</button>',
       'builders':{
          'text':function(k,d){return String(d[k])
             .replace(/</g,'&lt;').replace(/>/g,'&gt;');},
          'onclick':function(k,d){
-            return d[k]?(' onclick="'+d[k]+'"'):'';
+            return d[k]?('onclick="'+d[k]+'"'):'';
          }
       },
       'handlers':{
@@ -271,34 +291,29 @@ $wm.parser.buildControl = function(name,system,data,callback){
       var ctrl = $wm.parser.controls[key];
       var html = ctrl.body;
       var cid = false;
+      html = html.replace(/(<\w+\s)/,function(math){
+         var id = data['pid'];
+         if (!id) { id = cid = $wm.parser.idGen.getCID(); }
+         var val = math+'id="'+id+'"';
+         if (data['wmname'])
+            val += 'wmname="'+data['wmname']+'"';
+         val += 'type="'+(data['pid']?'page':('control:'+key))+'"';
+         return val+' ';
+      });
       html = html.replace(reg,function(math){
          math = math.replace(reg,'$1');
-         var str = '';
          if (ctrl.builders && typeof ctrl.builders[math] === 'function') {
             return ctrl.builders[math].call(ctrl,math,data);
          } else
-            switch (math) {
-               case 'id':
-                  if (data['pid'])
-                     str = ' pid="'+data['pid']+'"';
-                  else {
-                     cid = $wm.parser.idGen.getCID();
-                     str = ' cid="'+cid+'"';
-                  }
-                  if (data[math])
-                     str = ' id="'+data[math]+'"'+str;
-                  return str;
-               break;
-               default: return data[math]?(' '+data[math]):'';
-            }
+            return data[math]||'';
       });
       var js = false;
       if (data.handlers && ctrl.handlers && cid) {
          js = '';
          for (var i in data.handlers) {
             if (i in ctrl.handlers) {
-               js += '$(\'[cid="'+cid+ctrl.handlers[i]+'"\').'
-                  +i+"=function(){\n"+data.handlers[i]+'\n}\n';
+               js += '$(\'#'+cid+ctrl.handlers[i]+'\').'
+                  +i+"(function(){"+data.handlers[i]+'});';
             }
          }
       }
