@@ -8,6 +8,9 @@
             "title":"Web Morpher",
             "inputstyles":[
                "code.css"
+            ],
+            "inputscripts":[
+               "web-morpher/ui/test.js"
             ]
          }
       },
