@@ -21,7 +21,12 @@ $wm.parser = function($parser,runOnServer){
    var elements = new function(){
       var elements ={};
       this.get = function(name,standard,callback){
-         
+         var key = Number(standard)+name;
+         if (key in elements){
+            callback(elements[key]);
+         } else {
+            console.error('загрузка элементов');
+         }
       };
    }();
    /* Строит элемент
@@ -31,6 +36,13 @@ $wm.parser = function($parser,runOnServer){
     * callback(e,data) - функция для передачи результатов
     */
    $parser.element = function(name,data,standard,callback){
+      if (typeof callback !== 'function'){
+         console.error('"callback" не задан!'); return;
+      };
+      if (typeof name !== 'string'){
+         callback('"name" не задан!');
+      };
+
       elements.get(name,standard,function(e,element){
          
       });
