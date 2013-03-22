@@ -14,14 +14,10 @@ $wm.parser.idGen = new function(){
    var PID = 0;
    var CID = 0;
    this.PID = function(){
-      var pid = PID;
-      PID+=1;
-      return String(0+Number($wm.parser.server))+pid;
+      return String(0+Number($wm.parser.server))+PID++;
    };
    this.CID = function(){
-      var cid = CID;
-      CID+=1;
-      return String(2+Number($wm.parser.server))+cid;
+      return String(2+Number($wm.parser.server))+CID++;
    };
 }();
 /* Строит страницу по пути к файлу
