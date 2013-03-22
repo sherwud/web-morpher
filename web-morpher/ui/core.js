@@ -1,5 +1,18 @@
-$wm = (typeof $wm !== 'undefined' ? $wm : {});
-$wm.core = {version:'0.0.0'};
+$wm = new function(){
+   var $wm = this;
+   var projectName = 'Web Morpher';
+   var projectVersion = '0.0.0';
+   var projectPage = 'http://pafus.github.com/web-morpher/';
+   var author = 'Новожилов И. А. (Dr@KoN)';
+   var email = 'maildrakon@gmail.com';
+   var homePage = 'https://github.com/IDrakon';
+   $wm.version = function(){return projectVersion;};
+   $wm.info = function(){
+      return {projectName:projectName,projectVersion:projectVersion
+         ,projectPage:projectPage,author:author,email:email,homePage:homePage};
+   };
+}();
+$wm.core = {};
 $wm.core.loader = {};
 $wm.core.loader.cached = {
    getHTML:true,

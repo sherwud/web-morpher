@@ -1,6 +1,6 @@
 var $wm = (typeof $wm !== 'undefined' ? $wm : {});
 if (typeof window !== 'undefined') {
-   $wm.parser = $wm.parser || {};
+   $wm.parser = {};
    $wm.parser.server = false;
 } else {
    $wm.parser = exports = module.exports;
@@ -10,19 +10,20 @@ if (typeof window !== 'undefined') {
 /* Версяи парсера */
 $wm.parser.version = '0.0.0';
 /* Генератор идентефикаторов элементов */
-$wm.parser.idGen = {
-   PID: 0,CID: 0,
-   getPID: function(){
-      var PID = $wm.parser.idGen.PID;
-      $wm.parser.idGen.PID+=1;
-      return String(0+Number($wm.parser.server))+PID;
-   },
-   getCID: function(){
-      var CID = $wm.parser.idGen.CID;
-      $wm.parser.idGen.CID+=1;
-      return String(2+Number($wm.parser.server))+CID;
-   }
-};
+$wm.parser.idGen = new function(){
+   var PID = 0;
+   var CID = 0;
+   this.PID = function(){
+      var pid = PID;
+      PID+=1;
+      return String(0+Number($wm.parser.server))+pid;
+   };
+   this.CID = function(){
+      var cid = CID;
+      CID+=1;
+      return String(2+Number($wm.parser.server))+cid;
+   };
+}();
 /* Строит страницу по пути к файлу
  * path - путь к странице
  * params - входные параметры для построения страницы
@@ -175,7 +176,7 @@ $wm.parser.buildPage = function(data,inputParams,callback,setPageJS){
             if (typeof system !== 'boolean') system = true;
             var param = data.config.input||{};
             param.html = html;
-            var pid = param.pid = $wm.parser.idGen.getPID();
+            var pid = param.pid = $wm.parser.idGen.PID();
             if (js) {
                $wm.parser.buildControl(nane,system,param,function(e,html,pjs){
                   js = '$(document).ready(function(){'+js+(pjs?pjs:'')+'});';
@@ -294,7 +295,7 @@ $wm.parser.buildControl = function(name,system,data,callback){
       var cid = false;
       html = html.replace(/(<\w+\s)/,function(math){
          var id = data['pid'];
-         if (!id) { id = cid = $wm.parser.idGen.getCID(); }
+         if (!id) { id = cid = $wm.parser.idGen.CID(); }
          var val = math+'id="'+id+'"';
          if (data['wmname'])
             val += 'wmname="'+data['wmname']+'"';
