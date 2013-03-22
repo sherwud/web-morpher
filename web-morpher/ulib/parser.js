@@ -48,20 +48,21 @@ $wm.parser = function($parser,runOnServer){
          callback('parser.build - ошибка вызова метода');
          return;
       }
+      var $wm = this;
       var httpMethod = params.httpMethod;
-      $parser.loder.getPage.call(this,path,httpMethod,
+      $parser.loder.getPage.call($wm,path,httpMethod,
             function(e,data,cache,setPageJS){
          if (e) { callback(e); }
          else {
             if (typeof data === 'string') callback(0,data);
             else {
                var inputParams = params.inputParams;
-               $parser.buildPage(data,inputParams,function(e,html,pid){
+               $parser.buildPage.call($wm,data,inputParams,function(e,html,pid){
                   if (e) { callback(e); }
                   else {
                      var tmpl = data.config.template;
                      if (httpMethod === 'get' && typeof tmpl === 'object'){
-                        $parser.setTemplate(tmpl,inputParams,html,pid,
+                        $parser.setTemplate.call($wm,tmpl,inputParams,html,pid,
                            function(e,data){
                               if (e) { callback(e); }
                               else {
@@ -88,7 +89,8 @@ $wm.parser = function($parser,runOnServer){
     * callback - функция для передачи результатов
     */
    $parser.setTemplate = function(params,inputParams,html,pid,callback){
-      $parser.loder.getTemplate.call(this,params,function(e,data){
+      var $wm = this;
+      $parser.loder.getTemplate.call($wm,params,function(e,data){
          if (e) { callback(e); }
          else {
             if (typeof data === 'string')
@@ -99,7 +101,7 @@ $wm.parser = function($parser,runOnServer){
                      inputParams[i] = params.input[i];
                   }
                delete params.input;
-               $parser.buildPage(data,inputParams,function(e,data){
+               $parser.buildPage.call($wm,data,inputParams,function(e,data){
                   if (e) { callback(e); }
                   else {
                      var script =

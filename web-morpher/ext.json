@@ -1,4 +1,4 @@
 [
-   ["jquery.js","ui/ext/jquery.js"],
-   ["bootstrap","ui/ext/bootstrap/"]
+   ["http://code.jquery.com/jquery.min.js","ui/ext/jquery.js"],
+   ["http://twitter.github.com/bootstrap/assets/bootstrap.zip","ui/ext/bootstrap/"]
 ]
