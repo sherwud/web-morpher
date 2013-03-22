@@ -2,13 +2,39 @@ var $wm = (typeof $wm !== 'undefined' ? $wm : {});
 $wm.parser = function($parser,runOnServer){
    var version = '0.0.0';
    $parser.version = function(){return version;};
-   /* Генератор id элементов */
+   /* Генератор id элементов
+    * PID - id страницы 
+    * CID - id контрола
+    */
    var idGen = new function(){
       var PID = 0;
       var CID = 0;
       this.PID = function(){ return String(0+Number(runOnServer))+PID++; };
       this.CID = function(){ return String(2+Number(runOnServer))+CID++; };
    }();
+   /* Элементы html
+    * get(name,callback) - получает элементы
+    *    name - имя элемента
+    *    standard - стандартный элемент
+    *    callback(e,data) - функция для передачи результатов
+    */
+   var elements = new function(){
+      var elements ={};
+      this.get = function(name,standard,callback){
+         
+      };
+   }();
+   /* Строит элемент
+    * name - имя элемента
+    * data - данные для элемента
+    * standard - стандартный элемент
+    * callback(e,data) - функция для передачи результатов
+    */
+   $parser.element = function(name,data,standard,callback){
+      elements.get(name,standard,function(e,element){
+         
+      });
+   };
    /* Строит страницу по пути к файлу
     * path - путь к странице
     * params - входные параметры для построения страницы
