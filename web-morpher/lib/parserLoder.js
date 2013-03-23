@@ -1,4 +1,4 @@
-var $loder = exports = module.exports;
+exports = module.exports = wmParserLoderConstructor;
 var fs = require('fs');
 var path = require('path');
 var crypto = require('crypto');
@@ -102,66 +102,68 @@ function checkCache (file,jsonFile,callback){
       }
    });
 };
-/* Читает файл страцы из json, или из html, если страница кеширована
-* file - путь к странице
-* httpMethod - метод с помощью которого запрошена страница (get/post)
-* callback - функция для передачи результатов
-* callback(e,data)
-* e - ошибка, 0 если нет ошибки
-* data - данные для отправки
-*/
-$loder.getPage = function(file,httpMethod,callback){
-   var wm = this;
-   var htmlFile = file;
-   if (httpMethod === 'get'){
-      htmlFile = path.join(wm.pathSite,htmlFile);
-   } else {
-      htmlFile = path.join(wm.pathSite,'web-morpher','~cache',htmlFile);
-   }
-   var jsonFile = path.join(
-      wm.pathSite,
-      'web-morpher','pages',
-      path.dirname(file),
-      path.basename(file,path.extname(file))+'.json'
-   );
-   var JSONcallback = function(hash){
-      return function(e,data){
+function wmParserLoderConstructor(wm){
+   var $loder = {};
+   /* Читает файл страцы из json, или из html, если страница кеширована
+   * file - путь к странице
+   * httpMethod - метод с помощью которого запрошена страница (get/post)
+   * callback - функция для передачи результатов
+   * callback(e,data)
+   * e - ошибка, 0 если нет ошибки
+   * data - данные для отправки
+   */
+   $loder.getPage = function(file,httpMethod,callback){
+      var htmlFile = file;
+      if (httpMethod === 'get'){
+         htmlFile = path.join(wm.pathSite,htmlFile);
+      } else {
+         htmlFile = path.join(wm.pathSite,'web-morpher','~cache',htmlFile);
+      }
+      var jsonFile = path.join(
+         wm.pathSite,
+         'web-morpher','pages',
+         path.dirname(file),
+         path.basename(file,path.extname(file))+'.json'
+      );
+      var JSONcallback = function(hash){
+         return function(e,data){
+            if (e){ callback(e); }
+            else {
+               callback(0,data,
+                  function(html){
+                     cachePage(html,htmlFile,file,hash);
+                  },
+                  function(pid,js,callback){
+                     var jsFile = path.join(wm.pathSite,'js',pid+'.js');
+                     writeFile(jsFile,js,callback);
+                  }
+               );
+            }
+         };
+      };
+      checkCache(file,jsonFile,function(e,cached,jsonText,hash){
          if (e){ callback(e); }
          else {
-            callback(0,data,
-               function(html){
-                  cachePage(html,htmlFile,file,hash);
-               },
-               function(pid,js,callback){
-                  var jsFile = path.join(wm.pathSite,'js',pid+'.js');
-                  writeFile(jsFile,js,callback);
-               }
-            );
+            if (cached) {
+               readFile(htmlFile,function(e,data){
+                  if (!e){ callback(0,data); }
+                  else { readJSON(jsonFile,JSONcallback(hash),jsonText); }
+               });
+            } else { readJSON(jsonFile,JSONcallback(hash),jsonText); }
          }
-      };
+      });
    };
-   checkCache(file,jsonFile,function(e,cached,jsonText,hash){
-      if (e){ callback(e); }
-      else {
-         if (cached) {
-            readFile(htmlFile,function(e,data){
-               if (!e){ callback(0,data); }
-               else { readJSON(jsonFile,JSONcallback(hash),jsonText); }
-            });
-         } else { readJSON(jsonFile,JSONcallback(hash),jsonText); }
-      }
-   });
-};
-/* Читает шаблон 
-* params - параметры для шаблона из страницы
-* callback - функция для передачи результатов
-*/
-$loder.getTemplate = function(params,callback){
-   var wm = this;
-   var jsonFile = path.join(
-      wm.rootSites,
-      'web-morpher','interface','templates'
-      ,params.name+'.json'
-   );
-   readJSON(jsonFile,callback);
+   /* Читает шаблон 
+   * params - параметры для шаблона из страницы
+   * callback - функция для передачи результатов
+   */
+   $loder.getTemplate = function(params,callback){
+      var jsonFile = path.join(
+         wm.rootSites,
+         'web-morpher','interface','templates'
+         ,params.name+'.json'
+      );
+      readJSON(jsonFile,callback);
+   };
+   return $loder;
 };

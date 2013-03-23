@@ -18,7 +18,7 @@ exports.info = {
 };
 delete packageInfo;
 /* Конструктор объектов wm */
-function wmConstructor(params) {
+function wmConstructor(params){
    var wm = {};
    params = params || {};
    /* Каталог откуда запускается модуль */
@@ -68,6 +68,7 @@ function wmConstructor(params) {
       defaultPort;
    wm.core = require('./lib/core.js');
    wm.parser = require('./ulib/parser.js');
+   wm.parser.loder = require('./lib/parserLoder.js')(wm);
    wm.info = exports.info;
    wm.express = require('express');
    wm.app = wm.express();
