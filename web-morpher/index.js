@@ -7,22 +7,15 @@ var fs = require('fs');
 /* Порт по умолчанию */
 var defaultPort = 3000;
 /* Конструктор */
-var $wm = exports = module.exports = wmConstructor;
-/* парсинг параметров запуска */
-$wm.startArgs = {};
-for (var i in global.process.argv) {
-   if (global.process.argv[i].search('--') !== -1) {
-      var val = global.process.argv[i].replace(/--/,'').split(':');
-      $wm.startArgs[val[0]]=val[1];
-   }
-}
+exports = module.exports = wmConstructor;
 /* чтение данных из package.json*/
 var packageInfo = require('./package.json');
-$wm.info = {};
-$wm.info.name = packageInfo.name;
-$wm.info.version = packageInfo.version;
-$wm.info.versionName = packageInfo.versionName;
-$wm.info.author = packageInfo.author;
+exports.info = {
+   name: packageInfo.name,
+   version: packageInfo.version,
+   versionName: packageInfo.versionName,
+   author: packageInfo.author
+};
 delete packageInfo;
 /* Конструктор объектов wm */
 function wmConstructor(params) {
@@ -33,10 +26,9 @@ function wmConstructor(params) {
    /* Относительные пути будут искаться от этого каталога */
    wm.rootSites = path.normalize(path.dirname(module.parent.filename));
    /* Каталог сайта */
-   wm.pathSite = path.normalize(
-      $wm.startArgs.path?$wm.startArgs.path:
-      params.path?params.path:''
-   );
+   if (typeof params.path !== 'string')
+      console.error('Путь к сайту не задан!');
+   wm.pathSite = path.normalize(params.path);
    var buffer = path.join(wm.rootSites,wm.pathSite);
    if (fs.existsSync(buffer)) {
       wm.pathSite = path.join(wm.rootSites,wm.pathSite);
@@ -71,23 +63,18 @@ function wmConstructor(params) {
       }
    }
    wm.port =
-      $wm.startArgs.port?$wm.startArgs.port:
       params.port?params.port:
       localConfigs.port?localConfigs.port:
       defaultPort;
-   wm.start = wmStart;
-   wm.core = require('./lib/core.js')
+   wm.core = require('./lib/core.js');
    wm.parser = require('./ulib/parser.js');
-   wm.info = $wm.info;
+   wm.info = exports.info;
    wm.express = require('express');
    wm.app = wm.express();
-   return wm;
-}
-function wmStart(){
-   var wm = this;
    wm.core.start.call(wm);
    wm.app.listen(wm.port);
    console.log('Сайт: '+wm.pathSite);
    console.log('Тип сайта: '+wm.typeSite);
    console.log('Запущен на порту: '+wm.port);
+   return wm;
 }

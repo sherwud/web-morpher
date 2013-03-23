@@ -3,11 +3,52 @@
       "cached":true,
       "template":{
          "name":"main",
-         "type":"system",
-         "title":"Web Morpher"
+         "system":true,
+         "input":{
+            "title":"Web Morpher",
+            "inputstyles":[
+               "code.css"
+            ],
+            "inputscripts":[
+               "web-morpher/ui/test.js"
+            ]
+         }
+      },
+      "control":"page",
+      "system":true,
+      "input":{
+         "wmname":"indexPage"
       }
    },
-   "body": "hello {{name}}! {{hint}}",
-   "name": "123",
-   "hint": "hint"
+   "body":"{{trololo}}<h3>hello {{name}}! {{hint}}</h3>{{testInput}}\n\
+   <br>{{testInputNumber}}\n\
+   <br>{{knopka1}}",
+   "name":"123",
+   "hint":"hint",
+   "testInput":{
+      "format":"input",
+      "type":"text",
+      "name":"t"
+   },
+   "testInputNumber":{
+      "format":"input",
+      "type":"number",
+      "name":"t"
+   },
+   "knopka1":{
+      "ruName":"Кнопка 1",
+      "description":"Описание кнопки",
+      "format":"control",
+      "system":true,
+      "control":"button",
+      "data":{
+         "class":"btn",
+         "wmname":"appButton",
+         "text":"Пробник кнопки<a>asd</a>",
+         "onclick":"alert('через html')",
+         "handlers":{
+            "click":"alert('через js')"
+         }
+      }
+   }
 }

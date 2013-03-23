@@ -1,16 +1,39 @@
 {
-   "body": "<!DOCTYPE html>\
-   <html lang=\"ru\">\
-   <head>\
-      <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\
-      <title>{{title}}</title>\
-      {{script}}\
-      {{style}}\
-   </head>\
-   <body>{$page$}<body>\
+   "body": "<!DOCTYPE html>\n\
+<html lang=\"ru\">\n\
+   <head>\n\
+      <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n\
+      <title>{{title}}</title>\n\
+      {$coreScript$}\n\
+      {$pageScript$}\n\
+      {{script}}\n\
+      {{style}}\n\
+   </head>\n\
+   <body>{$page$}</body>\n\
 </html>",
-   "script":"<script type=\"text/javascript\" src=\"{{scripts}}\"></script>",
-   "scripts":["web-morpher/ui/ext/jquery.js"],
-   "style":"<link rel=\"stylesheet\" href=\"{{styles}}\"/>",
-   "styles":["web-morpher/ui/ext/bootstrap/css/bootstrap.min.css"]
+   "title":{
+      "format":"input",
+      "type":"text",
+      "name":"title"
+   },
+   "script":{
+      "format":"control",
+      "system":true,
+      "control":"scriptList",
+      "data":{
+         "scripts":[
+            "web-morpher/ulib/parser.js"
+         ]
+      }
+   },
+   "style":{
+      "format":"control",
+      "system":true,
+      "control":"styleList",
+      "data":{
+         "styles":[
+            "web-morpher/ui/ext/bootstrap/css/bootstrap.min.css"
+         ]
+      }
    }
+}

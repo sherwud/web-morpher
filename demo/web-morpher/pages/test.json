@@ -3,9 +3,16 @@
       "cached":true,
       "template":{
          "name":"main",
-         "type":"system"
+         "system":true,
+         "input":{
+            "title":"Web Morpher - TEST"
+         }
+      },
+      "control":"page",
+      "system":true,
+      "input":{
+         "wmname":"testPage"
       }
    },
-   "body": "hello world",
-   "title":"Web Morpher"
+   "body": "hello world! TEST"
 }
