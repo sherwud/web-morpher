@@ -13,19 +13,26 @@ $wm.parser = function($parser,runOnServer){
       this.CID = function(){ return String(2+Number(runOnServer))+CID++; };
    }();
    /* Элементы html
-    * get(name,callback) - получает элементы
+    * get( - получает элементы
     *    name - имя элемента
     *    standard - стандартный элемент
     *    callback(e,data) - функция для передачи результатов
+    * )
     */
    var elements = new function(){
       var elements ={};
       this.get = function(name,standard,callback){
          var key = Number(standard)+name;
          if (key in elements){
-            callback(elements[key]);
+            callback(0,elements[key]);
          } else {
-            console.error('загрузка элементов');
+            $parser.loder.getElement(name,standard,function(e,data){
+               if (e) { callback(e); }
+               else {
+                  elements[key] = data;
+                  callback(0,data);
+               }
+            });
          }
       };
    }();
@@ -40,11 +47,13 @@ $wm.parser = function($parser,runOnServer){
          console.error('"callback" не задан!'); return;
       };
       if (typeof name !== 'string'){
-         callback('"name" не задан!');
+         callback('"name" не задан!'); return;
       };
-
       elements.get(name,standard,function(e,element){
-         
+         if (e) { callback(e); }
+         else {
+            console.error('загрузка элементов');
+         }
       });
    };
    /* Строит страницу по пути к файлу
