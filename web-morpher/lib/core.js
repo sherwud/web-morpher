@@ -29,10 +29,10 @@ $core.start = function(){
       var extname = path.extname(file);
       if (extname === '') file += extname = '.html';
       var params = {};
+      params.httpMethod = req.route.method;
       params.inputParams = req.query;
       switch (extname) {
          case '.html':
-         params.httpMethod = req.route.method;
             wm.parser.build.call(wm,file,params,function(e,data){
                if (e){
                   res.send(e.HTTPCODE||500);
