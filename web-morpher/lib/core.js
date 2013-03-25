@@ -33,7 +33,7 @@ $core.start = function(){
       params.inputParams = req.query;
       switch (extname) {
          case '.html':
-            wm.parser.build.call(wm,file,params,function(e,data){
+            wm.parser.build(file,params,function(e,data){
                if (e){
                   res.send(e.HTTPCODE||500);
                   console.log(e);
