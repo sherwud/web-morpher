@@ -55,6 +55,7 @@ $wm.parser = function($parser,runOnServer){
             console.log('Строим элемент:');
             console.log(element);
             
+            
          }
       });
    };
