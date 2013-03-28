@@ -104,6 +104,18 @@ function checkCache (file,jsonFile,callback){
 };
 function wmParserLoderConstructor(wm){
    var $loder = {};
+   /* Читает файл элемента
+    * @param {string} name
+    * @param {boolean} standard
+    * @param {function} callback
+    * @returns {callback}
+    */
+   $loder.getElement = function(name,standard,callback){
+      var file = path.join(
+         (standard?wm.pathWMinterface:wm.dataWM.path)
+         ,'elements',name+'.json');
+      readJSON(file,callback);
+   };
    /* Читает файл страцы из json, или из html, если страница кеширована
    * file - путь к странице
    * httpMethod - метод с помощью которого запрошена страница (get/post)

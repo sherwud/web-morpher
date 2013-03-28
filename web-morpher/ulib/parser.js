@@ -52,7 +52,9 @@ $wm.parser = function($parser,runOnServer){
       elements.get(name,standard,function(e,element){
          if (e) callback(e);
          else {
-            console.error('загрузка элементов');
+            console.log('Строим элемент:');
+            console.log(element);
+            
          }
       });
    };

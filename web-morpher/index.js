@@ -25,6 +25,9 @@ function wmConstructor(params){
    /* По факту это корень для расположения сайтов по умолчанию */
    /* Относительные пути будут искаться от этого каталога */
    wm.rootSites = path.normalize(path.dirname(module.parent.filename));
+   /* Каталог модуля wm */
+   wm.pathWM = path.normalize(path.dirname(module.filename));
+   wm.pathWMinterface = path.join(wm.pathWM,'interface');
    /* Каталог сайта */
    if (typeof params.path !== 'string')
       console.error('Путь к сайту не задан!');
