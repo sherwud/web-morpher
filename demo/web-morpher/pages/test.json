@@ -8,9 +8,9 @@
             "title":"Web Morpher - TEST"
          }
       },
-      "control":"page",
-      "system":true,
-      "input":{
+      "element":"page",
+      "standard":true,
+      "params":{
          "wmname":"testPage"
       }
    },

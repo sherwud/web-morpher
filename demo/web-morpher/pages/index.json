@@ -14,40 +14,42 @@
             ]
          }
       },
-      "control":"page",
-      "system":true,
-      "input":{
+      "element":"page",
+      "standard":true,
+      "params":{
          "wmname":"indexPage"
       }
    },
    "body":"{{trololo}}<h3>hello {{name}}! {{hint}}</h3>{{testInput}}\n\
    <br>{{testInputNumber}}\n\
    <br>{{knopka1}}",
-   "name":"123",
-   "hint":"hint",
-   "testInput":{
-      "format":"input",
-      "type":"text",
-      "name":"t"
-   },
-   "testInputNumber":{
-      "format":"input",
-      "type":"number",
-      "name":"t"
-   },
-   "knopka1":{
-      "ruName":"Кнопка 1",
-      "description":"Описание кнопки",
-      "format":"control",
-      "system":true,
-      "control":"button",
-      "data":{
-         "class":"btn",
-         "wmname":"appButton",
-         "text":"Пробник кнопки<a>asd</a>",
-         "onclick":"alert('через html')",
-         "handlers":{
-            "click":"alert('через js')"
+   "params":{
+      "name":"123",
+      "hint":"hint",
+      "testInput":{
+         "format":"input",
+         "type":"text",
+         "name":"t"
+      },
+      "testInputNumber":{
+         "format":"input",
+         "type":"number",
+         "name":"t"
+      },
+      "knopka1":{
+         "ruName":"Кнопка 1",
+         "description":"Описание кнопки",
+         "format":"control",
+         "system":true,
+         "control":"button",
+         "data":{
+            "class":"btn",
+            "wmname":"appButton",
+            "text":"Пробник кнопки<a>asd</a>",
+            "onclick":"alert('через html')",
+            "handlers":{
+               "click":"alert('через js')"
+            }
          }
       }
    }

@@ -27,7 +27,7 @@ $wm.parser = function($parser,runOnServer){
             callback(0,elements[key]);
          } else {
             $parser.loder.getElement(name,standard,function(e,data){
-               if (e) { callback(e); }
+               if (e) callback(e);
                else {
                   elements[key] = data;
                   callback(0,data);
@@ -38,24 +38,105 @@ $wm.parser = function($parser,runOnServer){
    }();
    /* Строит элемент
     * name - имя элемента
-    * data - данные для элемента
     * standard - стандартный элемент
+    * data - данные для элемента
     * callback(e,data) - функция для передачи результатов
     */
-   $parser.element = function(name,data,standard,callback){
+   $parser.element = function(name,standard,data,callback){
       if (typeof callback !== 'function'){
-         console.error('"callback" не задан!'); return;
+         console.error('$parser.element: "callback" не задан!'); return;
       };
       if (typeof name !== 'string'){
-         callback('"name" не задан!'); return;
+         callback('$parser.element: "name" не задан!'); return;
       };
       elements.get(name,standard,function(e,element){
-         if (e) { callback(e); }
+         if (e) callback(e);
          else {
             console.error('загрузка элементов');
          }
       });
    };
+   $parser.control = function(){};
+   /* Строит страницу
+    * 
+    */
+   $parser.page = function(data,inputParams,callback){
+      if (typeof callback !== 'function'){
+         console.error('$parser.page: "callback" не задан!'); return;
+      }
+      if (typeof data === 'undefined' || !data instanceof Object) {
+         callback('$parser.page: "data" не задан!'); return;
+      }
+      if (typeof data.body !== 'string')
+         callback('$parser.page: "data.body" не задан!');
+      var reg = /{{(\w+)}}/;
+      var regAll = /{{(\w+)}}/g;
+      var removeKey = function (callback){
+         data.body = data.body.replace(reg,'');
+         setTimeout(function(){replaceKey(callback);},1);
+      };
+      var pageJS = '';
+      var replaceKey = function (callback) {
+         var params = data.params||{};
+         var key = reg.exec(data.body);
+         if (key === null) { callback(0,data.body,pageJS); }
+         else {
+            var val = params[key[1]];
+            switch (typeof val) {
+               case 'string':
+                  if (val.search(reg) !== -1)
+                     params[key[1]] = val = val.replace(regAll,'');
+                  data.body = data.body.replace(reg,val);
+                  setTimeout(function(){replaceKey(callback);},1);
+               break;
+               case 'object':
+                  if (val instanceof Array) {
+                     removeKey(callback);
+                  } else {
+                     $parser.buildObject(val,inputParams,function(e,val,js){
+                        if (e) { callback(e); }
+                        else {
+                           if (js) pageJS+=js;
+                           params[key[1]] = val;
+                           data.body = data.body.replace(reg,val);
+                           setTimeout(function(){replaceKey(callback);},1);
+                        }
+                     });
+                  }
+               break;
+               default: removeKey(callback);
+            }
+         }
+      };
+      replaceKey(function(e,html,js){
+         if (e) callback(e);
+         else {
+            var config = data.config;
+            if (config) {
+               var name = config.element||'page';
+               var standard = config.standard;
+               if (typeof standard !== 'boolean') standard = true;
+               var params = config.params||{};
+               params.page = html;
+               var pid = params.pid = idGen.PID();
+               $parser.element(name,standard,params,function(e,data){
+                  if (e) callback(e);
+                  else {
+                     if (js) {
+                        js = '$(document).ready(function(){'+js+'});';
+                        setPageJS(pid,js,function(){
+                           callback(0,data,pid);
+                        });
+                     } else {
+                        callback(0,data,pid);
+                     }
+                  }
+               });
+            } else { callback(0,html); }
+         }
+      });
+   };   
+   
    /* Строит страницу по пути к файлу
     * path - путь к странице
     * params - входные параметры для построения страницы
@@ -77,7 +158,7 @@ $wm.parser = function($parser,runOnServer){
             if (typeof data === 'string') callback(0,data);
             else {
                var inputParams = params.inputParams;
-               $parser.buildPage(data,inputParams,function(e,html,pid){
+               $parser.page(data,inputParams,function(e,html,pid){
                   if (e) { callback(e); }
                   else {
                      var tmpl = data.config.template;
