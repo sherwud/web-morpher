@@ -53,17 +53,18 @@ $wm.parser = function($parser,runOnServer){
          if (e) callback(e);
          else {
             var reg = /{{(\w+)}}/;
+            var html = element.body;
             var replaceKey = function(callback){
-               var key = reg.exec(element.body);
-               if (key === null) callback(0,element.body);
+               var key = reg.exec(html);
+               if (key === null) callback(0,html);
                else {
                   var val = String(data[key[1]]||'');
-                  element.body = element.body.replace(reg,val);
+                  html = html.replace(reg,val);
                   setTimeout(function(){replaceKey(callback);},1);
                }
             };
             if (data['wmname']) {
-               element.body = element.body.replace(/(<\w+\s)/,function(math){
+               html = html.replace(/(<\w+\s)/,function(math){
                   return math+'wmname="'+data['wmname']+'"'
                      +'type="element:'+name+'" ';
                });
