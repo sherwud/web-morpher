@@ -36,10 +36,7 @@ $core.start = function(){
             wm.parser.build(file,params,function(e,data){
                if (e){
                   if (e.HTTPCODE === 304){
-                     if (req.header("Cache-Control"))
-                        res.send(304);
-                     else
-                        res.send(200,data);
+                     next();
                   } else {
                      res.send(e.HTTPCODE||500);
                      console.log(e);

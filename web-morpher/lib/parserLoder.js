@@ -8,9 +8,19 @@ function getHash(data){
    hash.update(data,'utf8');
    return hash.digest('hex');
 }
-function readFile(file,callback){
+function checkFile(file,callback){
    fs.stat(file,function(e,stats){
       if (!e && stats.isFile())
+         callback(0);
+      else callback(e||{error:'File not found!'});
+   });
+};
+function readFile(file,callback){
+   checkFile(file,function(e){
+      if (e) {
+         e.HTTPCODE = 404;
+         callback(e);
+      } else {
          fs.readFile(file,'utf8',function(e, data){
             if (!e){
                try {
@@ -21,10 +31,6 @@ function readFile(file,callback){
                }
             } else { callback(e); }
          });
-      else {
-         e = e || {text:file+' не является файлом'};
-         e.HTTPCODE = 404;
-         callback(e);
       }
    });
 };
@@ -169,8 +175,8 @@ function wmParserLoderConstructor(wm){
          if (e){ callback(e); }
          else {
             if (cached) {
-               readFile(htmlFile,function(e,data){
-                  if (!e){ callback(0,data); }
+               checkFile(htmlFile,function(e){
+                  if (!e){ callback({HTTPCODE:304}); }
                   else { readJSON(jsonFile,JSONcallback(hash),jsonText); }
                });
             } else { readJSON(jsonFile,JSONcallback(hash),jsonText); }
