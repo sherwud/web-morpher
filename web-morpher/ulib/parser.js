@@ -52,18 +52,61 @@ $wm.parser = function($parser,runOnServer){
       elements.get(name,standard,function(e,element){
          if (e) callback(e);
          else {
-            console.log('Строим элемент:');
-            console.log(element);
-            
-            
+            var reg = /{{(\w+)}}/;
+            var replaceKey = function(callback){
+               var key = reg.exec(element.body);
+               if (key === null) callback(0,element.body);
+               else {
+                  var val = String(data[key[1]]||'');
+                  element.body = element.body.replace(reg,val);
+                  setTimeout(function(){replaceKey(callback);},1);
+               }
+            };
+            if (data['wmname']) {
+               element.body = element.body.replace(/(<\w+\s)/,function(math){
+                  return math+'wmname="'+data['wmname']+'"'
+                     +'type="element:'+name+'" ';
+               });
+            }
+            replaceKey(callback);
          }
       });
    };
-   $parser.control = function(){};
-   /* Строит страницу
+   /* Контролы
+    * get( - получает элементы
+    *    name - имя элемента
+    *    standard - стандартный контрол
+    *    callback(e,data) - функция для передачи результатов
+    * )
+    */
+   var controls = new function(){
+      var controls ={};
+      this.get = function(name,standard,callback){
+         var key = Number(standard)+name;
+         if (key in controls){
+            callback(0,controls[key]);
+         } else {
+            $parser.loder.getСontrol(name,standard,function(e,data){
+               if (e) callback(e);
+               else {
+                  controls[key] = data;
+                  callback(0,data);
+               }
+            });
+         }
+      };
+   }();
+   /* Строит контрол
     * 
     */
-   $parser.page = function(data,inputParams,callback){
+   $parser.control = function(){};
+   /* Строит страницу
+    * data - данные страницы из json
+    * inputParams - входные параметры
+    * callback(e,data) - функция для передачи результатов
+    * setPageJS(pid,js,callback) - функция сохранения скриптов страницы
+    */
+   $parser.page = function(data,inputParams,callback,setPageJS){
       if (typeof callback !== 'function'){
          console.error('$parser.page: "callback" не задан!'); return;
       }
@@ -74,13 +117,13 @@ $wm.parser = function($parser,runOnServer){
          callback('$parser.page: "data.body" не задан!');
       var reg = /{{(\w+)}}/;
       var regAll = /{{(\w+)}}/g;
-      var removeKey = function (callback){
+      var removeKey = function(callback){
          data.body = data.body.replace(reg,'');
          setTimeout(function(){replaceKey(callback);},1);
       };
       var pageJS = '';
-      var replaceKey = function (callback) {
-         var params = data.params||{};
+      var params = data.params||{};
+      var replaceKey = function(callback){
          var key = reg.exec(data.body);
          if (key === null) { callback(0,data.body,pageJS); }
          else {

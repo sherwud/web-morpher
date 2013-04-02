@@ -116,6 +116,18 @@ function wmParserLoderConstructor(wm){
          ,'elements',name+'.json');
       readJSON(file,callback);
    };
+   /* Читает файл контрола
+    * @param {string} name
+    * @param {boolean} standard
+    * @param {function} callback
+    * @returns {callback}
+    */
+   $loder.getСontrol = function(name,standard,callback){
+      var file = path.join(
+         (standard?wm.pathWMinterface:wm.dataWM.path)
+         ,'controls',name+'.json');
+      readJSON(file,callback);
+   };
    /* Читает файл страцы из json, или из html, если страница кеширована
    * file - путь к странице
    * httpMethod - метод с помощью которого запрошена страница (get/post)
