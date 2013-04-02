@@ -101,7 +101,7 @@ $wm.parser = function($parser,runOnServer){
     * 
     */
    $parser.control = function(){};
-   /* Строит страницу
+   /* Строит страницу из json файла
     * data - данные страницы из json
     * inputParams - входные параметры
     * callback(e,data) - функция для передачи результатов
@@ -202,7 +202,7 @@ $wm.parser = function($parser,runOnServer){
             function(e,data,cache,setPageJS){
          if (e) { callback(e); }
          else {
-            if (typeof data === 'string') callback(0,data);
+            if (typeof data === 'string') callback({HTTPCODE:304},data);
             else {
                var inputParams = params.inputParams;
                $parser.page(data,inputParams,function(e,html,pid){

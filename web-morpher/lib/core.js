@@ -35,8 +35,15 @@ $core.start = function(){
          case '.html':
             wm.parser.build(file,params,function(e,data){
                if (e){
-                  res.send(e.HTTPCODE||500);
-                  console.log(e);
+                  if (e.HTTPCODE === 304){
+                     if (req.header("Cache-Control"))
+                        res.send(304);
+                     else
+                        res.send(200,data);
+                  } else {
+                     res.send(e.HTTPCODE||500);
+                     console.log(e);
+                  }
                } else {
                   res.send(200,data);
                }
