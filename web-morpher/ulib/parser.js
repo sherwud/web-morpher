@@ -58,17 +58,36 @@ $wm.parser = function($parser,runOnServer){
                var key = reg.exec(html);
                if (key === null) callback(0,html);
                else {
-                  var val = String(data[key[1]]||'');
+                  key = key[1];
+                  var val = '';
+                  switch (key) {
+                     case 'id':
+                        val = String(data[key]||'');
+                        val = 'id="'+val+'"';
+                     break;
+                     case 'wmname':
+                        val = String(data[key]||'');
+                        if (val)
+                           val = 'wmname="'+val+'"';
+                        else val = '';
+                     break;
+                     case 'wmtype':
+                        val = 'wmtype="element:'+Number(standard)+name+'"';
+                     break;
+                     case 'class':
+                        val = String(data[key]||'');
+                        val = val?(' '+val):val;
+                        if (val||element.class)
+                           val = 'class="'+(element.class||'')+val+'"';
+                        else val = '';
+                     break;
+                     default: val = String(data[key]||'');
+                  }
+                  
                   html = html.replace(reg,val);
                   setTimeout(function(){replaceKey(callback);},1);
                }
             };
-            if (data['wmname']) {
-               html = html.replace(/(<\w+\s)/,function(math){
-                  return math+'wmname="'+data['wmname']+'"'
-                     +'type="element:'+name+'" ';
-               });
-            }
             replaceKey(callback);
          }
       });
@@ -165,7 +184,7 @@ $wm.parser = function($parser,runOnServer){
                if (typeof standard !== 'boolean') standard = true;
                var params = config.params||{};
                params.page = html;
-               var pid = params.pid = idGen.PID();
+               var pid = params.id = idGen.PID();
                $parser.element(name,standard,params,function(e,data){
                   if (e) callback(e);
                   else {
