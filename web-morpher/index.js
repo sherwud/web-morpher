@@ -69,6 +69,7 @@ function wmConstructor(params){
       params.port?params.port:
       localConfigs.port?localConfigs.port:
       defaultPort;
+   wm.formidable = require('formidable');
    wm.core = require('./lib/core.js');
    wm.parser = require('./ulib/parser.js');
    wm.parser.loder = require('./lib/parserLoder.js')(wm);

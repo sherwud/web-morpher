@@ -15,7 +15,11 @@
    },
    "body":"{{trololo}}<h3>hello {{name}}! {{hint}}</h3>{{testInput}}\n\
    <br>{{testInputNumber}}\n\
-   <br>{{knopka1}}",
+   <br>{{knopka1}}\n\
+   <form enctype=\"multipart/form-data\" method=\"post\" action=\"/upload\">\n\
+     <p><input type=\"file\" accept=\"image/*\" name=\"image\">\n\
+     <input type=\"submit\" value=\"Отправить\"></p>\n\
+     </form> ",
    "params":{
       "name":"123",
       "hint":"hint",
