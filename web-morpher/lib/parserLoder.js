@@ -120,6 +120,9 @@ function wmParserLoderConstructor(wm){
       var file = path.join(
          (standard?wm.pathWMinterface:wm.dataWM.path)
          ,'elements',name+'.json');
+      // строить объект. вместо eval
+      // b = new new Function("this.a = 123; console.log(this)")
+      // b = new new Function("this.a = function(){console.log(1)}; console.log(this)")
       readJSON(file,callback);
    };
    /* Читает файл контрола
