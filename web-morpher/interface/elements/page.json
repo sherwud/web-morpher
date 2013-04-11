@@ -1,4 +1,4 @@
 {
-   "body":"<section {{id}} {{wmtype}} {{wmname}} {{class}}>{{page}}</section>",
+   "body":"<section {{id}} {{wmname}} {{wmtype}} {{class}}>{{page}}</section>",
    "class":"wm-page"
 }
