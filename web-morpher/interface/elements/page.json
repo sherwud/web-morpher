@@ -1,4 +1,7 @@
 {
-   "body":"<section {{id}} {{wmname}} {{wmtype}} {{class}}>{{page}}</section>",
-   "class":"wm-page"
+   "body":"<section {{id}} {{wmname}} {{wmtype}} {{class}} {{buildTest}}>{{page}}</section>",
+   "class":"wm-page",
+   "builders":{
+      "buildTest":"return 'buildTest=\"'+key+':'+Number(standard)+name+'\"'"
+   }
 }

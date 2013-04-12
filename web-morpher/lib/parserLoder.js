@@ -10,8 +10,7 @@ function getHash(data){
 }
 function checkFile(file,callback){
    fs.stat(file,function(e,stats){
-      if (!e && stats.isFile())
-         callback(0);
+      if (!e && stats.isFile()) callback(0);
       else callback(e||{error:'File not found!'});
    });
 };
@@ -21,15 +20,8 @@ function readFile(file,callback){
          e.HTTPCODE = 404;
          callback(e);
       } else {
-         fs.readFile(file,'utf8',function(e, data){
-            if (!e){
-               try {
-                  callback(0,data);
-               } catch(e){
-                  callback(e);
-                  console.log(e);
-               }
-            } else { callback(e); }
+         fs.readFile(file,'utf8',function(e,data){
+            if (e) callback(e); else callback(0,data);
          });
       }
    });
@@ -42,15 +34,19 @@ function parseJSON(data,callback){
       callback(0,parse);
    } catch(e){
       e = {e:e};
-      e.metodmessage = 'ERROR: JSON.parse - '+data;
+      e.method = 'parserLoder.js: parseJSON';
+      e.data = data;
       callback(e);
    }
 }
 function readJSON(file,callback,jsonText){
-   if (typeof jsonText === 'string') parseJSON(jsonText,callback);
+   var recallback = function(e,data){
+      if (e) { e.file = file; callback(e); }
+      else callback(0,data);
+   };
+   if (typeof jsonText === 'string') parseJSON(jsonText,recallback);
    else readFile(file,function(e,data){
-      if (e){ callback(e); }
-      else { parseJSON(data,callback); }
+      if (e) callback(e); else { parseJSON(data,recallback); }
    });      
 };
 function mkdir(dir,callback){
@@ -58,11 +54,7 @@ function mkdir(dir,callback){
    fs.exists(parentDir,function(exists){
        if (exists){
           fs.mkdir(dir,function(e){
-             if (!e){
-                callback();
-             } else {
-                console.log(e);
-             }
+             if (e) { callback(e); } else { callback(0); }
           });
        } else { mkdir(parentDir,callback); }
    });   
@@ -73,12 +65,16 @@ function writeFile(file,data,callback){
       if (exists){
          fs.writeFile(file,data,'utf8',function(e){
             if (typeof callback === 'function') {
-               if (e) {console.log(e);callback(e);}
+               if (e) {console.error(e);callback(e);}
                else callback(0);
-            } else
-               if (e) console.log(e);
+            } else if (e) console.error(e);
          });
-      } else { mkdir(dir,function(){writeFile(file,data,callback);}); }
+      } else { mkdir(dir,function(e){
+         if (e) {
+            if (typeof callback === 'function') callback(e);
+            else console.error(e);
+         } else writeFile(file,data,callback);
+      }); }
    });
 }
 /* Кеширует готовые html файлы
@@ -97,7 +93,7 @@ function cachePage(html,htmlFile,file,hash){
  * jsonFile - путь к json представлению файла
  * callback - функция для передачи результатов
  */
-function checkCache (file,jsonFile,callback){
+function checkCache(file,jsonFile,callback){
    readFile(jsonFile,function(e,data){
       if (e){ callback(e); }
       else {
@@ -120,10 +116,28 @@ function wmParserLoderConstructor(wm){
       var file = path.join(
          (standard?wm.pathWMinterface:wm.dataWM.path)
          ,'elements',name+'.json');
-      // строить объект. вместо eval
-      // b = new new Function("this.a = 123; console.log(this)")
-      // b = new new Function("this.a = function(){console.log(1)}; console.log(this)")
-      readJSON(file,callback);
+      readJSON(file,function(e,data){
+         if(e) callback(e);
+         else {
+            if (data.builders instanceof Object) {
+               for (var i in data.builders){
+                  var funcBody = 'var key=\''+i+'\';'+'var name=\''+name+'\';'
+                     +'var standard='+String(standard)+';'+data.builders[i];
+                  try { data.builders[i] = Function('data,element',funcBody); }
+                  catch(e){
+                     e = {e:e};
+                     e.method = '$loder.getElement';
+                     e.element = Number(standard)+name;
+                     e.key = i;
+                     e.funcBody = funcBody;
+                     callback(e);
+                     return;
+                  }
+               }
+            } else data.builders = {};
+            callback(0,data);
+         }
+      });
    };
    /* Читает файл контрола
     * @param {string} name

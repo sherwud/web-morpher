@@ -56,10 +56,21 @@ $wm.parser = function($parser,runOnServer){
             var html = element.body;
             var replaceKey = function(callback){
                var key = reg.exec(html);
-               if (key === null) callback(0,html);
-               else {
-                  key = key[1];
-                  var val = '';
+               if (key === null) { callback(0,html); return; };
+               key = key[1];
+               var val = '';
+               if (key in element.builders){
+                  try { val = String(element.builders[key](data,element)); }
+                  catch(e){
+                     e = {e:e};
+                     e.method = '$parser.element';
+                     e.element = Number(standard)+name;
+                     e.key = key;
+                     console.error(e);
+                  }
+                  html = html.replace(reg,val);
+                  setTimeout(function(){replaceKey(callback);},1);
+               } else {
                   switch (key) {
                      case 'id':
                         val = String(data[key]||'');

@@ -68,7 +68,7 @@ $core.start = function(){
                      next();
                   } else {
                      res.send(e.HTTPCODE||500);
-                     console.log(e);
+                     console.error(e);
                   }
                } else {
                   res.send(200,data);
