@@ -19,26 +19,39 @@ exports.info = {
 delete packageInfo;
 /* Конструктор объектов wm */
 function wmConstructor(params){
-   var wm = {};
    params = params || {};
-   /* Каталог откуда запускается модуль */
-   /* По факту это корень для расположения сайтов по умолчанию */
-   /* Относительные пути будут искаться от этого каталога */
-   wm.rootSites = path.normalize(path.dirname(module.parent.filename));
-   /* Каталог модуля wm */
-   wm.pathWM = path.normalize(path.dirname(module.filename));
-   wm.pathWMinterface = path.join(wm.pathWM,'interface');
-   /* Каталог сайта */
    if (typeof params.path !== 'string')
-      console.error('Путь к сайту не задан!');
-   wm.pathSite = path.normalize(params.path);
-   var buffer = path.join(wm.rootSites,wm.pathSite);
-   if (fs.existsSync(buffer)) {
-      wm.pathSite = path.join(wm.rootSites,wm.pathSite);
-   } else if (!fs.existsSync(wm.pathSite)) {
-      console.log('Неверный путь к сайту: '+wm.pathSite);
-      return false;
+      { console.log('Неверный параметр "path"'); return; }
+   if (params.port && typeof params.port !== 'number')
+      { console.log('Неверный параметр "port"'); return; }
+   params.path = path.normalize(params.path);
+   params.port = params.port ^ 0;
+   var wm = {path:{}};
+   /* путь к модулю wm */
+   wm.path.wmroot = path.dirname(path.normalize(module.filename));
+   /* путь к стандартным интерфейсам */
+   wm.path.wmwi = path.join(wm.path.wmroot,'wi');
+   /* путь к каталогу запуска */
+   wm.path.startup = path.dirname(path.normalize(module.parent.filename));
+   /* путь к корню */
+   wm.path.root = path.dirname(wm.path.wmroot);
+   /* путь к сайту */
+   wm.path.site = path.join(wm.path.startup,params.path);
+   if (!fs.existsSync(wm.path.site)) {
+      wm.path.site = path.join(wm.path.root,params.path);
+      if (!fs.existsSync(wm.path.site)) {
+         wm.path.site = params.path;
+         if (!fs.existsSync(wm.path.site)) {
+            console.log('Неверный путь к сайту: "'+wm.path.site+'"');
+            return false;
+         }
+      }
    }
+   
+   /* task #3 in process */
+   console.log(wm.path);
+   return;
+
    /* Каталог сайта с файлами WM */
    /* Если каталога нет, то это обычный статический сайт */
    wm.dataWM = {};

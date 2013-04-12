@@ -38,7 +38,7 @@ $core.start = function(){
                   res.send(200,'<img src="'+image+'"/>');
                }
             });
-         })
+         });
          /*
          fs.rename(files.image.path, 
             path.join(path.dirname(files.image.path),files.image.name),
@@ -57,12 +57,9 @@ $core.start = function(){
       if (file[file.length-1] === '/') file += 'index.html';
       var extname = path.extname(file);
       if (extname === '') file += extname = '.html';
-      var params = {};
-      params.httpMethod = req.route.method;
-      params.inputParams = req.query;
       switch (extname) {
          case '.html':
-            wm.parser.build(file,params,function(e,data){
+            wm.parser.build(file,req.query,function(e,data){
                if (e){
                   if (e.HTTPCODE === 304){
                      next();
@@ -93,10 +90,9 @@ $core.start = function(){
       break;
       case 2: /* Динамика */
          wmUILIB();
-         upload();
          wmInfo();
+         upload();
          app.get('/*',wmParser);
-         app.post('/*',wmParser);
       break;
    }
    app.get('/*',function(req,res,next){

@@ -227,18 +227,15 @@ $wm.parser = function($parser,runOnServer){
          callback('parser.build - ошибка вызова метода');
          return;
       }
-      var httpMethod = params.httpMethod;
-      $parser.loder.getPage(path,httpMethod,
-            function(e,data,cache,setPageJS){
+      $parser.loder.getPage(path,function(e,data,cache,setPageJS){
          if (e) { callback(e,data); }
          else {
-            var inputParams = params.inputParams;
-            $parser.page(data,inputParams,function(e,html,pid){
+            $parser.page(data,params,function(e,html,pid){
                if (e) { callback(e); }
                else {
                   var tmpl = data.config.template;
-                  if (httpMethod === 'get' && typeof tmpl === 'object'){
-                     $parser.setTemplate(tmpl,inputParams,html,pid,
+                  if (typeof tmpl === 'object'){
+                     $parser.setTemplate(tmpl,params,html,pid,
                         function(e,data){
                            if (e) { callback(e); }
                            else {

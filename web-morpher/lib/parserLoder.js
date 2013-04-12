@@ -153,19 +153,13 @@ function wmParserLoderConstructor(wm){
    };
    /* Читает файл страцы из json, или из html, если страница кеширована
    * file - путь к странице
-   * httpMethod - метод с помощью которого запрошена страница (get/post)
    * callback - функция для передачи результатов
    * callback(e,data)
    * e - ошибка, 0 если нет ошибки
    * data - данные для отправки
    */
-   $loder.getPage = function(file,httpMethod,callback){
-      var htmlFile = file;
-      if (httpMethod === 'get'){
-         htmlFile = path.join(wm.pathSite,htmlFile);
-      } else {
-         htmlFile = path.join(wm.pathSite,'web-morpher','~cache',htmlFile);
-      }
+   $loder.getPage = function(file,callback){
+      var htmlFile = path.join(wm.pathSite,file);
       var jsonFile = path.join(
          wm.pathSite,
          'web-morpher','pages',

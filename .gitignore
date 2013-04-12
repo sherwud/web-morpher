@@ -2,7 +2,8 @@
 *local*.bat
 /ext/
 /demo/web-morpher/~cache/
+/demo/web-morpher/~upload/
 /demo/js
 /demo/*.html
 /docs/ext/
-web-morpher/ui/ext/
+/web-morpher/ui/ext/
