@@ -47,10 +47,24 @@ function wmConstructor(params){
          }
       }
    }
+   /* путь к ресурсам сайта */
+   wm.path.sitewm = path.join(wm.path.site,'wm');
+   /* разбор структуры */
+   var siteconfig = path.join(wm.path.sitewm,'config.json');
+   if (fs.existsSync(wm.path.sitewm)) {
+      if (fs.existsSync(siteconfig)) {
+         try { siteconfig = require(siteconfig)||{}; }
+         catch(e) { console.error(e); siteconfig = {}; }
+      } else { siteconfig = {}; }
+   } else { wm.path.sitewm = false; siteconfig = {}; }
+   
    
    /* task #3 in process */
    console.log(wm.path);
+   console.log(siteconfig);
    return;
+
+
 
    /* Каталог сайта с файлами WM */
    /* Если каталога нет, то это обычный статический сайт */
