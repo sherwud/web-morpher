@@ -58,10 +58,11 @@ function wmConstructor(params){
       } else { siteconfig = {}; }
    } else { wm.path.sitewm = false; siteconfig = {}; }
    
-   
+   wm.test = require('./ins/standart.js');
+   wm.test.tt();
    /* task #3 in process */
-   console.log(wm.path);
-   console.log(siteconfig);
+   //console.log(wm.test);
+   //console.log(siteconfig);
    return;
 
 
