@@ -14,7 +14,10 @@ $core.start = function(){
             var file = path.join(wm.rootSites,req.path);
             fs.stat(file,function(err,stats){
                if (!err && stats.isFile())
-                  res.sendfile(file);
+                  if (req.header("Cache-Control"))
+                     res.sendfile(304);
+                  else
+                     res.sendfile(file);
                else
                   res.send(404);
             });
