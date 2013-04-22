@@ -1,32 +1,40 @@
-/*
- * Модуль сервера
- */
-/* Необходимые модули */
 var path = require('path');
 var fs = require('fs');
-/* Порт по умолчанию */
-var defaultPort = 3000;
-/* Конструктор */
-exports = module.exports = wmConstructor;
-/* чтение данных из package.json*/
 var packageInfo = require('./package.json');
-exports.info = {
-   name: packageInfo.name,
-   version: packageInfo.version,
-   versionName: packageInfo.versionName,
-   author: packageInfo.author
+/* @info Получение общей информации о системе
+ * @param {string} name - имя параметра для получения
+ * @returns {any} - значение параметра, или стандартный набор
+ */
+this.info = function(name){
+   if (name) {
+      return packageInfo[name]?packageInfo[name]:null;
+   } else {
+      return {
+         name: packageInfo.name,
+         version: packageInfo.version,
+         versionName: packageInfo.versionName,
+         author: packageInfo.author
+      };
+   }
 };
-delete packageInfo;
-/* Конструктор объектов wm */
-function wmConstructor(params){
-   params = params || {};
-   if (typeof params.path !== 'string')
-      { console.log('Неверный параметр "path"'); return; }
-   if (params.port && typeof params.port !== 'number')
-      { console.log('Неверный параметр "port"'); return; }
-   params.path = path.normalize(params.path);
-   params.port = params.port ^ 0;
-   var wm = {path:{}};
+/* @info Создает объект для сайта
+ * @param {string} sitePath - путь к сайту
+ * @returns {object} - объект для управления сайтом
+ */
+this.app = wmConstructor;
+function wmConstructor(sitePath){
+   if (!(this instanceof wmConstructor)) {return new wmConstructor(sitePath);}
+   if (typeof sitePath === 'string') 
+      sitePath = path.normalize(sitePath);
+   else {
+      console.log('Путь к сайту не задан');
+      return;
+   }
+   var wm = this;
+   wm.path = {};
+   
+
+   
    /* путь к модулю wm */
    wm.path.wmroot = path.dirname(path.normalize(module.filename));
    /* путь к стандартным интерфейсам */
@@ -36,11 +44,11 @@ function wmConstructor(params){
    /* путь к корню */
    wm.path.root = path.dirname(wm.path.wmroot);
    /* путь к сайту */
-   wm.path.site = path.join(wm.path.startup,params.path);
+   wm.path.site = path.join(wm.path.startup,sitePath);
    if (!fs.existsSync(wm.path.site)) {
-      wm.path.site = path.join(wm.path.root,params.path);
+      wm.path.site = path.join(wm.path.root,sitePath);
       if (!fs.existsSync(wm.path.site)) {
-         wm.path.site = params.path;
+         wm.path.site = sitePath;
          if (!fs.existsSync(wm.path.site)) {
             console.log('Неверный путь к сайту: "'+wm.path.site+'"');
             return false;
@@ -57,12 +65,12 @@ function wmConstructor(params){
          catch(e) { console.error(e); siteconfig = {}; }
       } else { siteconfig = {}; }
    } else { wm.path.sitewm = false; siteconfig = {}; }
-   
+   /*
    wm.test = require('./modules/standart.js');
-   wm.test.tt();
+   wm.test.tt();*/
    /* task #3 in process */
-   //console.log(wm.test);
-   //console.log(siteconfig);
+   console.log(wm);
+   console.log(siteconfig);
    return;
 
 
@@ -93,10 +101,13 @@ function wmConstructor(params){
             module.paths.push(buffer[i]);
       }
    }
-   wm.port =
-      params.port?params.port:
-      localConfigs.port?localConfigs.port:
-      defaultPort;
+   wm.listen = function(sitePort){
+      if (typeof sitePort === 'number')
+         sitePort = sitePort ^ 0;
+   };
+   wm.port = sitePort?sitePort:localConfigs.port;
+   if (!wm.port)
+      { console.log('Параметр "port" не задан'); return; }
    wm.formidable = require('formidable');
    wm.core = require('./lib/core.js');
    wm.parser = require('./ulib/parser.js');
@@ -109,5 +120,4 @@ function wmConstructor(params){
    console.log('Сайт: '+wm.pathSite);
    console.log('Тип сайта: '+wm.typeSite);
    console.log('Запущен на порту: '+wm.port);
-   return wm;
 }

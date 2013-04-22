@@ -1,4 +1,5 @@
 /* инициализация Web morpher */
-var wmConstructor = require('./web-morpher');
-console.log(wmConstructor.info);
-var demo = wmConstructor({path:'demo',port:777});
+var $wm = require('./web-morpher');
+console.log($wm.info());
+var demo = $wm.app('demo');
+demo.listen(777);
