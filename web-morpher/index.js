@@ -30,7 +30,7 @@ function wmConstructor(params){
    /* путь к модулю wm */
    wm.path.wmroot = path.dirname(path.normalize(module.filename));
    /* путь к стандартным интерфейсам */
-   wm.path.wmwi = path.join(wm.path.wmroot,'wi');
+   wm.path.wmui = path.join(wm.path.wmroot,'ui');
    /* путь к каталогу запуска */
    wm.path.startup = path.dirname(path.normalize(module.parent.filename));
    /* путь к корню */
@@ -58,7 +58,7 @@ function wmConstructor(params){
       } else { siteconfig = {}; }
    } else { wm.path.sitewm = false; siteconfig = {}; }
    
-   wm.test = require('./ins/standart.js');
+   wm.test = require('./modules/standart.js');
    wm.test.tt();
    /* task #3 in process */
    //console.log(wm.test);
