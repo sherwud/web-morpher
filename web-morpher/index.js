@@ -33,8 +33,18 @@ function wmConstructor(sitePath){
    var serv = {path:{}};
    /* путь к модулю wm */
    serv.path.wmroot = path.dirname(path.normalize(module.filename));
+   /* путь к обязательным модулям */
+   serv.path.wmlib = path.join(serv.path.wmroot,'lib');
+   /* путь к необязательным модулям */
+   serv.path.wmmod = path.join(serv.path.wmroot,'modules');
+   /* путь к модулям общим с интерфейсом */
+   serv.path.wmlibwi = path.join(serv.path.wmroot,'lib-wi');
    /* путь к стандартным интерфейсам */
-   serv.path.wmres = path.join(serv.path.wmroot,'wi','res');
+   serv.path.wires = path.join(serv.path.wmroot,'wi','res');
+   /* путь к модулям интерфейса */
+   serv.path.wilib = path.join(serv.path.wmroot,'wi','lib');
+   /* путь к расширениям интерфеса */
+   serv.path.wiext = path.join(serv.path.wmroot,'wi','ext');
    /* путь к каталогу запуска */
    serv.path.startup = path.dirname(path.normalize(module.parent.filename));
    /* путь к корню */
@@ -53,6 +63,7 @@ function wmConstructor(sitePath){
    }
    /* путь к ресурсам сайта */
    serv.path.sitewm = path.join(serv.path.site,'wm');
+   serv.path.sitepages = path.join(serv.path.site,'pages');
    /* разбор структуры */
    var siteconfig = path.join(serv.path.sitewm,'config.json');
    if (fs.existsSync(serv.path.sitewm)) {
@@ -61,29 +72,17 @@ function wmConstructor(sitePath){
          catch(e) { console.error(e); siteconfig = {}; }
       } else { siteconfig = {}; }
    } else { serv.path.sitewm = false; siteconfig = {}; }
+   /* настройки сайта */
+   serv.port = siteconfig.port;
    /*
    wm.test = require('./modules/standart.js');
    wm.test.tt();*/
    /* task #3 in process */
    console.log(serv);
-   console.log(siteconfig);
    return;
 
    var $wm = {};
 
-   /* Каталог сайта с файлами WM */
-   /* Если каталога нет, то это обычный статический сайт */
-   wm.dataWM = {};
-   wm.dataWM.path = path.join(wm.pathSite,'web-morpher');
-   var localConfigs = {};
-   if (fs.existsSync(wm.dataWM.path)) {
-      localConfigs = require(path.join(wm.dataWM.path,'config.json'));
-      
-      wm.typeSite = localConfigs.typeSite?localConfigs.typeSite:1;
-   } else {
-      wm.dataWM = false;
-      wm.typeSite = 0;
-   }
    var globalConfigs = require('./config.json');
    /* Пути для поиска модулей */
    if (globalConfigs.node_modules instanceof Array)
