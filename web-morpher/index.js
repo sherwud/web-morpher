@@ -30,50 +30,46 @@ function wmConstructor(sitePath){
       console.log('Путь к сайту не задан');
       return;
    }
-   var wm = this;
-   wm.path = {};
-   
-
-   
+   var serv = {path:{}};
    /* путь к модулю wm */
-   wm.path.wmroot = path.dirname(path.normalize(module.filename));
+   serv.path.wmroot = path.dirname(path.normalize(module.filename));
    /* путь к стандартным интерфейсам */
-   wm.path.wmui = path.join(wm.path.wmroot,'ui');
+   serv.path.wmres = path.join(serv.path.wmroot,'wi','res');
    /* путь к каталогу запуска */
-   wm.path.startup = path.dirname(path.normalize(module.parent.filename));
+   serv.path.startup = path.dirname(path.normalize(module.parent.filename));
    /* путь к корню */
-   wm.path.root = path.dirname(wm.path.wmroot);
+   serv.path.root = path.dirname(serv.path.wmroot);
    /* путь к сайту */
-   wm.path.site = path.join(wm.path.startup,sitePath);
-   if (!fs.existsSync(wm.path.site)) {
-      wm.path.site = path.join(wm.path.root,sitePath);
-      if (!fs.existsSync(wm.path.site)) {
-         wm.path.site = sitePath;
-         if (!fs.existsSync(wm.path.site)) {
-            console.log('Неверный путь к сайту: "'+wm.path.site+'"');
+   serv.path.site = path.join(serv.path.startup,sitePath);
+   if (!fs.existsSync(serv.path.site)) {
+      serv.path.site = path.join(serv.path.root,sitePath);
+      if (!fs.existsSync(serv.path.site)) {
+         serv.path.site = sitePath;
+         if (!fs.existsSync(serv.path.site)) {
+            console.log('Неверный путь к сайту: "'+serv.path.site+'"');
             return false;
          }
       }
    }
    /* путь к ресурсам сайта */
-   wm.path.sitewm = path.join(wm.path.site,'wm');
+   serv.path.sitewm = path.join(serv.path.site,'wm');
    /* разбор структуры */
-   var siteconfig = path.join(wm.path.sitewm,'config.json');
-   if (fs.existsSync(wm.path.sitewm)) {
+   var siteconfig = path.join(serv.path.sitewm,'config.json');
+   if (fs.existsSync(serv.path.sitewm)) {
       if (fs.existsSync(siteconfig)) {
          try { siteconfig = require(siteconfig)||{}; }
          catch(e) { console.error(e); siteconfig = {}; }
       } else { siteconfig = {}; }
-   } else { wm.path.sitewm = false; siteconfig = {}; }
+   } else { serv.path.sitewm = false; siteconfig = {}; }
    /*
    wm.test = require('./modules/standart.js');
    wm.test.tt();*/
    /* task #3 in process */
-   console.log(wm);
+   console.log(serv);
    console.log(siteconfig);
    return;
 
-
+   var $wm = {};
 
    /* Каталог сайта с файлами WM */
    /* Если каталога нет, то это обычный статический сайт */
@@ -101,7 +97,7 @@ function wmConstructor(sitePath){
             module.paths.push(buffer[i]);
       }
    }
-   wm.listen = function(sitePort){
+   this.listen = function(sitePort){
       if (typeof sitePort === 'number')
          sitePort = sitePort ^ 0;
    };
