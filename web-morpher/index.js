@@ -64,7 +64,7 @@ function wmConstructor(sitePath){
    /* путь к ресурсам сайта */
    serv.path.sitewm = path.join(serv.path.site,'wm');
    serv.path.sitepages = path.join(serv.path.site,'pages');
-   /* разбор структуры */
+   /* настройки сайта */
    var siteconfig = path.join(serv.path.sitewm,'config.json');
    if (fs.existsSync(serv.path.sitewm)) {
       if (fs.existsSync(siteconfig)) {
@@ -72,8 +72,9 @@ function wmConstructor(sitePath){
          catch(e) { console.error(e); siteconfig = {}; }
       } else { siteconfig = {}; }
    } else { serv.path.sitewm = false; siteconfig = {}; }
-   /* настройки сайта */
+   /* порт для сайта */
    serv.port = siteconfig.port;
+   
    /*
    wm.test = require('./modules/standart.js');
    wm.test.tt();*/
