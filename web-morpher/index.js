@@ -31,6 +31,20 @@ function wmConstructor(sitePath){
       return;
    }
    var serv = {path:{}};
+   var globalConfigs = require('./config.json');
+   var temp = globalConfigs['node_modules_root'];
+   serv.path.nmroot = temp?temp:'';
+   if (!fs.existsSync(serv.path.nmroot)) serv.path.nmroot = '';
+   temp = globalConfigs['node_modules'];
+   if (typeof temp === 'object' && !(temp instanceof Array))
+      serv.path.nm = temp;
+   else serv.path.nm = {};
+   for (var i in serv.path.nm) {
+      if (!fs.existsSync(serv.path.nm[i])) delete serv.path.nm[i];
+   }
+   var findNodeModule = function(name){
+      
+   };
    /* путь к модулю wm */
    serv.path.wmroot = path.dirname(path.normalize(module.filename));
    /* путь к обязательным модулям */
@@ -75,6 +89,8 @@ function wmConstructor(sitePath){
    /* порт для сайта */
    serv.port = siteconfig.port;
    
+   console.log(path.join('','express'))
+   
    /*
    wm.test = require('./modules/standart.js');
    wm.test.tt();*/
@@ -84,19 +100,6 @@ function wmConstructor(sitePath){
 
    var $wm = {};
 
-   var globalConfigs = require('./config.json');
-   /* Пути для поиска модулей */
-   if (globalConfigs.node_modules instanceof Array)
-      buffer = globalConfigs.node_modules;
-   else buffer = [];
-   if (localConfigs.node_modules instanceof Array)
-      buffer = buffer.concat(localConfigs.node_modules);
-   if (buffer instanceof Array) {
-      for (var i in buffer) {
-         if (module.paths.indexOf(buffer[i]) === -1)
-            module.paths.push(buffer[i]);
-      }
-   }
    this.listen = function(sitePort){
       if (typeof sitePort === 'number')
          sitePort = sitePort ^ 0;
@@ -104,12 +107,12 @@ function wmConstructor(sitePath){
    wm.port = sitePort?sitePort:localConfigs.port;
    if (!wm.port)
       { console.log('Параметр "port" не задан'); return; }
-   wm.formidable = require('formidable');
+   wm.formidable = require(findNodeModule('formidable'));
    wm.core = require('./lib/core.js');
    wm.parser = require('./ulib/parser.js');
    wm.parser.loder = require('./lib/parserLoder.js')(wm);
    wm.info = exports.info;
-   wm.express = require('express');
+   wm.express = require(findNodeModule('express'));
    wm.app = wm.express();
    wm.core.start.call(wm);
    wm.app.listen(wm.port);
