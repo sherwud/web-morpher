@@ -1,11 +1,59 @@
 var path = require('path');
 var fs = require('fs');
 var packageInfo = require('./package.json');
+var glConf = require('./config.json');
+var temp = glConf['node_modules_root'];
+temp = String(temp);
+if (!fs.existsSync(temp)) temp = '';
+glConf['node_modules_root'] = temp;
+temp = glConf['node_modules'];
+if (typeof temp !== 'object' || temp instanceof Array) {
+   delete temp;
+   glConf['node_modules'] = {};
+} else {
+   for (var i in temp) {
+      if (!fs.existsSync(temp[i])) delete temp[i];
+   }
+   delete temp;
+}
+var findNodeModule = function(name){
+   var temp = glConf['node_modules'][name];
+   if (temp) return temp;
+   else {
+      return path.join(glConf['node_modules_root'],name);
+   }
+};
+var glPath = {};
+/* путь к модулю wm */
+glPath.wmroot = path.dirname(path.normalize(module.filename));
+/* путь к обязательным модулям */
+glPath.wmlib = path.join(glPath.wmroot,'lib');
+/* путь к необязательным модулям */
+glPath.wmmod = path.join(glPath.wmroot,'modules');
+/* путь к модулям общим с интерфейсом */
+glPath.wmlibwi = path.join(glPath.wmroot,'lib-wi');
+/* путь к стандартным интерфейсам */
+glPath.wires = path.join(glPath.wmroot,'wi','res');
+/* путь к модулям интерфейса */
+glPath.wilib = path.join(glPath.wmroot,'wi','lib');
+/* путь к расширениям интерфеса */
+glPath.wiext = path.join(glPath.wmroot,'wi','ext');
+/* путь к каталогу запуска */
+glPath.startup = path.dirname(path.normalize(module.parent.filename));
+/* путь к корню */
+glPath.root = path.dirname(glPath.wmroot);
+/* подключаем внешние модули */
+var formidable = require(findNodeModule('formidable'));
+var express = require(findNodeModule('express'));
+/* подключаем модули wm*/
+var core = require('./lib/core.js');
+//var parser = require('./ulib/parser.js');
+//var parserLoder = require('./lib/parserLoder.js');
 /* @info Получение общей информации о системе
  * @param {string} name - имя параметра для получения
  * @returns {any} - значение параметра, или стандартный набор
  */
-this.info = function(name){
+exports.info = function(name){
    if (name) {
       return packageInfo[name]?packageInfo[name]:null;
    } else {
@@ -21,7 +69,7 @@ this.info = function(name){
  * @param {string} sitePath - путь к сайту
  * @returns {object} - объект для управления сайтом
  */
-this.app = wmConstructor;
+exports.app = wmConstructor;
 function wmConstructor(sitePath){
    if (!(this instanceof wmConstructor)) {return new wmConstructor(sitePath);}
    if (typeof sitePath === 'string') 
@@ -31,42 +79,10 @@ function wmConstructor(sitePath){
       return;
    }
    var serv = {path:{}};
-   var globalConfigs = require('./config.json');
-   var temp = globalConfigs['node_modules_root'];
-   serv.path.nmroot = temp?temp:'';
-   if (!fs.existsSync(serv.path.nmroot)) serv.path.nmroot = '';
-   temp = globalConfigs['node_modules'];
-   if (typeof temp === 'object' && !(temp instanceof Array))
-      serv.path.nm = temp;
-   else serv.path.nm = {};
-   for (var i in serv.path.nm) {
-      if (!fs.existsSync(serv.path.nm[i])) delete serv.path.nm[i];
-   }
-   var findNodeModule = function(name){
-      
-   };
-   /* путь к модулю wm */
-   serv.path.wmroot = path.dirname(path.normalize(module.filename));
-   /* путь к обязательным модулям */
-   serv.path.wmlib = path.join(serv.path.wmroot,'lib');
-   /* путь к необязательным модулям */
-   serv.path.wmmod = path.join(serv.path.wmroot,'modules');
-   /* путь к модулям общим с интерфейсом */
-   serv.path.wmlibwi = path.join(serv.path.wmroot,'lib-wi');
-   /* путь к стандартным интерфейсам */
-   serv.path.wires = path.join(serv.path.wmroot,'wi','res');
-   /* путь к модулям интерфейса */
-   serv.path.wilib = path.join(serv.path.wmroot,'wi','lib');
-   /* путь к расширениям интерфеса */
-   serv.path.wiext = path.join(serv.path.wmroot,'wi','ext');
-   /* путь к каталогу запуска */
-   serv.path.startup = path.dirname(path.normalize(module.parent.filename));
-   /* путь к корню */
-   serv.path.root = path.dirname(serv.path.wmroot);
    /* путь к сайту */
-   serv.path.site = path.join(serv.path.startup,sitePath);
+   serv.path.site = path.join(glPath.startup,sitePath);
    if (!fs.existsSync(serv.path.site)) {
-      serv.path.site = path.join(serv.path.root,sitePath);
+      serv.path.site = path.join(glPath.root,sitePath);
       if (!fs.existsSync(serv.path.site)) {
          serv.path.site = sitePath;
          if (!fs.existsSync(serv.path.site)) {
@@ -79,44 +95,36 @@ function wmConstructor(sitePath){
    serv.path.sitewm = path.join(serv.path.site,'wm');
    serv.path.sitepages = path.join(serv.path.site,'pages');
    /* настройки сайта */
-   var siteconfig = path.join(serv.path.sitewm,'config.json');
+   var siteConf = path.join(serv.path.sitewm,'config.json');
    if (fs.existsSync(serv.path.sitewm)) {
-      if (fs.existsSync(siteconfig)) {
-         try { siteconfig = require(siteconfig)||{}; }
-         catch(e) { console.error(e); siteconfig = {}; }
-      } else { siteconfig = {}; }
-   } else { serv.path.sitewm = false; siteconfig = {}; }
+      if (fs.existsSync(siteConf)) {
+         try { siteConf = require(siteConf)||{}; }
+         catch(e) { console.error(e); siteConf = {}; }
+      } else { siteConf = {}; }
+   } else { serv.path.sitewm = false; siteConf = {}; }
    /* порт для сайта */
-   serv.port = siteconfig.port;
-   
-   console.log(path.join('','express'))
-   
-   /*
-   wm.test = require('./modules/standart.js');
-   wm.test.tt();*/
-   /* task #3 in process */
-   console.log(serv);
-   return;
-
+   serv.port = siteConf.port;
+   /* ссылки на модули */
+   serv.express = express;
+   serv.formidable = formidable;
+   /* добавляем приложение */
+   serv.app = express();
+   /*  */
    var $wm = {};
-
+   
+   serv.core = core(serv,$wm);
+   
    this.listen = function(sitePort){
-      if (typeof sitePort === 'number')
+      if (typeof sitePort === 'number') {
          sitePort = sitePort ^ 0;
+         serv.port = sitePort;
+      }
+      if (!serv.port) {
+         console.log('Не задан порт для сайта: "'+serv.path.site+'"');
+         return;
+      }
+      serv.app.listen(serv.port);
+      console.log('Сайт: '+serv.path.site);
+      console.log('Запущен на порту: '+serv.port);
    };
-   wm.port = sitePort?sitePort:localConfigs.port;
-   if (!wm.port)
-      { console.log('Параметр "port" не задан'); return; }
-   wm.formidable = require(findNodeModule('formidable'));
-   wm.core = require('./lib/core.js');
-   wm.parser = require('./ulib/parser.js');
-   wm.parser.loder = require('./lib/parserLoder.js')(wm);
-   wm.info = exports.info;
-   wm.express = require(findNodeModule('express'));
-   wm.app = wm.express();
-   wm.core.start.call(wm);
-   wm.app.listen(wm.port);
-   console.log('Сайт: '+wm.pathSite);
-   console.log('Тип сайта: '+wm.typeSite);
-   console.log('Запущен на порту: '+wm.port);
 }
