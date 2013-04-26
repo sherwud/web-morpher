@@ -1,5 +1,6 @@
 var path = require('path');
 var fs = require('fs');
+exports = module.exports = {};
 var packageInfo = require('./package.json');
 var glConf = require('./config.json');
 var temp = glConf['node_modules_root'];
@@ -32,12 +33,14 @@ glPath.wmlib = path.join(glPath.wmroot,'lib');
 glPath.wmmod = path.join(glPath.wmroot,'modules');
 /* путь к модулям общим с интерфейсом */
 glPath.wmlibwi = path.join(glPath.wmroot,'lib-wi');
+/* путь к интерфейсу */
+glPath.wi = path.join(glPath.wmroot,'wi');
 /* путь к стандартным интерфейсам */
-glPath.wires = path.join(glPath.wmroot,'wi','res');
+glPath.wires = path.join(glPath.wi,'res');
 /* путь к модулям интерфейса */
-glPath.wilib = path.join(glPath.wmroot,'wi','lib');
+glPath.wilib = path.join(glPath.wi,'lib');
 /* путь к расширениям интерфеса */
-glPath.wiext = path.join(glPath.wmroot,'wi','ext');
+glPath.wiext = path.join(glPath.wi,'ext');
 /* путь к каталогу запуска */
 glPath.startup = path.dirname(path.normalize(module.parent.filename));
 /* путь к корню */
@@ -49,7 +52,8 @@ var express = require(findNodeModule('express'));
 var core = require('./lib/core.js');
 //var parser = require('./ulib/parser.js');
 //var parserLoder = require('./lib/parserLoder.js');
-/* @info Получение общей информации о системе
+/*
+ * @info Получение общей информации о системе
  * @param {string} name - имя параметра для получения
  * @returns {any} - значение параметра, или стандартный набор
  */
@@ -65,7 +69,8 @@ exports.info = function(name){
       };
    }
 };
-/* @info Создает объект для сайта
+/*
+ * @info Создает объект для сайта
  * @param {string} sitePath - путь к сайту
  * @returns {object} - объект для управления сайтом
  */
@@ -94,6 +99,8 @@ function wmConstructor(sitePath){
    /* путь к ресурсам сайта */
    serv.path.sitewm = path.join(serv.path.site,'wm');
    serv.path.sitepages = path.join(serv.path.site,'pages');
+   /* пути от wm */
+   serv.glPath = glPath;
    /* настройки сайта */
    var siteConf = path.join(serv.path.sitewm,'config.json');
    if (fs.existsSync(serv.path.sitewm)) {
@@ -107,13 +114,15 @@ function wmConstructor(sitePath){
    /* ссылки на модули */
    serv.express = express;
    serv.formidable = formidable;
-   /* добавляем приложение */
+   /* добавляем приложение express */
    serv.app = express();
-   /*  */
-   var $wm = {};
-   
-   serv.core = core(serv,$wm);
-   
+   /* добавляем экземпляр сервера wm */
+   serv.core = core(serv);
+   /* функции управления сервером */
+   /*
+    * @info Запускает сервер
+    * @param {string} sitePort - порт на котором запускать сайт
+    */
    this.listen = function(sitePort){
       if (typeof sitePort === 'number') {
          sitePort = sitePort ^ 0;

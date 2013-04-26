@@ -1,9 +1,42 @@
-var $core = exports = module.exports;
 var path = require('path');
 var fs = require('fs');
+var helper = require('./helper.js');
+exports = module.exports = coreConstructor;
+function coreConstructor(serv){
+   if (!(this instanceof coreConstructor)) {return new coreConstructor(serv);}
+   
+   var $wm = this;
+   
+   proxy(serv);
+}
+
+function proxy(serv){
+   var express = serv.express;
+   var app = serv.app;
+   
+   app.get('/wm/wi/:libDir/*',function(req,res,next){
+      var libDir = req.params.libDir;
+         if (libDir==='lib' || libDir==='ext'){
+         var file = path.join(serv.glPath.wi,helper.cutDirL(req.path,'/wm/wi'));
+         fs.stat(file,function(err,stats){
+            if (!err && stats.isFile())
+               if (req.header("Cache-Control"))
+                  res.send(304);
+               else
+                  res.sendfile(file);
+            else
+               res.send(404);
+         });
+      } else {
+         next();
+      }
+   });
+   
+   app.use(express.static(serv.path.site,{ maxAge: 86400000 }));
+}
 /* время жизни статики по умолчанию 1 год */
 var lifetimeStatic = 31557600000;
-$core.start = function(){
+exports.start = function(){
    var wm = this;
    var express = wm.express;
    var app = wm.app;
