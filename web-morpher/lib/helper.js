@@ -6,7 +6,7 @@ exports = module.exports = {};
  * @param {string} cut - обрезаемая часть
  * @returns {string} - относительный путь
  */
-exports.cutDirL = function(full,cut){
+exports.cutDir = function(full,cut){
    var re = new RegExp(cut);
    return full.replace(re,'');
 };

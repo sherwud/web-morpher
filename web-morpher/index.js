@@ -32,7 +32,7 @@ glPath.wmlib = path.join(glPath.wmroot,'lib');
 /* путь к необязательным модулям */
 glPath.wmmod = path.join(glPath.wmroot,'modules');
 /* путь к модулям общим с интерфейсом */
-glPath.wmlibwi = path.join(glPath.wmroot,'lib-wi');
+glPath.wmulib = path.join(glPath.wmroot,'ulib');
 /* путь к интерфейсу */
 glPath.wi = path.join(glPath.wmroot,'wi');
 /* путь к стандартным интерфейсам */
@@ -84,6 +84,8 @@ function wmConstructor(sitePath){
       return;
    }
    var serv = {path:{}};
+   /* инфо о сервере */
+   serv.info = exports.info;
    /* путь к сайту */
    serv.path.site = path.join(glPath.startup,sitePath);
    if (!fs.existsSync(serv.path.site)) {
@@ -111,6 +113,11 @@ function wmConstructor(sitePath){
    } else { serv.path.sitewm = false; siteConf = {}; }
    /* порт для сайта */
    serv.port = siteConf.port;
+   /* настройки сайта */
+   serv.conf = {};
+   /* показывать инфо о системе */
+   serv.conf.showInfo = typeof siteConf['showInfo'] === 'boolean' ?
+      siteConf['showInfo']:true;
    /* ссылки на модули */
    serv.express = express;
    serv.formidable = formidable;

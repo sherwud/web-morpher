@@ -13,82 +13,43 @@ function coreConstructor(serv){
 function proxy(serv){
    var express = serv.express;
    var app = serv.app;
-   
-   app.get('/wm/wi/:libDir/*',function(req,res,next){
-      var libDir = req.params.libDir;
-         if (libDir==='lib' || libDir==='ext'){
-         var file = path.join(serv.glPath.wi,helper.cutDirL(req.path,'/wm/wi'));
-         fs.stat(file,function(err,stats){
-            if (!err && stats.isFile())
-               if (req.header("Cache-Control"))
-                  res.send(304);
-               else
-                  res.sendfile(file);
+   function sendfile(req,res,file){
+      fs.stat(file,function(err,stats){
+         if (!err && stats.isFile())
+            if (req.header("Cache-Control"))
+               res.send(304,'Not Modified');
             else
-               res.send(404);
-         });
-      } else {
-         next();
-      }
-   });
-   
-   app.use(express.static(serv.path.site,{ maxAge: 86400000 }));
-}
-/* время жизни статики по умолчанию 1 год */
-var lifetimeStatic = 31557600000;
-exports.start = function(){
-   var wm = this;
-   var express = wm.express;
-   var app = wm.app;
-   var wmUILIB = function(){
-      app.get('/web-morpher/:libDir/*',function(req,res,next){
-         var libDir = req.params.libDir;
-         if (libDir==='ui' || libDir==='ulib'){
-            var file = path.join(wm.rootSites,req.path);
-            fs.stat(file,function(err,stats){
-               if (!err && stats.isFile())
-                  if (req.header("Cache-Control"))
-                     res.sendfile(304);
-                  else
-                     res.sendfile(file);
-               else
-                  res.send(404);
-            });
-         } else {
+               res.sendfile(file);
+         else
+            res.send(404,'Not found');
+      });
+   }
+   function sendwi(req,res){
+      var file = path.join(serv.glPath.wi,helper.cutDir(req.path,'/wm/wi'));
+      sendfile(req,res,file);
+   }
+   function sendulib(req,res){
+      var file = path.join(serv.glPath.wmulib,
+         helper.cutDir(req.path,'/wm/wi/ulib'));
+      sendfile(req,res,file);
+   }
+   function checkfile(req,res,next){
+      var file = req.path;
+      if (file[file.length-1] === '/') file += 'index.html';
+      var extname = path.extname(file);
+      if (extname === '') file += extname = '.html';
+      file = path.join(serv.path.site,file);
+      fs.stat(file,function(err,stats){
+         if (!err && stats.isFile())
             next();
-         }
+         else
+            res.send(404,'Not found');
       });
-   };
-   var upload = function(){
-      app.post('/upload',function(req,res){
-         var form = new wm.formidable.IncomingForm();
-         //form.uploadDir = path.join(wm.dataWM.path,'~upload');
-         //console.log(form);
-         form.parse(req, function(err, fields, files) {
-            //console.log(files);
-            fs.readFile(files.image.path,'base64',function(e, data){
-               if (e) console.log(e);
-               else {
-                  var image = 'data:' + files.image.type + ';base64,'+data;
-                  fs.unlink(files.image.path);
-                  res.send(200,'<img src="'+image+'"/>');
-               }
-            });
-         });
-         /*
-         fs.rename(files.image.path, 
-            path.join(path.dirname(files.image.path),files.image.name),
-            function(err) {
-               if (err) {
-                  console.log(err);
-               }
-            }
-         );*/
-         //console.log(files);
-         //res.send(200,'файл загружен!');
-      });
-   };
-   var wmParser = function(req,res,next){
+   }
+   function showinfo(req,res){
+      res.send(serv.info());
+   }
+   function parser(req,res,next){
       var file = req.path;
       if (file[file.length-1] === '/') file += 'index.html';
       var extname = path.extname(file);
@@ -110,39 +71,15 @@ exports.start = function(){
          break;
          default: next();
       }
-   };
-   var wmInfo = function(){
-      app.get('/web-morpher',function(req,res){
-         res.send(wm.info);
-      });
-      app.get('/web-morpher/*',function(req,res){
-         res.send(wm.info);
-      });
-   };
-   switch (wm.typeSite){
-      case 1: /* Статика */
-         wmUILIB();
-         wmInfo();
-      break;
-      case 2: /* Динамика */
-         wmUILIB();
-         wmInfo();
-         upload();
-         app.get('/*',wmParser);
-      break;
    }
-   app.get('/*',function(req,res,next){
-      var file = req.path;
-      if (file[file.length-1] === '/') file += 'index.html';
-      var extname = path.extname(file);
-      if (extname === '') file += extname = '.html';
-      file = path.join(wm.pathSite,file);
-      fs.stat(file,function(err,stats){
-         if (!err && stats.isFile())
-            next();
-         else
-            res.send(404,'Not found');
-      });
-   });
-   app.use(express.static(wm.pathSite,{ maxAge: lifetimeStatic }));
-};
+   app.get('/wm/wi/lib/*',sendwi);
+   app.get('/wm/wi/ext/*',sendwi);
+   app.get('/wm/wi/ulib/*',sendulib);
+   if (serv.conf.showInfo) {
+      app.get('/wm',showinfo);
+      app.get('/wm/*',showinfo);
+   }
+   //app.get('/*',parser);
+   app.get('/*',checkfile);
+   app.use(express.static(serv.path.site));
+}
