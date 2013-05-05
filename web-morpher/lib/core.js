@@ -4,9 +4,9 @@ var helper = require('./helper.js');
 exports = module.exports = coreConstructor;
 function coreConstructor(serv){
    if (!(this instanceof coreConstructor)) {return new coreConstructor(serv);}
-   var formidable = require(findNodeModule('formidable'));
-   var parser = require('./ulib/parser.js');
-   var parserLoder = require('./lib/parserLoder.js');
+   var formidable = require(serv.findNodeModule('formidable'));
+   var parser = require('../ulib/parser.js');
+   var parserLoder = require('./parserLoder.js');
 
    var $wm = this;
    
