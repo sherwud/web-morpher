@@ -46,12 +46,9 @@ glPath.startup = path.dirname(path.normalize(module.parent.filename));
 /* путь к корню */
 glPath.root = path.dirname(glPath.wmroot);
 /* подключаем внешние модули */
-var formidable = require(findNodeModule('formidable'));
 var express = require(findNodeModule('express'));
 /* подключаем модули wm*/
 var core = require('./lib/core.js');
-//var parser = require('./ulib/parser.js');
-//var parserLoder = require('./lib/parserLoder.js');
 /*
  * @info Получение общей информации о системе
  * @param {string} name - имя параметра для получения
@@ -86,6 +83,8 @@ function wmConstructor(sitePath){
    var serv = {path:{}};
    /* инфо о сервере */
    serv.info = exports.info;
+   /* ссылка на поиск модулей */
+   serv.findNodeModule = findNodeModule;
    /* путь к сайту */
    serv.path.site = path.join(glPath.startup,sitePath);
    if (!fs.existsSync(serv.path.site)) {
@@ -118,9 +117,8 @@ function wmConstructor(sitePath){
    /* показывать инфо о системе */
    serv.conf.showInfo = typeof siteConf['showInfo'] === 'boolean' ?
       siteConf['showInfo']:true;
-   /* ссылки на модули */
+   /* ссылка на express */
    serv.express = express;
-   serv.formidable = formidable;
    /* добавляем приложение express */
    serv.app = express();
    /* добавляем экземпляр сервера wm */
