@@ -56,7 +56,7 @@ function proxy(serv){
       if (extname === '') file += extname = '.html';
       switch (extname) {
          case '.html':
-            wm.parser.build(file,req.query,function(e,data){
+            serv.parser.build(file,req.query,function(e,data){
                if (e){
                   if (e.HTTPCODE === 304){
                      next();
