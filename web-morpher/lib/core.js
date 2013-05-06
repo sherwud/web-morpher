@@ -6,7 +6,7 @@ function coreConstructor(serv){
    if (!(this instanceof coreConstructor)) {return new coreConstructor(serv);}
    var formidable = require(serv.findNodeModule('formidable'));
    var parser = require('../ulib/parser.js');
-   var parserLoder = require('./parserLoder.js');
+   var filemanager = require('./filemanager.js');
 
    var $wm = this;
    

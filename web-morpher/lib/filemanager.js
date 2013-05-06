@@ -1,4 +1,4 @@
-exports = module.exports = wmParserLoderConstructor;
+exports = module.exports = wmfilemanagerConstructor;
 var fs = require('fs');
 var path = require('path');
 var crypto = require('crypto');
@@ -104,7 +104,7 @@ function checkCache(file,jsonFile,callback){
       }
    });
 };
-function wmParserLoderConstructor(wm){
+function wmfilemanagerConstructor(wm){
    var $loder = {};
    /* Читает файл элемента
     * @param {string} name
