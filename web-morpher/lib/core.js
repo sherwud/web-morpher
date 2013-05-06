@@ -4,16 +4,34 @@ var helper = require('./helper.js');
 exports = module.exports = coreConstructor;
 function coreConstructor(serv){
    if (!(this instanceof coreConstructor)) {return new coreConstructor(serv);}
-   var formidable = require(serv.findNodeModule('formidable'));
-   var parser = require('../ulib/parser.js');
-   var filemanager = require('./filemanager.js');
+   /* системные модули */
+   var sys = {};
+   sys.formidable = require(serv.findNodeModule('formidable'));
+   sys.parser = require('../ulib/parser.js');
+   sys.filemanager = require('./filemanager.js');
 
    var $wm = this;
-   
-   proxy(serv);
+   $wm.syscall = function(module,method,params){
+      function err(e){
+         if (params[params.length-1] === 'function')
+            params[params.length-1](e);
+         return e;
+      }
+      if (!(params instanceof Array)) params = [];
+      if (typeof module !== 'string' && typeof method !== 'string')
+         return err('Неверные параметры:'
+            +'module='+module
+            +'method='+method
+         );
+      if (typeof module === 'string' && typeof method === 'string'
+            && module in sys && method in sys[module]){
+         
+      } else err();
+   };
+   proxy(serv,$wm);
 }
 
-function proxy(serv){
+function proxy(serv,$wm){
    var express = serv.express;
    var app = serv.app;
    function sendfile(req,res,file){
@@ -59,7 +77,7 @@ function proxy(serv){
       if (extname === '') file += extname = '.html';
       switch (extname) {
          case '.html':
-            serv.parser.build(file,req.query,function(e,data){
+            $wm.parser.build(file,req.query,function(e,data){
                if (e){
                   if (e.HTTPCODE === 304){
                      next();
