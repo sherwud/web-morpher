@@ -223,11 +223,12 @@ $wm.parser = function($parser,runOnServer){
     *    data - данные для отправки
     */
    $parser.build = function(path,params,callback){
+      var getPage = this.syscall('filemanager','getPage');
       if (typeof path !== 'string' || typeof callback !== 'function'){
          callback('parser.build - ошибка вызова метода');
          return;
       }
-      $parser.loder.getPage(path,function(e,data,cache,setPageJS){
+      getPage(path,function(e,data,cache,setPageJS){
          if (e) { callback(e,data); }
          else {
             $parser.page(data,params,function(e,html,pid){

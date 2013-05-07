@@ -9,28 +9,48 @@ function coreConstructor(serv){
    sys.formidable = require(serv.findNodeModule('formidable'));
    sys.parser = require('../ulib/parser.js');
    sys.filemanager = require('./filemanager.js');
-
+   /* Объект для взаимодействия модулей */
    var $wm = this;
-   $wm.syscall = function(module,method,params){
-      function err(e){
-         if (params[params.length-1] === 'function')
-            params[params.length-1](e);
-         return e;
-      }
-      if (!(params instanceof Array)) params = [];
-      if (typeof module !== 'string' && typeof method !== 'string')
-         return err('Неверные параметры:'
-            +'module='+module
-            +'method='+method
-         );
-      if (typeof module === 'string' && typeof method === 'string'
-            && module in sys && method in sys[module]){
-         
-      } else err();
+   /*
+    * @info Функция для вызова системных методов из модулей
+    * @param {string} module - Имя модуля
+    * @param {string} method - Имя функции
+    * @returns {function} - Возвращает функцию выполняющую заданный метод
+    */
+   $wm.syscall = function(module,method){
+      return function(){
+         return calling($wm,sys,module,method,arguments);
+      };
    };
    proxy(serv,$wm);
 }
-
+/*
+ * @info Функция вызывающая методы из объектов
+ * @param {object} $wm - Объект для взаимодействия модулей
+ * @param {object} obj - объект из которого зовутся методы
+ * @param {string} module - Имя модуля
+ * @param {string} method - Имя функции
+ * @param {object} params - Параметры передаваемые в функцию
+ * @returns {any} - значение возвращаемое вызванной функцией
+ */
+function calling($wm,obj,module,method,params){
+   function err(e){
+      if (typeof params[params.length-1] === 'function')
+         params[params.length-1](e);
+      return e;
+   }
+   if (typeof module !== 'string' && typeof method !== 'string')
+      return err('Неверные параметры:'+' module='+module+' method='+method);
+   if (module in obj && method in obj[module]){
+      return obj[module][method].apply($wm,params);
+   } else return err('Функция '+module+'.'+method+' не найдена');
+}
+/*
+ * @info проксирование обращений к серверу
+ * @param {object} serv - Данные сервера
+ * @param {object} $wm - Объект для взаимодействия модулей
+ * @returns {undefined}
+ */
 function proxy(serv,$wm){
    var express = serv.express;
    var app = serv.app;
@@ -77,7 +97,8 @@ function proxy(serv,$wm){
       if (extname === '') file += extname = '.html';
       switch (extname) {
          case '.html':
-            $wm.parser.build(file,req.query,function(e,data){
+            var build = $wm.syscall('parser','build');
+            build(file,req.query,function(e,data){
                if (e){
                   if (e.HTTPCODE === 304){
                      next();
