@@ -12,6 +12,22 @@ function coreConstructor(serv){
    /* Объект для взаимодействия модулей */
    var $wm = this;
    /*
+    * @info отдает модулю путь к ресурсам по его имени из параметров сервера
+    * @param {string} pathName - имя пути
+    * @returns {string} - путь к ресурсам
+    */
+   $wm.getPath = function(pathName){
+      if (typeof pathName !== 'string'){
+         console.log('Неверынй вызов $wm.getPath');
+         return '';
+      }
+      if (pathName in serv.glPath)
+         return serv.glPath[pathName];
+      if (pathName in serv.path)
+         return serv.path[pathName];
+      console.log('Путь "'+pathName+'" не найден');
+   };
+   /*
     * @info Функция для вызова системных методов из модулей
     * @param {string} module - Имя модуля
     * @param {string} method - Имя функции

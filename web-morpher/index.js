@@ -37,6 +37,12 @@ glPath.wmulib = path.join(glPath.wmroot,'ulib');
 glPath.wi = path.join(glPath.wmroot,'wi');
 /* путь к стандартным интерфейсам */
 glPath.wires = path.join(glPath.wi,'res');
+/* путь к стандартным контролам */
+glPath.wiresc = path.join(glPath.wires,'controls');
+/* путь к стандартным элементам */
+glPath.wirese = path.join(glPath.wires,'elements');
+/* путь к стандартным шаблонам */
+glPath.wirest = path.join(glPath.wires,'templates');
 /* путь к модулям интерфейса */
 glPath.wilib = path.join(glPath.wi,'lib');
 /* путь к расширениям интерфеса */
@@ -99,7 +105,14 @@ function wmConstructor(sitePath){
    }
    /* путь к ресурсам сайта */
    serv.path.sitewm = path.join(serv.path.site,'wm');
-   serv.path.sitepages = path.join(serv.path.site,'pages');
+   /* страницы сайта */
+   serv.path.sitepages = path.join(serv.path.sitewm,'pages');
+   /* контролы сайта */
+   serv.path.sitec = path.join(serv.path.sitewm,'controls');
+   /* элементы сайта */
+   serv.path.sitee = path.join(serv.path.sitewm,'elements');
+   /* шаблоны сайта */
+   serv.path.sitet = path.join(serv.path.sitewm,'templates');
    /* пути от wm */
    serv.glPath = glPath;
    /* настройки сайта */

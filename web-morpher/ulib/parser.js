@@ -22,11 +22,12 @@ $wm.parser = function($parser,runOnServer){
    var elements = new function(){
       var elements ={};
       this.get = function(name,standard,callback){
+         var getElement = this.syscall('filemanager','getElement');
          var key = Number(standard)+name;
          if (key in elements){
             callback(0,elements[key]);
          } else {
-            $parser.loder.getElement(name,standard,function(e,data){
+            getElement(name,standard,function(e,data){
                if (e) callback(e);
                else {
                   elements[key] = data;
@@ -49,7 +50,7 @@ $wm.parser = function($parser,runOnServer){
       if (typeof name !== 'string'){
          callback('$parser.element: "name" не задан!'); return;
       };
-      elements.get(name,standard,function(e,element){
+      elements.get.call(this,name,standard,function(e,element){
          if (e) callback(e);
          else {
             var reg = /{{(\w+)}}/;
@@ -146,6 +147,8 @@ $wm.parser = function($parser,runOnServer){
       }
       if (typeof data.body !== 'string')
          callback('$parser.page: "data.body" не задан!');
+      var buildObject = this.syscall('parser','buildObject');
+      var element = this.syscall('parser','element');
       var reg = /{{(\w+)}}/;
       var regAll = /{{(\w+)}}/g;
       var removeKey = function(callback){
@@ -170,7 +173,7 @@ $wm.parser = function($parser,runOnServer){
                   if (val instanceof Array) {
                      removeKey(callback);
                   } else {
-                     $parser.buildObject(val,inputParams,function(e,val,js){
+                     buildObject(val,inputParams,function(e,val,js){
                         if (e) { callback(e); }
                         else {
                            if (js) pageJS+=js;
@@ -196,7 +199,7 @@ $wm.parser = function($parser,runOnServer){
                var params = config.params||{};
                params.page = html;
                var pid = params.id = idGen.PID();
-               $parser.element(name,standard,params,function(e,data){
+               element(name,standard,params,function(e,data){
                   if (e) callback(e);
                   else {
                      if (js) {
@@ -223,20 +226,22 @@ $wm.parser = function($parser,runOnServer){
     *    data - данные для отправки
     */
    $parser.build = function(path,params,callback){
-      var getPage = this.syscall('filemanager','getPage');
       if (typeof path !== 'string' || typeof callback !== 'function'){
          callback('parser.build - ошибка вызова метода');
          return;
       }
+      var getPage = this.syscall('filemanager','getPage');
+      var page = this.syscall('parser','page');
+      var setTemplate = this.syscall('parser','setTemplate');
       getPage(path,function(e,data,cache,setPageJS){
          if (e) { callback(e,data); }
          else {
-            $parser.page(data,params,function(e,html,pid){
+            page(data,params,function(e,html,pid){
                if (e) { callback(e); }
                else {
                   var tmpl = data.config.template;
                   if (typeof tmpl === 'object'){
-                     $parser.setTemplate(tmpl,params,html,pid,
+                     setTemplate(tmpl,params,html,pid,
                         function(e,data){
                            if (e) { callback(e); }
                            else {
@@ -262,7 +267,8 @@ $wm.parser = function($parser,runOnServer){
     * callback - функция для передачи результатов
     */
    $parser.setTemplate = function(params,inputParams,html,pid,callback){
-      $parser.loder.getTemplate(params,function(e,data){
+      var getTemplate = this.syscall('filemanager','getTemplate');
+      getTemplate(params,function(e,data){
          if (e) { callback(e); }
          else {
             if (typeof data === 'string')
@@ -279,8 +285,8 @@ $wm.parser = function($parser,runOnServer){
                      var script =
                         '<script type="text/javascript" src="{{src}}"></script>';
                      data = data.replace(/{\$coreScript\$}/,
-                        script.replace(/{{src}}/,'web-morpher/ui/ext/jquery.js')
-                       +script.replace(/{{src}}/,'web-morpher/ui/core.js')
+                        script.replace(/{{src}}/,'wm/wi/ext/jquery.js')
+                       +script.replace(/{{src}}/,'wm/wi/lib/core.js')
                      );
                      if (pid)
                         data = data.replace(/{\$pageScript\$}/,

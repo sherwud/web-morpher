@@ -22,7 +22,7 @@
       "control":"scriptList",
       "data":{
          "scripts":[
-            "web-morpher/ulib/parser.js"
+            "wm/wi/ulib/parser.js"
          ]
       }
    },
@@ -32,7 +32,7 @@
       "control":"styleList",
       "data":{
          "styles":[
-            "web-morpher/ui/ext/bootstrap/css/bootstrap.min.css"
+            "wm/wi/ext/bootstrap/css/bootstrap.min.css"
          ]
       }
    }
