@@ -173,7 +173,8 @@ exports.getPage = function(file,callback){
          else {
             callback(0,data,
                function(html){
-                  cachePage(html,htmlFile,file,hash);
+                  var cached = data.config.cached;
+                  if (cached) cachePage(html,htmlFile,file,hash);
                },
                function(pid,js,callback){
                   var jsFile = path.join(site,'js',pid+'.js');
@@ -201,8 +202,9 @@ exports.getPage = function(file,callback){
 */
 exports.getTemplate = function(params,callback){
    var getPath = this.getPath;
+   var standard = params.standard;
    var jsonFile = path.join(
-          getPath('wirest'),params.name+'.json'
+          (standard?getPath('wirest'):getPath('sitet')),params.name+'.json'
        );
    readJSON(jsonFile,callback);
 };

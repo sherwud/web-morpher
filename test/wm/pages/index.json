@@ -1,0 +1,35 @@
+{
+   "config":{
+      "cached":false,
+      "template":{
+         "name":"main",
+         "standard":false
+      },
+      "title":"Info - Test",
+      "element":"page",
+      "standard":true,
+      "params":{
+         "wmname":"infoPage",
+         "class":"infoPage"
+      }
+   },
+   "body":"{{HEADER}}\n\
+   {{mainmenu}}\n\
+   ",
+   "params":{
+      "HEADER":"<h3 class=\"wm-header shadowbox\">\n\
+        <span>Node.js</span>\n\
+        <i>Тут должна быть ваша цитата</i></h3>",
+      "mainmenu":{
+         "ruName":"Главное меню",
+         "description":"Основное меню сайта",
+         "format":"elemetn",
+         "system":false,
+         "elemetn":"mainmenu",
+         "data":{
+            "class":"my-mainmenu",
+            "wmname":"my-mainmenu"
+         }
+      }
+   }
+}

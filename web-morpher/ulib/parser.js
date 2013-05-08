@@ -50,6 +50,7 @@ $wm.parser = function($parser,runOnServer){
       if (typeof name !== 'string'){
          callback('$parser.element: "name" не задан!'); return;
       };
+      var self = this;
       elements.get.call(this,name,standard,function(e,element){
          if (e) callback(e);
          else {
@@ -61,7 +62,10 @@ $wm.parser = function($parser,runOnServer){
                key = key[1];
                var val = '';
                if (key in element.builders){
-                  try { val = String(element.builders[key](data,element)); }
+                  try {
+                     val = String(element.builders[key]
+                        .call(self,data,element));
+                  }
                   catch(e){
                      e = {e:e};
                      e.method = '$parser.element';
@@ -268,6 +272,7 @@ $wm.parser = function($parser,runOnServer){
     */
    $parser.setTemplate = function(params,inputParams,html,pid,callback){
       var getTemplate = this.syscall('filemanager','getTemplate');
+      var buildPage = this.syscall('parser','buildPage');
       getTemplate(params,function(e,data){
          if (e) { callback(e); }
          else {
@@ -279,7 +284,7 @@ $wm.parser = function($parser,runOnServer){
                      inputParams[i] = params.input[i];
                   }
                delete params.input;
-               $parser.buildPage(data,inputParams,function(e,data){
+               buildPage(data,inputParams,function(e,data){
                   if (e) { callback(e); }
                   else {
                      var script =
@@ -314,6 +319,7 @@ $wm.parser = function($parser,runOnServer){
          callback('parser.buildPage - ошибка вызова метода');
          return;
       }
+      var buildObject = this.syscall('parser','buildObject');
       if (typeof data.body !== 'string') 
          callback('parser.buildPage - data.body не является string');
       var reg = /{{(\w+)}}/;
@@ -339,7 +345,7 @@ $wm.parser = function($parser,runOnServer){
                   if (val instanceof Array) {
                      removeKey(callback);
                   } else {
-                     $parser.buildObject(val,inputParams,function(e,val,js){
+                     buildObject(val,inputParams,function(e,val,js){
                         if (e) { callback(e); }
                         else {
                            if (js) alljs+=js;
@@ -387,6 +393,7 @@ $wm.parser = function($parser,runOnServer){
          callback('parser.buildObject - не задан формат объекта');
          return;
       }
+      var element = this.syscall('parser','element');
       var mergeInputParams = function(){
          if (typeof data.data === 'object' && !(data.data instanceof Array))
             for (var i in data.data){
@@ -415,6 +422,11 @@ $wm.parser = function($parser,runOnServer){
             mergeInputParams();
             if (typeof data.system !== 'boolean') data.system = true;
             $parser.buildControl(data.control,data.system,inputParams,callback);
+         break;
+         case 'elemetn':
+            mergeInputParams();
+            if (typeof data.system !== 'boolean') data.system = true;
+            element(data.elemetn,data.system,inputParams,callback);
          break;
          default: callback(0,'');
       }
