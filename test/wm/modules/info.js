@@ -1,13 +1,10 @@
-
 var path = require('path');
-
 
 function b (x){
    return a++;
 }
 
 exports = module.exports = {};
-
 exports.mainmenuSync = function(){
    var menu = 
       '<a class="menuitem active" href="/">Главная</a>'
