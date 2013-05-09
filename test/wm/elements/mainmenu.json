@@ -1,6 +1,6 @@
 {
    "body":"<div {{wmname}} {{class}}>{{data}}</div>",
-   "class":"wm-mainmenu shadowbox",
+   "class":"wm-mainmenu",
    "builders":{
       "data":"return this.modcall('info','mainmenuSync')()"
    }

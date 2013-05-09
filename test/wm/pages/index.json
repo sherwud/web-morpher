@@ -3,33 +3,59 @@
       "cached":false,
       "template":{
          "name":"main",
-         "standard":false
+         "standard":false,
+         "input":{
+            "title":"Info - Test"
+         }
       },
-      "title":"Info - Test",
       "element":"page",
-      "standard":true,
+      "standard":false,
       "params":{
-         "wmname":"infoPage",
          "class":"infoPage"
       }
    },
    "body":"{{HEADER}}\n\
-   {{mainmenu}}\n\
+   <div class=\"aside-left shadowbox\">{{MAINMENU}}{{ADDBUTTON}}</div>\n\
+   <div id=\"wm-content\" class=\"shadowbox\">{{NODEJSINFO}}</div>\n\
+   {{EDITBUTTON}}\n\
+   {{FOOTER}}\n\
    ",
    "params":{
       "HEADER":"<h3 class=\"wm-header shadowbox\">\n\
         <span>Node.js</span>\n\
         <i>Тут должна быть ваша цитата</i></h3>",
-      "mainmenu":{
+      "MAINMENU":{
          "ruName":"Главное меню",
          "description":"Основное меню сайта",
          "format":"elemetn",
          "system":false,
          "elemetn":"mainmenu",
          "data":{
-            "class":"my-mainmenu",
-            "wmname":"my-mainmenu"
+            "class":"my-mainmenu"
          }
+      },
+      "ADDBUTTON":"<div class=\"menubutton add\"><div></div>add</div>",
+      "EDITBUTTON":"<div class=\"menubutton editPage hide\">edit</div>",
+      "FOOTER":"<div class=\"wm-footer\">\n\
+         <span>Спасибо: </span>\n\
+         <a target=\"blank\" href=\"http://nodejs.org\">Node.js</a>\n\
+         <span> | </span>\n\
+         <a target=\"blank\" href=\"https://github.com\">GitHub</a>\n\
+         <span> | </span>\n\
+         <a target=\"blank\" href=\"http://jquery.com\">jQuery</a>\n\
+         <span> | </span>\n\
+         <a target=\"blank\" href=\"http://twitter.github.com/bootstrap/\">Bootstrap</a>\n\
+         <span>Автор: </span>\n\
+         <a href=\"https://github.com/IDrakon\">Dr@KoN</a>\n\
+         <span>CMS: </span>\n\
+         <a target=\"blank\" href=\"https://github.com/IDrakon/web-morpher\">Web Morpher</a>\n\
+         </div>",
+      "NODEJSINFO":{
+         "ruName":"Информация о Node.JS",
+         "description":"Элемент с информацией о Node.JS",
+         "format":"elemetn",
+         "system":false,
+         "elemetn":"nodejsinfo"
       }
    }
 }

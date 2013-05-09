@@ -212,7 +212,7 @@ $wm.parser = function($parser,runOnServer){
                            callback(0,data,pid);
                         });
                      } else {
-                        callback(0,data,pid);
+                        callback(0,data,false);
                      }
                   }
                });

@@ -22,7 +22,8 @@
       "control":"scriptList",
       "data":{
          "scripts":[
-            "index.js"
+            "index.js",
+            "wm/wi/lib/syntaxHighlight.js"
          ]
       }
    },
@@ -32,8 +33,8 @@
       "control":"styleList",
       "data":{
          "styles":[
-            "wm/wi/ext/bootstrap/css/bootstrap.min.css",
-            "index.css"
+            "index.css",
+            "wm/wi/lib/css/syntaxHighlight.css"
          ]
       }
    }
