@@ -136,6 +136,11 @@ function wmConstructor(sitePath){
    serv.express = express;
    /* добавляем приложение express */
    serv.app = express();
+   /* разбор POST параметров, включая файлы */
+   if (siteConf['bodyParser'])
+      serv.app.use(express.bodyParser());
+   /* настройки сайта */
+   serv.siteConf = siteConf;
    /* добавляем экземпляр сервера wm */
    serv.core = core(serv);
    /* функции управления сервером */

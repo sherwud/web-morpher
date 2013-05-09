@@ -16,7 +16,7 @@
    },
    "body":"{{HEADER}}\n\
    <div class=\"aside-left shadowbox\">{{MAINMENU}}{{ADDBUTTON}}</div>\n\
-   <div id=\"wm-content\" class=\"shadowbox\">{{NODEJSINFO}}</div>\n\
+   <div id=\"wm-content\" class=\"shadowbox\">{{NODEJSINFO}}{{UPLOAD}}</div>\n\
    {{EDITBUTTON}}\n\
    {{FOOTER}}\n\
    ",
@@ -56,6 +56,10 @@
          "format":"elemetn",
          "system":false,
          "elemetn":"nodejsinfo"
-      }
+      },
+      "UPLOAD":"<form enctype=\"multipart/form-data\" method=\"post\" action=\"/wm\">\n\
+         <p><input type=\"file\" accept=\"image/*\" name=\"image\">\n\
+         <input type=\"submit\" value=\"Отправить\"></p>\n\
+         </form>"
    }
 }

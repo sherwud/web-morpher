@@ -6,7 +6,6 @@ function coreConstructor(serv){
    if (!(this instanceof coreConstructor)) {return new coreConstructor(serv);}
    /* системные модули */
    var sys = {};
-   sys.formidable = require(serv.findNodeModule('formidable'));
    sys.parser = require('../ulib/parser.js');
    sys.filemanager = require('./filemanager.js');
    /* модули сайта */
@@ -152,9 +151,37 @@ function proxy(serv,$wm){
          default: next();
       }
    }
+   function modsPOST(req,res,next){
+      if (serv.siteConf['maxFileSize']){
+         var size = Number(serv.siteConf['maxFileSize']);
+         for (var i in req.files){
+            if (req.files[i].size > size*1048576){
+               fs.unlink(req.files[i].path);
+               delete req.files[i];
+               res.send(200,'Максимальный размер файла '+size+' МБ');
+            }
+         }
+      }
+      function send(){
+         for (var i in req.files){
+            fs.unlink(req.files[i].path);
+         }
+         res.send.apply(res,arguments);
+      }
+      
+      console.log(req.query);
+      console.log(req.body);
+      
+      send(200,req.body);
+   }
+   function modsGET(req,res,next){
+      res.send(200,req.query);
+   }
    app.get('/wm/wi/lib/*',sendwi);
    app.get('/wm/wi/ext/*',sendwi);
    app.get('/wm/wi/ulib/*',sendulib);
+   app.post('/wm',modsPOST);
+   app.get('/wm',modsGET);
    if (serv.conf.showInfo) {
       app.get('/wm',showinfo);
       app.get('/wm/*',showinfo);
