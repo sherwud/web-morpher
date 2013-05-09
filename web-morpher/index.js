@@ -113,6 +113,8 @@ function wmConstructor(sitePath){
    serv.path.sitee = path.join(serv.path.sitewm,'elements');
    /* шаблоны сайта */
    serv.path.sitet = path.join(serv.path.sitewm,'templates');
+   /* модули сайта */
+   serv.path.sitemod = path.join(serv.path.sitewm,'modules');
    /* пути от wm */
    serv.glPath = glPath;
    /* настройки сайта */

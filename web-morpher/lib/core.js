@@ -9,6 +9,17 @@ function coreConstructor(serv){
    sys.formidable = require(serv.findNodeModule('formidable'));
    sys.parser = require('../ulib/parser.js');
    sys.filemanager = require('./filemanager.js');
+   /* модули сайта */
+   var mod = {};
+   var files = fs.readdirSync(serv.path.sitemod);
+   for (var i=0; i < files.length; i++){
+      files[i] = path.join(serv.path.sitemod,files[i]);
+      if (fs.statSync(files[i]).isFile() && path.extname(files[i]) === '.js'){
+         var name = path.basename(files[i],'.js');
+         mod[name] = require(files[i]);
+      }
+   }
+   delete files;
    /* Объект для взаимодействия модулей */
    var $wm = this;
    /*
@@ -36,6 +47,17 @@ function coreConstructor(serv){
    $wm.syscall = function(module,method){
       return function(){
          return calling($wm,sys,module,method,arguments);
+      };
+   };
+   /*
+    * @info Функция для вызова методов из модулей сайта
+    * @param {string} module - Имя модуля
+    * @param {string} method - Имя функции
+    * @returns {function} - Возвращает функцию выполняющую заданный метод
+    */
+   $wm.modcall = function(module,method){
+      return function(){
+         return calling($wm,mod,module,method,arguments);
       };
    };
    proxy(serv,$wm);
