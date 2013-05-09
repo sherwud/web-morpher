@@ -128,8 +128,11 @@ h3{
    float: left;
    margin: 5px 3px 3px 0;
    display: table;
-   padding: 8px;
+   padding: 8px 8px 4px;
    text-align: justify;
+}
+#wm-content *:last-child {
+   margin-bottom: 0px;
 }
 .wm-footer{
    float: left;

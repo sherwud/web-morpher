@@ -11,7 +11,7 @@ exports = module.exports = {};
 exports.mainmenuSync = function(){
    var menu = 
       '<a class="menuitem active" href="/">Главная</a>'
-      +'<a class="menuitem" href="javascript: void(0)">О системе</a>';
+      +'<a rowid="1" class="menuitem" href="javascript: void(0)">О системе</a>';
    return menu;
 };
 exports.NodeJS_Info = function(){
