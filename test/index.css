@@ -71,20 +71,20 @@ h3{
    width: auto;
    margin: 2px 1px;
 }
-.wm-mainmenu>.menuitem{
+.wm-mainmenu .menuitem{
    display: block;
    padding: 3px 6px;
    width: auto;
    margin: 1px;
    border-radius: 6px;
 }
-.wm-mainmenu>.menuitem:hover{
+.wm-mainmenu .menuitem:hover{
    box-shadow: 0 0 2px rgba(0,0,0,0.2);
 }
-.wm-mainmenu>.menuitem:active{
+.wm-mainmenu .menuitem:active{
    background-color: #EEE;
 }
-.wm-mainmenu>.menuitem.active{
+.wm-mainmenu .menuitem.active{
    background-color: #EEE;
    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
    color: #333;
@@ -106,10 +106,17 @@ h3{
    background-color: #F8F8F8;
 }
 .menubutton>div{
-   height: 14px;
+   height: 18px;
+   margin: 0 -3px;
    position: absolute;
-   width: 16px;
+   width: 22px;
    z-index: 1;
+}
+.menubutton.wm-del>div{
+   width: 28px;
+}
+.menubutton.wm-save>div{
+   width: 28px;
 }
 .menubutton:hover{
    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
@@ -118,9 +125,10 @@ h3{
    background-color: #EEE;
 }
 .menubutton.add{
-   margin: 4px;
+   margin: 6px;
    left: 175px;
    position: absolute;
+   line-height: 18px;
 }
 .menubutton.edit{
    display: none;
@@ -129,7 +137,8 @@ h3{
    display: block;
 }
 .menubutton.editPage{
-   margin: 4px 8px 8px 0;
+   margin: 4px 5px 8px 0;
+   line-height: 18px;
 }
 .wm-upload{
    float: left;
@@ -140,8 +149,8 @@ h3{
 }
 #wm-content{
    border-radius: 6px;
-   height: calc(100% - 108px);
-   width: calc(100% - 229px); 
+   height: calc(100% - 109px);
+   width: calc(100% - 229px);
    float: left;
    margin: 5px 3px 0 0;
    display: table;
@@ -160,4 +169,61 @@ h3{
 }
 .hide {
    display: none;
+}
+.wm-blocked{
+   bottom: 0;
+   left: 0;
+   position: fixed;
+   right: 0;
+   top: 0;
+   z-index: 1000000;
+   background: rgba(50, 50, 50, 0.5);
+   
+}
+.wm-loading>div{
+   text-align: center;
+   bottom: 50%;
+   position: fixed;
+   left: 50%;
+   font-size: 20pt;
+   color: #444;
+   text-shadow: 0 0 3px rgba(5, 5, 5, 0.85);
+}
+.wm-itemform {
+   position: fixed;
+   top: 10%;
+   left: 10%;
+   width: 80%;
+   height: 80%;
+   border-radius: 8px;
+   z-index: 1000001;
+   padding: 8px;
+}
+.wm-close{
+   line-height: 18px;
+   margin: -2px;
+   text-align: center;
+   width: 11px;
+}
+.wm-add{
+   line-height: 18px;
+   margin: -2px 8px;
+   text-align: center;
+   width: 15px;
+}
+.wm-save{
+   line-height: 18px;
+   margin: -2px 8px;
+   text-align: center;
+   width: 21px;
+}
+.wm-del{
+   line-height: 18px;
+   margin: -2px -2px 0 8px;
+   text-align: center;
+   width: 21px;
+}
+.wm-art-header{
+   font-size: 16pt;
+   height: 30px;
 }

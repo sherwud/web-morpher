@@ -21,7 +21,7 @@
    <div id=\"wm-content\" class=\"shadowbox\">{{NODEJSINFO}}</div>\n\
    {{EDITBUTTON}}\n\
    {{FOOTER}}\n\
-   ",
+   {{loading}}{{editing}}{{additemform}}{{edititemform}}",
    "params":{
       "HEADER":"<h3 class=\"wm-header shadowbox\">\n\
         <span>Node.js</span>\n\
@@ -37,7 +37,7 @@
          }
       },
       "ADDBUTTON":"<div class=\"menubutton add\"><div></div>add</div>",
-      "EDITBUTTON":"<div class=\"menubutton editPage hide\">edit</div>",
+      "EDITBUTTON":"<div class=\"menubutton editPage hide\"><div></div>edit</div>",
       "FOOTER":"<div class=\"wm-footer\">\n\
          <span>Спасибо: </span>\n\
          <a target=\"blank\" href=\"http://nodejs.org\">Node.js</a>\n\
@@ -64,6 +64,31 @@
          <input type=\"text\" class=\"hide\" name=\"call\" value=\"info.upload\">\n\
          <input size=\"17\" type=\"file\" accept=\"image/*\" name=\"image\">\n\
          <input type=\"submit\" value=\"Отправить\">\n\
-         </form>"
+         </form>",
+      "loading":"<div class=\"wm-loading wm-blocked\"><div>Загрузка...</div></div>",
+      "editing":"<div class=\"wm-editing wm-blocked hide\"></div>",
+      "additemform":"<div class=\"wm-additemform wm-itemform hide shadowbox\">\n\
+      <div class=\"wm-close menubutton\"><div></div>X</div>\n\
+      <div class=\"wm-add menubutton\"><div></div>add</div>\n\
+      <div class=\"wm-art-header\">Добавить статью</div>\n\
+      <span>Название</span>\n\
+      <input type=\"text\" name=\"name\" style=\"margin-bottom: 4px; width: 200px;\"></input>\n\
+      <span>Позиция</span>\n\
+      <input type=\"text\" name=\"sort\" style=\"margin-bottom: 4px; width: 40px;\"></input>\n\
+      <span style=\"display: block;\">HTML код статьи</span>\n\
+      <textarea name=\"html\" style=\"resize: none; width: calc(100% - 6px); height: calc(100% - 81px);\"></textarea>\n\
+      </div>",
+      "edititemform":"<div class=\"wm-edititemform wm-itemform hide shadowbox\">\n\
+      <div class=\"wm-close menubutton\"><div></div>X</div>\n\
+      <div class=\"wm-save menubutton\"><div></div>save</div>\n\
+      <div class=\"wm-del menubutton\"><div></div>del</div>\n\
+      <div class=\"wm-art-header\">Редактировать статью</div>\n\
+      <span>Название</span>\n\
+      <input type=\"text\" name=\"name\" style=\"margin-bottom: 4px; width: 200px;\"></input>\n\
+      <span>Позиция</span>\n\
+      <input type=\"text\" name=\"sort\" style=\"margin-bottom: 4px; width: 40px;\"></input>\n\
+      <span style=\"display: block;\">HTML код статьи</span>\n\
+      <textarea name=\"html\" style=\"resize: none; width: calc(100% - 6px); height: calc(100% - 81px);\"></textarea>\n\
+      </div>"
    }
 }

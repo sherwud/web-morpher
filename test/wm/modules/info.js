@@ -2,9 +2,8 @@ var path = require('path');
 var fs = require('fs');
 exports = module.exports = {};
 exports.mainmenuSync = function(){
-   var menu = 
-      '<a class="menuitem active" href="/">Главная</a>'
-      +'<a rowid="1" class="menuitem" href="javascript: void(0)">О системе</a>';
+   var menu = '<a class="menuitem home active" href="/">Главная</a>'
+      +'<div class="menucontainer"></div>';
    return menu;
 };
 exports.NodeJS_Info = function(){
@@ -45,7 +44,102 @@ exports.NodeJS_Info = function(){
 };
 exports.POST = {};
 exports.POST.menu = function(req,send){
-   send(200,req.body.data);
+   var getPath = this.getPath;
+   var findNodeModule = this.findNodeModule;
+   var mongodb = require(findNodeModule('mongodb'));
+   var conf = require(path.join(getPath('sitewm'),'dbconfig.json'));
+   var db = new mongodb.Db(conf.dbname,
+      new mongodb.Server(conf.host,conf.port,{}),{safe:false});
+   db.open(function(e,db){
+      db.collection('mainmenu',function(e,collection){
+         collection.find({parent:{$exists:false}},{name:1,sort:1})
+                   .sort({sort:1},function(e,cursor){
+            cursor.toArray(function(e,items){
+               var html = '';
+               if (items)
+                  for (var i=0;i<items.length;i++){
+                     html += '<a '
+                          +'rowid="'+String(items[i]._id)+'" '
+                          +'sort="'+String(items[i].sort)+'" '
+                          +'class="menuitem dbitem" href="javascript: void(0)">'
+                          +items[i].name
+                          +'</a>';
+                  }
+               send(200,html);
+               db.close();
+            });
+         });
+      });
+   });
+   return true;
+};
+exports.POST.getPage = function(req,send){
+   var getPath = this.getPath;
+   var findNodeModule = this.findNodeModule;
+   var mongodb = require(findNodeModule('mongodb'));
+   var conf = require(path.join(getPath('sitewm'),'dbconfig.json'));
+   var db = new mongodb.Db(conf.dbname,
+      new mongodb.Server(conf.host,conf.port,{}),{safe:false});
+   db.open(function(e, db){
+      db.collection('mainmenu',function(e,collection){
+         collection.find({_id:mongodb.ObjectID(req.body.data._id)},{html:1},
+               function(e,cursor){
+            cursor.toArray(function(e,items){
+               if (items) send(200,items[0].html);
+               db.close();
+            });
+         });
+      });
+   });
+   return true;
+};
+exports.POST.addmenu = function(req,send){
+   var getPath = this.getPath;
+   var findNodeModule = this.findNodeModule;
+   var mongodb = require(findNodeModule('mongodb'));
+   var conf = require(path.join(getPath('sitewm'),'dbconfig.json'));
+   var db = new mongodb.Db(conf.dbname,
+      new mongodb.Server(conf.host,conf.port,{}),{safe:false});
+   db.open(function(e,db){
+      db.collection('mainmenu',function(e,collection){
+         collection.insert(req.body.data);
+         send(200,'ok');
+         db.close();
+      });
+   });
+   return true;
+};
+exports.POST.savemenu = function(req,send){
+   var getPath = this.getPath;
+   var findNodeModule = this.findNodeModule;
+   var mongodb = require(findNodeModule('mongodb'));
+   var conf = require(path.join(getPath('sitewm'),'dbconfig.json'));
+   var db = new mongodb.Db(conf.dbname,
+      new mongodb.Server(conf.host,conf.port,{}),{safe:false});
+   db.open(function(e,db){
+      db.collection('mainmenu',function(e,collection){
+         req.body.data._id = mongodb.ObjectID(req.body.data._id);
+         collection.save(req.body.data);
+         send(200,'ok');
+         db.close();
+      });
+   });
+   return true;
+};
+exports.POST.delmenu = function(req,send){
+   var getPath = this.getPath;
+   var findNodeModule = this.findNodeModule;
+   var mongodb = require(findNodeModule('mongodb'));
+   var conf = require(path.join(getPath('sitewm'),'dbconfig.json'));
+   var db = new mongodb.Db(conf.dbname,
+      new mongodb.Server(conf.host,conf.port,{}),{safe:false});
+   db.open(function(e,db){
+      db.collection('mainmenu',function(e,collection){
+         collection.remove({_id:mongodb.ObjectID(req.body.data._id)});
+         send(200,'ok');
+         db.close();
+      });
+   });
    return true;
 };
 exports.POST.upload = function(req,send){

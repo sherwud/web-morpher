@@ -21,6 +21,8 @@ function coreConstructor(serv){
    delete files;
    /* Объект для взаимодействия модулей */
    var $wm = this;
+   /* Передаем функцию подключения мдулей */
+   $wm.findNodeModule = serv.findNodeModule;
    /*
     * @info отдает модулю путь к ресурсам по его имени из параметров сервера
     * @param {string} pathName - имя пути
