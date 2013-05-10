@@ -15,8 +15,10 @@
       }
    },
    "body":"{{HEADER}}\n\
-   <div class=\"aside-left shadowbox\">{{MAINMENU}}{{ADDBUTTON}}</div>\n\
-   <div id=\"wm-content\" class=\"shadowbox\">{{NODEJSINFO}}{{UPLOAD}}</div>\n\
+   <div class=\"aside-left\">\n\
+   <div class=\"aside-menu shadowbox\">{{MAINMENU}}{{ADDBUTTON}}</div>\n\
+   {{UPLOAD}}</div>\n\
+   <div id=\"wm-content\" class=\"shadowbox\">{{NODEJSINFO}}</div>\n\
    {{EDITBUTTON}}\n\
    {{FOOTER}}\n\
    ",
@@ -57,9 +59,10 @@
          "system":false,
          "elemetn":"nodejsinfo"
       },
-      "UPLOAD":"<form enctype=\"multipart/form-data\" method=\"post\" action=\"/wm\">\n\
-         <p><input type=\"file\" accept=\"image/*\" name=\"image\">\n\
-         <input type=\"submit\" value=\"Отправить\"></p>\n\
+      "UPLOAD":"<form class=\"wm-upload\" enctype=\"multipart/form-data\" method=\"post\" action=\"/wm\">\n\
+         Загрузить картинку\n\
+         <input size=\"17\" type=\"file\" accept=\"image/*\" name=\"image\">\n\
+         <input type=\"submit\" value=\"Отправить\">\n\
          </form>"
    }
 }

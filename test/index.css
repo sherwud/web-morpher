@@ -52,6 +52,14 @@ h3{
    color: #555555;
    text-shadow: 0 0 1px rgba(100, 100, 100, 0.5);
 }
+.aside-menu {
+   float: left;
+   margin-bottom: 26px;
+   width: 198px;
+   display: block;
+   padding: 2px;
+   border-radius: 8px;
+}
 .aside-left {
    float: left;
    margin: 5px;
@@ -122,6 +130,13 @@ h3{
 }
 .menubutton.editPage{
    margin: 4px 8px 8px 0;
+}
+.wm-upload{
+   float: left;
+   margin-bottom: 4px;
+   width: 200px;
+   display: block;
+   border-radius: 8px;
 }
 #wm-content{
    border-radius: 6px;
