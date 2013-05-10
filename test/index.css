@@ -143,9 +143,9 @@ h3{
    height: calc(100% - 108px);
    width: calc(100% - 229px); 
    float: left;
-   margin: 5px 3px 3px 0;
+   margin: 5px 3px 0 0;
    display: table;
-   padding: 8px 8px 4px;
+   padding: 8px;
    text-align: justify;
 }
 #wm-content *:last-child {
