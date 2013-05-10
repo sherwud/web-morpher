@@ -72,11 +72,11 @@
       <div class=\"wm-add menubutton\"><div></div>add</div>\n\
       <div class=\"wm-art-header\">Добавить статью</div>\n\
       <span>Название</span>\n\
-      <input type=\"text\" name=\"name\" style=\"margin-bottom: 4px; width: 200px;\"></input>\n\
+      <input class=\"name\" type=\"text\" name=\"name\"></input>\n\
       <span>Позиция</span>\n\
-      <input type=\"text\" name=\"sort\" style=\"margin-bottom: 4px; width: 40px;\"></input>\n\
+      <input class=\"sort\" type=\"text\" name=\"sort\"></input>\n\
       <span style=\"display: block;\">HTML код статьи</span>\n\
-      <textarea name=\"html\" style=\"resize: none; width: calc(100% - 6px); height: calc(100% - 81px);\"></textarea>\n\
+      <textarea class=\"html\" name=\"html\"></textarea>\n\
       </div>",
       "edititemform":"<div class=\"wm-edititemform wm-itemform hide shadowbox\">\n\
       <div class=\"wm-close menubutton\"><div></div>X</div>\n\
@@ -84,11 +84,11 @@
       <div class=\"wm-del menubutton\"><div></div>del</div>\n\
       <div class=\"wm-art-header\">Редактировать статью</div>\n\
       <span>Название</span>\n\
-      <input type=\"text\" name=\"name\" style=\"margin-bottom: 4px; width: 200px;\"></input>\n\
+      <input class=\"name\" type=\"text\" name=\"name\"></input>\n\
       <span>Позиция</span>\n\
-      <input type=\"text\" name=\"sort\" style=\"margin-bottom: 4px; width: 40px;\"></input>\n\
+      <input class=\"sort\" type=\"text\" name=\"sort\"></input>\n\
       <span style=\"display: block;\">HTML код статьи</span>\n\
-      <textarea name=\"html\" style=\"resize: none; width: calc(100% - 6px); height: calc(100% - 81px);\"></textarea>\n\
+      <textarea class=\"html\" name=\"html\"></textarea>\n\
       </div>"
    }
 }

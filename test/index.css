@@ -231,3 +231,16 @@ h3{
    font-size: 16pt;
    height: 30px;
 }
+.wm-itemform .name{
+   margin-bottom: 4px;
+   width: 200px;
+}
+.wm-itemform .sort{
+   margin-bottom: 4px;
+   width: 40px;
+}
+.wm-itemform .html{
+   resize: none; 
+   width: calc(100% - 6px); 
+   height: calc(100% - 81px);
+}
