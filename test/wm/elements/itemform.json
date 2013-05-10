@@ -1,0 +1,6 @@
+{
+   "body":"{{data}}",
+   "builders":{
+      "data":"return this.modcall('info','itemformSync')(data.type)"
+   }
+}

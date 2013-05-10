@@ -59,7 +59,8 @@
          "system":false,
          "elemetn":"nodejsinfo"
       },
-      "UPLOAD":"<form class=\"wm-upload\" enctype=\"multipart/form-data\" method=\"post\" action=\"/wm\">\n\
+      "UPLOAD":"<form class=\"wm-upload\" enctype=\"multipart/form-data\"\n\
+            method=\"post\" action=\"/wm\">\n\
          Загрузить картинку\n\
          <input type=\"text\" class=\"hide\" name=\"call\" value=\"info.upload\">\n\
          <input size=\"17\" type=\"file\" accept=\"image/*\" name=\"image\">\n\
@@ -67,28 +68,21 @@
          </form>",
       "loading":"<div class=\"wm-loading wm-blocked\"><div>Загрузка...</div></div>",
       "editing":"<div class=\"wm-editing wm-blocked hide\"></div>",
-      "additemform":"<div class=\"wm-additemform wm-itemform hide shadowbox\">\n\
-      <div class=\"wm-close menubutton\"><div></div>X</div>\n\
-      <div class=\"wm-add menubutton\"><div></div>add</div>\n\
-      <div class=\"wm-art-header\">Добавить статью</div>\n\
-      <span>Название</span>\n\
-      <input class=\"name\" type=\"text\" name=\"name\"></input>\n\
-      <span>Позиция</span>\n\
-      <input class=\"sort\" type=\"text\" name=\"sort\"></input>\n\
-      <span style=\"display: block;\">HTML код статьи</span>\n\
-      <textarea class=\"html\" name=\"html\"></textarea>\n\
-      </div>",
-      "edititemform":"<div class=\"wm-edititemform wm-itemform hide shadowbox\">\n\
-      <div class=\"wm-close menubutton\"><div></div>X</div>\n\
-      <div class=\"wm-save menubutton\"><div></div>save</div>\n\
-      <div class=\"wm-del menubutton\"><div></div>del</div>\n\
-      <div class=\"wm-art-header\">Редактировать статью</div>\n\
-      <span>Название</span>\n\
-      <input class=\"name\" type=\"text\" name=\"name\"></input>\n\
-      <span>Позиция</span>\n\
-      <input class=\"sort\" type=\"text\" name=\"sort\"></input>\n\
-      <span style=\"display: block;\">HTML код статьи</span>\n\
-      <textarea class=\"html\" name=\"html\"></textarea>\n\
-      </div>"
+      "additemform":{
+         "format":"elemetn",
+         "system":false,
+         "elemetn":"itemform",
+         "data":{
+            "type":"add"
+         }
+      },
+      "edititemform":{
+         "format":"elemetn",
+         "system":false,
+         "elemetn":"itemform",
+         "data":{
+            "type":"edit"
+         }
+      }
    }
 }

@@ -1,10 +1,34 @@
 var path = require('path');
 var fs = require('fs');
+function itemform(type,button,header){
+   return '<div class="wm-'+type+'itemform wm-itemform hide shadowbox">'
+      +'<div class="wm-close menubutton"><div></div>X</div>'
+      + button
+      +'<div class="wm-art-header">'+header+'</div>'
+      +'<span>Название</span>'
+      +'<input class="name" type="text" name="name"></input>'
+      +'<span>Позиция</span>'
+      +'<input class="sort" type="text" name="sort"></input>'
+      +'<span style="display: block;">HTML код статьи</span>'
+      +'<textarea class="html" name="html"></textarea>'
+      +'</div>';
+}
 exports = module.exports = {};
 exports.mainmenuSync = function(){
    var menu = '<a class="menuitem home active" href="/">Главная</a>'
       +'<div class="menucontainer"></div>';
    return menu;
+};
+exports.itemformSync = function(type){
+   var button = '<div class="wm-add menubutton"><div></div>add</div>';
+   var header = 'Добавить статью';
+   if (type !== 'add'){
+      type = 'edit';
+      button = '<div class="wm-save menubutton"><div></div>save</div>'
+         +'<div class="wm-del menubutton"><div></div>del</div>';
+      header = 'Редактировать статью';
+   }
+   return itemform(type,button,header);
 };
 exports.NodeJS_Info = function(){
    var info = '&nbsp;&nbsp;&nbsp;<b>Node</b> или <b>Node.js</b> — серверная реализация языка программирования JavaScript, основанная на движке V8. Предназначена для создания масштабируемых распределённых сетевых приложений, таких как веб-сервер.'
