@@ -1,9 +1,5 @@
 var path = require('path');
-
-function b (x){
-   return a++;
-}
-
+var fs = require('fs');
 exports = module.exports = {};
 exports.mainmenuSync = function(){
    var menu = 
@@ -46,4 +42,21 @@ exports.NodeJS_Info = function(){
    
    +'</p>'
    ;return info;
+};
+exports.POST = {};
+exports.POST.menu = function(req,send){
+   send(200,req.body.data);
+   return true;
+};
+exports.POST.upload = function(req,send){
+   if (req.files && req.files['image'])
+      fs.readFile(req.files.image.path,'base64',function(e, data){
+         if (e) send(e);
+         else {
+            var image = 'data:' + req.files.image.type + ';base64,'+data;
+            send(200,'<img src="'+image+'"/>');
+         }
+      });
+   else return 'Картинка не передана';
+   return true;
 };

@@ -61,6 +61,7 @@
       },
       "UPLOAD":"<form class=\"wm-upload\" enctype=\"multipart/form-data\" method=\"post\" action=\"/wm\">\n\
          Загрузить картинку\n\
+         <input type=\"text\" class=\"hide\" name=\"call\" value=\"info.upload\">\n\
          <input size=\"17\" type=\"file\" accept=\"image/*\" name=\"image\">\n\
          <input type=\"submit\" value=\"Отправить\">\n\
          </form>"

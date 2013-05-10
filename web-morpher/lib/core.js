@@ -59,6 +59,30 @@ function coreConstructor(serv){
          return calling($wm,mod,module,method,arguments);
       };
    };
+   /*
+    * @info Функция для вызова POST методов из модулей сайта
+    * @param {string} module - Имя модуля
+    * @param {string} method - Имя функции
+    * @returns {function} - Возвращает функцию выполняющую заданный метод
+    */
+   serv.POSTcall = function(call){
+      call = call.split('.');
+      var module = String(call[0]);
+      var method = String(call[1]?call[1]:'');
+      return function(){
+         if (typeof module !== 'string' && typeof method !== 'string')
+            return false;
+         if (
+                module in mod
+                && typeof mod[module].POST === 'object'
+                && !(mod[module].POST instanceof Array)
+                && method in mod[module].POST
+                && typeof mod[module].POST[method] === 'function'
+         ){
+            return mod[module].POST[method].apply($wm,arguments);
+         } else return false;
+      };
+   };
    proxy(serv,$wm);
 }
 /*
@@ -78,7 +102,8 @@ function calling($wm,obj,module,method,params){
    }
    if (typeof module !== 'string' && typeof method !== 'string')
       return err('Неверные параметры:'+' module='+module+' method='+method);
-   if (module in obj && method in obj[module]){
+   if (module in obj && method in obj[module]
+         && typeof obj[module][method] === 'function'){
       return obj[module][method].apply($wm,params);
    } else return err('Функция '+module+'.'+method+' не найдена');
 }
@@ -151,7 +176,7 @@ function proxy(serv,$wm){
          default: next();
       }
    }
-   function modsPOST(req,res,next){
+   function modsPOST(req,res){
       if (serv.siteConf['maxFileSize']){
          var size = Number(serv.siteConf['maxFileSize']);
          for (var i in req.files){
@@ -168,11 +193,14 @@ function proxy(serv,$wm){
          }
          res.send.apply(res,arguments);
       }
-      
-      console.log(req.query);
-      console.log(req.body);
-      
-      send(200,req.body);
+      var method = serv.POSTcall(req.body.call);
+      var result = method(req,send);
+      if (result){
+         if (result !== true)
+            send(200,result);
+      } else {
+         send(404,'Метод не найден');
+      }
    }
    function modsGET(req,res,next){
       res.send(200,req.query);
