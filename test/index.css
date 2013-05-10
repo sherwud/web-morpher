@@ -164,9 +164,9 @@ h3{
 }
 .wm-footer{
    float: left;
-   width: calc(100% - 64px);
+   width: calc(100% - 56px);
    text-align: center;
-   margin: 8px 0 8px 32px;
+   margin: 8px 0 8px 28px;
    color: #777;
 }
 .hide {
