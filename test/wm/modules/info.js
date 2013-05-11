@@ -21,6 +21,11 @@ function removeSpecChars(str){
    if (typeof str !== 'string') return str;
    return str.replace(/[^-,.№@_A-Za-zА-Яа-яЁё 0-9]/g,'');
 }
+function removeSpecCharsSearch(str){
+   if (typeof str !== 'string') return str;
+   return removeSpecChars(str)
+      .replace(/([-,.№@_ ])/g,'\\$1');
+}
 function removeHTML(str){
    if (typeof str !== 'string') return str;
    return str.replace(/\<[^\<]*\>/g,' ').replace(/\s+/g,' ');
@@ -214,16 +219,16 @@ exports.POST.delmenu = function(req,send){
 };
 exports.POST.getSearch = function(){
    var search = '<div id="searchform">'
-   +'<input class="search" type="text"></input>'
+   +'<input class="search" placeholder="Поиск статьи" type="text"></input>'
    +'<div class="searchbutton"><div></div>Поиск</div>'
-   +'<div class="radio">'
-   +'<input class="o-and" type="radio"></input><span>AND</span>'
-   +'<input class="o-or" checked="checked" type="radio"></input><span>OR</span>'
-   +'</div>'
    +'<div class="checkbox">'
    +'<input class="menu" type="checkbox"></input><span>В меню</span>'
    +'<input class="tags" type="checkbox"></input><span>В тегах</span>'
    +'<input class="text" checked="checked" type="checkbox"></input><span>В тексте</span>'
+   +'</div>'
+   +'<div class="radio">'
+   +'<input class="o-and" type="radio"></input><span>AND</span>'
+   +'<input class="o-or" checked="checked" type="radio"></input><span>OR</span>'
    +'</div>'
    +'</div>'
    +'<div id="searchresult"></div>'
@@ -239,7 +244,13 @@ exports.POST.search = function(req,send){
    db.open(function(e, db){
       db.collection('mainmenu',function(e,collection){
          var data = req.body.data;
-         var search = new RegExp(data.search,'i');
+         var search = removeSpecCharsSearch(data.search);
+         if (!search){
+            send(200,'Ничего не найдено');
+            return;
+         }
+         var repl = new RegExp('('+search+')','g');
+         search = new RegExp(search,'i');
          collection.find({text:search},{name:1,text:1},
                function(e,cursor){
             cursor.toArray(function(e,items){
@@ -252,12 +263,12 @@ exports.POST.search = function(req,send){
                         +'<a href="javascript: void(0)" class="a-header">'
                         +items[i].name+'</a>'
                         +'<span>'
-                        +items[i].text
+                        +items[i].text.replace(repl,'<b>$1</b>')
                         +'</span>'
                         +'</div>';
                   }
                   send(200,html);
-               } else send(404,'Ничего не найдено');
+               } else send(200,'Ничего не найдено');
                db.close();
             });
          });

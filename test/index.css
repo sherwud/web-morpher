@@ -301,10 +301,10 @@ h3{
 }
 #searchform .radio{
    float: left;
-   margin-right: 8px;
 }
 #searchform .checkbox{
    float: left;
+   margin-right: 8px;
 }
 #searchform .radio>span,#searchform .checkbox>span{
    display: block;
@@ -320,4 +320,18 @@ h3{
 #searchform .radio>input,#searchform .checkbox>input{
    display: block;
    float: left;
+}
+#searchresult{
+   margin-top: 8px;
+   display: table;
+   width: 100%;
+}
+#searchresult .article{
+   margin-top: 8px;
+   display: table;
+   width: 100%;
+}
+#searchresult .a-header{
+   display: table;
+   width: 100%;
 }

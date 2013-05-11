@@ -67,7 +67,8 @@ $(window).bind('load', function(){
             $('.menuitem.search').click(function(){
                function search(){
                   var search = $('#searchform .search').val();
-                  if (search) {
+                  var sr = $('#searchresult');
+                  if (search && search.length > 3) {
                      $wm.loading.show();
                      $.ajax({
                         type: 'POST', url: '/wm', contentType:'application/json; charset=utf-8',
@@ -76,7 +77,6 @@ $(window).bind('load', function(){
                            data:{search:search}
                         }),
                         success: function(data){
-                           var sr = $('#searchresult');
                            sr.html(data);
                            $wm.syntaxHighlight(sr);
                            $wm.loading.hide();
@@ -86,6 +86,8 @@ $(window).bind('load', function(){
                            $wm.loading.hide();
                         }
                      });
+                  } else {
+                     sr.html('Введите более 3х символов');
                   }
                }
                $wm.loading.show();
@@ -121,6 +123,10 @@ $(window).bind('load', function(){
                               .attr('checked',true);
                      });
                      $('#searchform .searchbutton').click(search);
+                     $('#searchform .search').focus();
+                     $('#searchform .search').keypress(function(e){
+                        if(e.keyCode === 13) search();
+                     });
                   },
                   error: function(e){;
                      alert(e.responseText);
