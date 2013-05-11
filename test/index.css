@@ -92,6 +92,21 @@ h3{
    color: #333;
    text-decoration: none !important;
 }
+#menucontainer div[level="0"]>a{
+   padding-left: 12px;
+}
+#menucontainer div[level="1"]>a{
+   padding-left: 24px;
+}
+#menucontainer div[level="2"]>a{
+   padding-left: 36px;
+}
+#menucontainer div[level="3"]>a{
+   padding-left: 48px;
+}
+#menucontainer div[level="4"]>a{
+   padding-left: 60px;
+}
 .shadowbox {
    box-shadow: 0 0 3px rgba(0,0,0,0.4);
    background-color: #F8F8F8;
@@ -231,17 +246,74 @@ h3{
    font-size: 16pt;
    height: 30px;
 }
+.wm-itemform input,.wm-itemform select{
+   margin: 4px 16px 4px 4px;
+}
 .wm-itemform .name{
-   margin-bottom: 4px;
    width: 160px;
-   margin-right: 8px;
 }
 .wm-itemform .sort{
-   margin-bottom: 4px;
    width: 16px;
+}
+.wm-itemform .parent{
+   width: 160px;
 }
 .wm-itemform .html{
    resize: none; 
    width: calc(100% - 6px); 
    height: calc(100% - 81px);
+}
+#searchform{
+   display: table;
+   width: 100%;
+}
+#searchform .searchbutton{
+    background: url("img/find.png") no-repeat 42px 2px transparent;
+    float: left;
+    height: 19px;
+    width: 55px;
+    margin: 1px 4px 0;
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+    padding-left: 5px;
+    text-shadow: 0 0 1px rgba(100, 100, 100, 0.85);
+    color: #888;
+    cursor: pointer;
+}
+#searchform .searchbutton>div{
+   height: 19px;
+   position: absolute;
+   width: 50px;
+}
+#searchform .searchbutton:hover{
+   box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+#searchform .searchbutton:active{
+   background-color: #EEE;
+}
+#searchform .search{
+   width: calc(100% - 384px);
+   float: left;
+}
+#searchform .radio{
+   float: left;
+   margin-right: 8px;
+}
+#searchform .checkbox{
+   float: left;
+}
+#searchform .radio>span,#searchform .checkbox>span{
+   display: block;
+   float: left;
+   margin: 1px 4px 0 0;
+}
+#searchform .radio>span{
+   margin: 1px 2px 0 0;
+}
+#searchform .checkbox>span{
+   margin: 1px 8px 0 0;
+}
+#searchform .radio>input,#searchform .checkbox>input{
+   display: block;
+   float: left;
 }

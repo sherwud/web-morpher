@@ -19,13 +19,14 @@
    <div class=\"aside-menu shadowbox\">{{MAINMENU}}{{ADDBUTTON}}</div>\n\
    {{UPLOAD}}</div>\n\
    <div id=\"wm-content\" class=\"shadowbox\">{{NODEJSINFO}}</div>\n\
+   <div id=\"wm-content-editing\" class=\"hide\"></div>\n\
    {{EDITBUTTON}}\n\
    {{FOOTER}}\n\
    {{loading}}{{editing}}{{additemform}}{{edititemform}}",
    "params":{
       "HEADER":"<h3 class=\"wm-header shadowbox\">\n\
         <span>Node.js</span>\n\
-        <i>Тут должна быть ваша цитата</i></h3>",
+        <i>Don’t Worry, Be Happy - © Роберт Макферрин-младший</i></h3>",
       "MAINMENU":{
          "ruName":"Главное меню",
          "description":"Основное меню сайта",

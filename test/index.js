@@ -1,39 +1,108 @@
 $(window).bind('load', function(){
    $wm.loadmenu = function(){
+      function itemclick(){
+         var self = this;
+         var rowid = self.getAttribute('rowid');
+         var submenu = $('div[rowid="'+rowid+'"]');
+         $('#menucontainer>div').addClass('hide');
+         submenu.removeClass('hide');
+         var i = submenu.parent();
+         while (i && i.get(0).id !== 'menucontainer') {
+           i.removeClass('hide');
+           i = i.parent();
+         }
+         $wm.loading.show();
+         $('.menuitem').removeClass('active');
+         $('.menuitem').removeAttr('contextmenu');
+         $(self).addClass('active');
+         $(self).attr('contextmenu','contextmenu');
+         $.ajax({
+            type: 'POST', url: '/wm', contentType:'application/json; charset=utf-8',
+            data: JSON.stringify({
+               call:"info.menu",
+               data:{parent:rowid,level:submenu.attr('level')}
+            }),
+            success: function(data){
+               submenu.html(data);
+               var items = $('.menuitem.dbitem');
+               items.unbind('click',itemclick);
+               items.click(itemclick);
+            },
+            error: function(e){;
+               alert(e.responseText);
+               $wm.loading.hide();
+            }
+         });
+         $.ajax({
+            type: 'POST', url: '/wm', contentType:'application/json; charset=utf-8',
+            data: JSON.stringify({
+               call:"info.getPage",
+               data:{_id:rowid}
+            }),
+            success: function(data){
+               $('.menubutton.editPage.hide').removeClass('hide');
+               $('#wm-content').html(data);
+               $('#wm-content-editing').html(data);
+               $wm.syntaxHighlight($('#wm-content'));
+               $wm.loading.hide();
+            },
+            error: function(e){;
+               alert(e.responseText);
+               $wm.loading.hide();
+            }
+         });
+      };
       $.ajax({
          type: 'POST', url: '/wm', contentType:'application/json; charset=utf-8',
          data: JSON.stringify({call:"info.menu"}),
          success: function(data){
-            $('.wm-mainmenu>.menucontainer').html(data);
-            $('.menuitem.dbitem').click(function(){
-               var self = this;
+            $('#menucontainer').html(data);
+            $('.menuitem.dbitem').click(itemclick);
+            $('.menuitem.home').click(function(){
                $wm.loading.show();
+               $('#menucontainer>div').addClass('hide');
                $('.menuitem').removeClass('active');
-               $('.menuitem').removeAttr('contextmenu');
-               $(self).addClass('active');
-               $(self).attr('contextmenu','contextmenu');
+               $(this).addClass('active');
+            });
+            $('.menuitem.search').click(function(){
+               $wm.loading.show();
+               $('#menucontainer>div').addClass('hide');
+               $('.menuitem').removeClass('active');
+               $(this).addClass('active');
                $.ajax({
                   type: 'POST', url: '/wm', contentType:'application/json; charset=utf-8',
                   data: JSON.stringify({
-                     call:"info.getPage",
-                     data:{_id:self.getAttribute('rowid')}
+                     call:"info.getSearch"
                   }),
                   success: function(data){
-                     $('.menubutton.editPage.hide').removeClass('hide');
+                     $('.menubutton.editPage').addClass('hide');
                      $('#wm-content').html(data);
-                     $wm.syntaxHighlight();
+                     $('#wm-content-editing').html('');
                      $wm.loading.hide();
+                     $('#searchform .radio input').click(function(){
+                        $('#searchform .radio input').attr('checked',false);
+                        $(this).attr('checked',true);
+                     });
+                     $('#searchform .checkbox input').click(function(){
+                        if ($(this).attr('checked'))
+                           $(this).attr('checked','checked'); 
+                        else
+                           $(this).removeAttr('checked');
+                        var nochecked = true;
+                        $('#searchform .checkbox input').each(function(){
+                           if ($(this).attr('checked') === 'checked')
+                              nochecked = false;
+                        });
+                        if (nochecked)
+                           $('#searchform .checkbox input.text')
+                              .attr('checked',true);
+                     });
                   },
                   error: function(e){;
                      alert(e.responseText);
                      $wm.loading.hide();
                   }
                });
-            });
-            $('.menuitem.home').click(function(){
-               $wm.loading.show();
-               $('.menuitem').removeClass('active');
-               $(self).addClass('active');
             });
             $wm.loading.hide();
          }
@@ -75,6 +144,7 @@ $(window).bind('load', function(){
       var form = {
          name:$('.wm-additemform input.name'),
          sort:$('.wm-additemform input.sort'),
+         parent:$('.wm-additemform select.parent'),
          html:$('.wm-additemform textarea.html')
       };
       var elm = $('.wm-additemform');
@@ -84,7 +154,21 @@ $(window).bind('load', function(){
       $('.wm-add',elm).click(function(){
          $wm.addmenuitem.add();
       });
+      this.eathmenuitems = function(){
+         $('option',form.parent).remove();
+         form.parent.append('<option value="null">Главное меню</option>');
+         $('.menuitem.dbitem').each(function(){
+            var level = this.parentElement.getAttribute('level');
+            if (level < 4)
+               form.parent.append('<option value="'
+                  +this.getAttribute('rowid')+'">'
+                  +this.text
+                  +'</option>'
+               );
+         });
+      };
       this.show = function(){
+         $wm.addmenuitem.eathmenuitems();
          $wm.editing.show();
          elm.removeClass('hide');
       };
@@ -103,6 +187,7 @@ $(window).bind('load', function(){
                   data:{
                      name:form.name.val(),
                      sort:form.sort.val(),
+                     parent:form.parent.val(),
                      html:form.html.val()
                   }
                }),
@@ -121,6 +206,7 @@ $(window).bind('load', function(){
          form.name.val('');
          form.sort.val('');
          form.html.val('');
+         form.parent.val('null');
       };
    };
    $('.menubutton.editPage').click(function(){
@@ -131,6 +217,7 @@ $(window).bind('load', function(){
       var form = {
          name:$('.wm-edititemform input.name'),
          sort:$('.wm-edititemform input.sort'),
+         parent:$('.wm-edititemform select.parent'),
          html:$('.wm-edititemform textarea.html')
       };
       var elm = $('.wm-edititemform');
@@ -143,7 +230,21 @@ $(window).bind('load', function(){
       $('.wm-del',elm).click(function(){
          $wm.edititemform.del();
       });
+      this.eathmenuitems = function(){
+         $('option',form.parent).remove();
+         form.parent.append('<option value="null">Главное меню</option>');
+         $('.menuitem.dbitem').each(function(){
+            var level = this.parentElement.getAttribute('level');
+            if (level < 4)
+               form.parent.append('<option value="'
+                  +this.getAttribute('rowid')+'">'
+                  +this.text
+                  +'</option>'
+               );
+         });
+      };
       this.show = function(){
+         $wm.edititemform.eathmenuitems();
          $wm.editing.show();
          elm.removeClass('hide');
       };
@@ -163,6 +264,7 @@ $(window).bind('load', function(){
                      _id:$('.menuitem.dbitem.active').attr('rowid'),
                      name:form.name.val(),
                      sort:form.sort.val(),
+                     parent:form.parent.val(),
                      html:form.html.val()
                   }
                }),
@@ -199,8 +301,9 @@ $(window).bind('load', function(){
       this.set = function(){
          form.name.val($('.menuitem.dbitem.active').text());
          form.sort.val($('.menuitem.dbitem.active').attr('sort'));
-         form.html.val($('#wm-content').html());
+         form.parent.val($('.menuitem.dbitem.active').attr('parent'));
+         form.html.val($('#wm-content-editing').html());
       };
    };
-   $wm.syntaxHighlight();
+   $wm.syntaxHighlight($('#wm-content'));
 });

@@ -197,7 +197,7 @@ function proxy(serv,$wm){
       }
       var method = serv.POSTcall(req.body.call);
       var result = method(req,send);
-      if (result){
+      if (typeof result !== 'undefined' && result !== false){
          if (result !== true)
             send(200,result);
       } else {

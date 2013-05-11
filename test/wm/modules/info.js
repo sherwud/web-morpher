@@ -9,6 +9,8 @@ function itemform(type,button,header){
       +'<input class="name" type="text"></input>'
       +'<span>Позиция</span>'
       +'<input maxlength="2" class="sort" type="text"></input>'
+      +'<span>В меню</span>'
+      +'<select class="parent"><option value="null">Главное меню</option></select>'
       +'<span style="display: block;">HTML код статьи</span>'
       +'<textarea class="html"></textarea>'
       +'</div>';
@@ -19,7 +21,8 @@ exports.mainmenuSync = function(){
       +'<menuitem icon="img/edit.png" onclick="$wm.edititemform.set(); $wm.edititemform.show();">Редактировать статью</menuitem>'
       +'</menu>'
       +'<a class="menuitem home active" href="/">Главная</a>'
-      +'<div class="menucontainer"></div>';
+      +'<a class="menuitem search" href="javascript: void(0)">Поиск</a>'
+      +'<div id="menucontainer"></div>';
    return menu;
 };
 exports.itemformSync = function(type){
@@ -79,7 +82,14 @@ exports.POST.menu = function(req,send){
       new mongodb.Server(conf.host,conf.port,{}),{safe:false});
    db.open(function(e,db){
       db.collection('mainmenu',function(e,collection){
-         collection.find({parent:{$exists:false}},{name:1,sort:1})
+         var data = req.body.data;
+         var parent = 'null';
+         var level = '0';
+         if(data && data['parent'])
+            parent = data['parent'];
+         if(data && data['level'])
+            level = String(Number(data['level'])+1);
+         collection.find({parent:parent},{name:1,sort:1})
                    .sort({sort:1},function(e,cursor){
             cursor.toArray(function(e,items){
                var html = '';
@@ -88,9 +98,15 @@ exports.POST.menu = function(req,send){
                      html += '<a '
                           +'rowid="'+String(items[i]._id)+'" '
                           +'sort="'+String(items[i].sort)+'" '
+                          +'parent="'+String(items[i].parent)+'" '
                           +'class="menuitem dbitem" href="javascript: void(0)">'
                           +items[i].name
-                          +'</a>';
+                          +'</a>'
+                          +'<div '
+                          +'rowid="'+String(items[i]._id)+'" '
+                          +'level="'+level+'" '
+                          +'></div>'
+                     ;
                   }
                send(200,html);
                db.close();
@@ -174,6 +190,23 @@ exports.POST.delmenu = function(req,send){
       });
    });
    return true;
+};
+exports.POST.getSearch = function(){
+   var search = '<div id="searchform">'
+   +'<input class="search" type="text"></input>'
+   +'<div class="searchbutton"><div></div>Поиск</div>'
+   +'<div class="radio">'
+   +'<input class="o-and" type="radio"></input><span>AND</span>'
+   +'<input class="o-or" checked="checked" type="radio"></input><span>OR</span>'
+   +'</div>'
+   +'<div class="checkbox">'
+   +'<input class="menu" type="checkbox"></input><span>В меню</span>'
+   +'<input class="tag" type="checkbox"></input><span>В тегах</span>'
+   +'<input class="text" checked="checked" type="checkbox"></input><span>В тексте</span>'
+   +'</div>'
+   +'</div>'
+   +'<div id="searchresult"></div>'
+   ;return search;
 };
 exports.POST.upload = function(req,send){
    if (req.files && req.files['image'])

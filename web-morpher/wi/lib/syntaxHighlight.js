@@ -1,4 +1,4 @@
-$wm.syntaxHighlight = function(){
+$wm.syntaxHighlight = function(elm){
    var js = [
       [/\n/g,'<br>'],
       [/^<br>/g,''],
@@ -34,22 +34,22 @@ $wm.syntaxHighlight = function(){
       [/(--\w+):/g,'<span class="obj-elm">$1</span>:']
       
    ];
-   $('.wm-code.js').each(function(i, elem) {
+   $('.wm-code.js',elm).each(function(i, elem) {
       for (var i in js) {
          elem.innerHTML = elem.innerHTML.replace(js[i][0],js[i][1]);
       }
    });
-   $('.wm-code.json').each(function(i, elem) {
+   $('.wm-code.json',elm).each(function(i, elem) {
       for (var i in json) {
          elem.innerHTML = elem.innerHTML.replace(json[i][0],json[i][1]);
       }
    });
-   $('.wm-code.http').each(function(i, elem) {
+   $('.wm-code.http',elm).each(function(i, elem) {
       for (var i in http) {
          elem.innerHTML = elem.innerHTML.replace(http[i][0],http[i][1]);
       }
    });
-   $('.wm-code.cmd').each(function(i, elem) {
+   $('.wm-code.cmd',elm).each(function(i, elem) {
       for (var i in cmd) {
          elem.innerHTML = elem.innerHTML.replace(cmd[i][0],cmd[i][1]);
       }
