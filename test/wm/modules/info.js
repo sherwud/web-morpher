@@ -15,7 +15,10 @@ function itemform(type,button,header){
 }
 exports = module.exports = {};
 exports.mainmenuSync = function(){
-   var menu = '<a class="menuitem home active" href="/">Главная</a>'
+   var menu = '<menu type="context" id="contextmenu">'
+      +'<menuitem icon="img/edit.png" onclick="$wm.edititemform.set(); $wm.edititemform.show();">Редактировать статью</menuitem>'
+      +'</menu>'
+      +'<a class="menuitem home active" href="/">Главная</a>'
       +'<div class="menucontainer"></div>';
    return menu;
 };

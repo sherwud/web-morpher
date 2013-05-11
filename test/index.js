@@ -9,7 +9,9 @@ $(window).bind('load', function(){
                var self = this;
                $wm.loading.show();
                $('.menuitem').removeClass('active');
+               $('.menuitem').removeAttr('contextmenu');
                $(self).addClass('active');
+               $(self).attr('contextmenu','contextmenu');
                $.ajax({
                   type: 'POST', url: '/wm', contentType:'application/json; charset=utf-8',
                   data: JSON.stringify({
