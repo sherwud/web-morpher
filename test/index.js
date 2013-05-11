@@ -72,6 +72,11 @@ $(window).bind('load', function(){
       };
    };
    $wm.addmenuitem = new function(){
+      var form = {
+         name:$('.wm-additemform input.name'),
+         sort:$('.wm-additemform input.sort'),
+         html:$('.wm-additemform textarea.html')
+      };
       var elm = $('.wm-additemform');
       $('.wm-close',elm).click(function(){
          $wm.addmenuitem.hide();
@@ -88,17 +93,18 @@ $(window).bind('load', function(){
          elm.addClass('hide');
       };
       this.add = function(data){
-         var name=$('.wm-additemform input[name="name"]').val();
-         var sort=$('.wm-additemform input[name="sort"]').val();
-         var html=$('.wm-additemform textarea[name="html"]').val();
-         if (name && html) {
+         if (form.name.val() && form.html.val()) {
             $wm.addmenuitem.hide();
             $wm.loading.show();
             $.ajax({
                type: 'POST', url: '/wm', contentType:'application/json; charset=utf-8',
                data: JSON.stringify({
                   call:"info.addmenu",
-                  data:{name:name,sort:sort,html:html}
+                  data:{
+                     name:form.name.val(),
+                     sort:form.sort.val(),
+                     html:form.html.val()
+                  }
                }),
                success: function(data){
                   location.reload();
@@ -112,9 +118,9 @@ $(window).bind('load', function(){
          }
       };
       this.clear = function(){
-         $('.wm-additemform input[name="name"]').val('');
-         $('.wm-additemform input[name="sort"]').val('');
-         $('.wm-additemform textarea[name="html"]').val('');
+         form.name.val('');
+         form.sort.val('');
+         form.html.val('');
       };
    };
    $('.menubutton.editPage').click(function(){
@@ -122,6 +128,11 @@ $(window).bind('load', function(){
       $wm.edititemform.show();
    });
    $wm.edititemform = new function(){
+      var form = {
+         name:$('.wm-edititemform input.name'),
+         sort:$('.wm-edititemform input.sort'),
+         html:$('.wm-edititemform textarea.html')
+      };
       var elm = $('.wm-edititemform');
       $('.wm-close',elm).click(function(){
          $wm.edititemform.hide();
@@ -141,10 +152,7 @@ $(window).bind('load', function(){
          elm.addClass('hide');
       };
       this.save = function(data){
-         var name=$('.wm-edititemform input[name="name"]').val();
-         var sort=$('.wm-edititemform input[name="sort"]').val();
-         var html=$('.wm-edititemform textarea[name="html"]').val();
-         if (name && html) {
+         if (form.name.val() && form.html.val()) {
             $wm.edititemform.hide();
             $wm.loading.show();
             $.ajax({
@@ -153,7 +161,9 @@ $(window).bind('load', function(){
                   call:"info.savemenu",
                   data:{
                      _id:$('.menuitem.dbitem.active').attr('rowid'),
-                     name:name,sort:sort,html:html
+                     name:form.name.val(),
+                     sort:form.sort.val(),
+                     html:form.html.val()
                   }
                }),
                success: function(data){
@@ -187,12 +197,9 @@ $(window).bind('load', function(){
          });
       };
       this.set = function(){
-         $('.wm-edititemform input[name="name"]')
-            .val($('.menuitem.dbitem.active').text());
-         $('.wm-edititemform input[name="sort"]')
-            .val($('.menuitem.dbitem.active').attr('sort'));
-         $('.wm-edititemform textarea[name="html"]')
-            .val($('#wm-content').html());
+         form.name.val($('.menuitem.dbitem.active').text());
+         form.sort.val($('.menuitem.dbitem.active').attr('sort'));
+         form.html.val($('#wm-content').html());
       };
    };
    $wm.syntaxHighlight();

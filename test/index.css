@@ -233,11 +233,12 @@ h3{
 }
 .wm-itemform .name{
    margin-bottom: 4px;
-   width: 200px;
+   width: 160px;
+   margin-right: 8px;
 }
 .wm-itemform .sort{
    margin-bottom: 4px;
-   width: 40px;
+   width: 16px;
 }
 .wm-itemform .html{
    resize: none; 

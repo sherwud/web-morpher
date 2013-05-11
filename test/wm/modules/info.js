@@ -6,11 +6,11 @@ function itemform(type,button,header){
       + button
       +'<div class="wm-art-header">'+header+'</div>'
       +'<span>Название</span>'
-      +'<input class="name" type="text" name="name"></input>'
+      +'<input class="name" type="text"></input>'
       +'<span>Позиция</span>'
-      +'<input class="sort" type="text" name="sort"></input>'
+      +'<input maxlength="2" class="sort" type="text"></input>'
       +'<span style="display: block;">HTML код статьи</span>'
-      +'<textarea class="html" name="html"></textarea>'
+      +'<textarea class="html"></textarea>'
       +'</div>';
 }
 exports = module.exports = {};
@@ -129,7 +129,10 @@ exports.POST.addmenu = function(req,send){
       new mongodb.Server(conf.host,conf.port,{}),{safe:false});
    db.open(function(e,db){
       db.collection('mainmenu',function(e,collection){
-         collection.insert(req.body.data);
+         var data = req.body.data;
+         if (data && data['sort'] && String(data['sort']).length < 2)
+               data['sort'] = '0'+String(data['sort']);
+         collection.insert(data);
          send(200,'ok');
          db.close();
       });
@@ -145,8 +148,11 @@ exports.POST.savemenu = function(req,send){
       new mongodb.Server(conf.host,conf.port,{}),{safe:false});
    db.open(function(e,db){
       db.collection('mainmenu',function(e,collection){
-         req.body.data._id = mongodb.ObjectID(req.body.data._id);
-         collection.save(req.body.data);
+         var data = req.body.data;
+         if (data && data['sort'] && String(data['sort']).length < 2)
+               data['sort'] = '0'+String(data['sort']);
+         data._id = mongodb.ObjectID(data._id);
+         collection.save(data);
          send(200,'ok');
          db.close();
       });
