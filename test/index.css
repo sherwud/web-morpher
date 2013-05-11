@@ -250,13 +250,17 @@ h3{
    margin: 4px 16px 4px 4px;
 }
 .wm-itemform .name{
-   width: 160px;
+   width: 165px;
 }
 .wm-itemform .sort{
    width: 16px;
 }
 .wm-itemform .parent{
-   width: 160px;
+   width: 165px;
+}
+.wm-itemform .tags{
+   margin-right: 0;
+   width: calc(100% - 597px);
 }
 .wm-itemform .html{
    resize: none; 

@@ -6,14 +6,20 @@ function itemform(type,button,header){
       + button
       +'<div class="wm-art-header">'+header+'</div>'
       +'<span>Название</span>'
-      +'<input class="name" type="text"></input>'
+      +'<input maxlength="20" class="name" type="text"></input>'
       +'<span>Позиция</span>'
       +'<input maxlength="2" class="sort" type="text"></input>'
       +'<span>В меню</span>'
       +'<select class="parent"><option value="null">Главное меню</option></select>'
+      +'<span>Теги</span>'
+      +'<input maxlength="30" class="tags" type="text"></input>'
       +'<span style="display: block;">HTML код статьи</span>'
       +'<textarea class="html"></textarea>'
       +'</div>';
+}
+function removeSpecChars(str){
+   if (typeof str !== 'string') return str;
+   return str.replace(/[^-,.№@_A-Za-zА-Яа-яЁё 0-9]/g,'');
 }
 exports = module.exports = {};
 exports.mainmenuSync = function(){
@@ -99,6 +105,7 @@ exports.POST.menu = function(req,send){
                           +'rowid="'+String(items[i]._id)+'" '
                           +'sort="'+String(items[i].sort)+'" '
                           +'parent="'+String(items[i].parent)+'" '
+                          +'tags="'+String(items[i].tags)+'" '
                           +'class="menuitem dbitem" href="javascript: void(0)">'
                           +items[i].name
                           +'</a>'
@@ -146,6 +153,9 @@ exports.POST.addmenu = function(req,send){
    db.open(function(e,db){
       db.collection('mainmenu',function(e,collection){
          var data = req.body.data;
+         data['name'] = removeSpecChars(data['name']);
+         data['sort'] = removeSpecChars(data['sort']);
+         data['tags'] = removeSpecChars(data['tags']);
          if (data && data['sort'] && String(data['sort']).length < 2)
                data['sort'] = '0'+String(data['sort']);
          collection.insert(data);
@@ -165,6 +175,9 @@ exports.POST.savemenu = function(req,send){
    db.open(function(e,db){
       db.collection('mainmenu',function(e,collection){
          var data = req.body.data;
+         data['name'] = removeSpecChars(data['name']);
+         data['sort'] = removeSpecChars(data['sort']);
+         data['tags'] = removeSpecChars(data['tags']);
          if (data && data['sort'] && String(data['sort']).length < 2)
                data['sort'] = '0'+String(data['sort']);
          data._id = mongodb.ObjectID(data._id);
@@ -201,7 +214,7 @@ exports.POST.getSearch = function(){
    +'</div>'
    +'<div class="checkbox">'
    +'<input class="menu" type="checkbox"></input><span>В меню</span>'
-   +'<input class="tag" type="checkbox"></input><span>В тегах</span>'
+   +'<input class="tags" type="checkbox"></input><span>В тегах</span>'
    +'<input class="text" checked="checked" type="checkbox"></input><span>В тексте</span>'
    +'</div>'
    +'</div>'

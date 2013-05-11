@@ -145,6 +145,7 @@ $(window).bind('load', function(){
          name:$('.wm-additemform input.name'),
          sort:$('.wm-additemform input.sort'),
          parent:$('.wm-additemform select.parent'),
+         tags:$('.wm-additemform input.tags'),
          html:$('.wm-additemform textarea.html')
       };
       var elm = $('.wm-additemform');
@@ -188,6 +189,7 @@ $(window).bind('load', function(){
                      name:form.name.val(),
                      sort:form.sort.val(),
                      parent:form.parent.val(),
+                     tags:form.tags.val(),
                      html:form.html.val()
                   }
                }),
@@ -205,8 +207,9 @@ $(window).bind('load', function(){
       this.clear = function(){
          form.name.val('');
          form.sort.val('');
-         form.html.val('');
          form.parent.val('null');
+         form.tags.val('');
+         form.html.val('');
       };
    };
    $('.menubutton.editPage').click(function(){
@@ -218,6 +221,7 @@ $(window).bind('load', function(){
          name:$('.wm-edititemform input.name'),
          sort:$('.wm-edititemform input.sort'),
          parent:$('.wm-edititemform select.parent'),
+         tags:$('.wm-edititemform input.tags'),
          html:$('.wm-edititemform textarea.html')
       };
       var elm = $('.wm-edititemform');
@@ -265,6 +269,7 @@ $(window).bind('load', function(){
                      name:form.name.val(),
                      sort:form.sort.val(),
                      parent:form.parent.val(),
+                     tags:form.tags.val(),
                      html:form.html.val()
                   }
                }),
@@ -302,6 +307,7 @@ $(window).bind('load', function(){
          form.name.val($('.menuitem.dbitem.active').text());
          form.sort.val($('.menuitem.dbitem.active').attr('sort'));
          form.parent.val($('.menuitem.dbitem.active').attr('parent'));
+         form.tags.val($('.menuitem.dbitem.active').attr('tags'));
          form.html.val($('#wm-content-editing').html());
       };
    };
