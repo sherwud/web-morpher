@@ -21,6 +21,10 @@ function removeSpecChars(str){
    if (typeof str !== 'string') return str;
    return str.replace(/[^-,.№@_A-Za-zА-Яа-яЁё 0-9]/g,'');
 }
+function removeHTML(str){
+   if (typeof str !== 'string') return str;
+   return str.replace(/\<[^\<]*\>/g,' ').replace(/\s+/g,' ');
+}
 exports = module.exports = {};
 exports.mainmenuSync = function(){
    var menu = '<menu type="context" id="contextmenu">'
@@ -102,17 +106,17 @@ exports.POST.menu = function(req,send){
                if (items)
                   for (var i=0;i<items.length;i++){
                      html += '<a '
-                          +'rowid="'+String(items[i]._id)+'" '
-                          +'sort="'+String(items[i].sort)+'" '
-                          +'parent="'+String(items[i].parent)+'" '
-                          +'tags="'+String(items[i].tags)+'" '
-                          +'class="menuitem dbitem" href="javascript: void(0)">'
-                          +items[i].name
-                          +'</a>'
-                          +'<div '
-                          +'rowid="'+String(items[i]._id)+'" '
-                          +'level="'+level+'" '
-                          +'></div>'
+                        +'rowid="'+String(items[i]._id)+'" '
+                        +'sort="'+String(items[i].sort)+'" '
+                        +'parent="'+String(items[i].parent)+'" '
+                        +'tags="'+String(items[i].tags)+'" '
+                        +'class="menuitem dbitem" href="javascript: void(0)">'
+                        +items[i].name
+                        +'</a>'
+                        +'<div '
+                        +'rowid="'+String(items[i]._id)+'" '
+                        +'level="'+level+'" '
+                        +'></div>'
                      ;
                   }
                send(200,html);
@@ -132,10 +136,12 @@ exports.POST.getPage = function(req,send){
       new mongodb.Server(conf.host,conf.port,{}),{safe:false});
    db.open(function(e, db){
       db.collection('mainmenu',function(e,collection){
-         collection.find({_id:mongodb.ObjectID(req.body.data._id)},{html:1},
+         var data = req.body.data;
+         collection.find({_id:mongodb.ObjectID(data._id)},{html:1},
                function(e,cursor){
             cursor.toArray(function(e,items){
                if (items) send(200,items[0].html);
+               else send(404,'Страница не найдена');
                db.close();
             });
          });
@@ -156,6 +162,7 @@ exports.POST.addmenu = function(req,send){
          data['name'] = removeSpecChars(data['name']);
          data['sort'] = removeSpecChars(data['sort']);
          data['tags'] = removeSpecChars(data['tags']);
+         data['text'] = removeHTML(data['html']);
          if (data && data['sort'] && String(data['sort']).length < 2)
                data['sort'] = '0'+String(data['sort']);
          collection.insert(data);
@@ -178,6 +185,7 @@ exports.POST.savemenu = function(req,send){
          data['name'] = removeSpecChars(data['name']);
          data['sort'] = removeSpecChars(data['sort']);
          data['tags'] = removeSpecChars(data['tags']);
+         data['text'] = removeHTML(data['html']);
          if (data && data['sort'] && String(data['sort']).length < 2)
                data['sort'] = '0'+String(data['sort']);
          data._id = mongodb.ObjectID(data._id);
@@ -220,6 +228,42 @@ exports.POST.getSearch = function(){
    +'</div>'
    +'<div id="searchresult"></div>'
    ;return search;
+};
+exports.POST.search = function(req,send){
+   var getPath = this.getPath;
+   var findNodeModule = this.findNodeModule;
+   var mongodb = require(findNodeModule('mongodb'));
+   var conf = require(path.join(getPath('sitewm'),'dbconfig.json'));
+   var db = new mongodb.Db(conf.dbname,
+      new mongodb.Server(conf.host,conf.port,{}),{safe:false});
+   db.open(function(e, db){
+      db.collection('mainmenu',function(e,collection){
+         var data = req.body.data;
+         var search = new RegExp(data.search,'i');
+         collection.find({text:search},{name:1,text:1},
+               function(e,cursor){
+            cursor.toArray(function(e,items){
+               if (items) {
+                  var html = '';
+                  for (var i=0;i<items.length;i++){
+                     html += '<div'
+                        +' rowid="'+String(items[i]._id)+'" '
+                        +' class="article">'
+                        +'<a href="javascript: void(0)" class="a-header">'
+                        +items[i].name+'</a>'
+                        +'<span>'
+                        +items[i].text
+                        +'</span>'
+                        +'</div>';
+                  }
+                  send(200,html);
+               } else send(404,'Ничего не найдено');
+               db.close();
+            });
+         });
+      });
+   });
+   return true;
 };
 exports.POST.upload = function(req,send){
    if (req.files && req.files['image'])

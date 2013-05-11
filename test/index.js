@@ -65,6 +65,29 @@ $(window).bind('load', function(){
                $(this).addClass('active');
             });
             $('.menuitem.search').click(function(){
+               function search(){
+                  var search = $('#searchform .search').val();
+                  if (search) {
+                     $wm.loading.show();
+                     $.ajax({
+                        type: 'POST', url: '/wm', contentType:'application/json; charset=utf-8',
+                        data: JSON.stringify({
+                           call:"info.search",
+                           data:{search:search}
+                        }),
+                        success: function(data){
+                           var sr = $('#searchresult');
+                           sr.html(data);
+                           $wm.syntaxHighlight(sr);
+                           $wm.loading.hide();
+                        },
+                        error: function(e){;
+                           alert(e.responseText);
+                           $wm.loading.hide();
+                        }
+                     });
+                  }
+               }
                $wm.loading.show();
                $('#menucontainer>div').addClass('hide');
                $('.menuitem').removeClass('active');
@@ -97,6 +120,7 @@ $(window).bind('load', function(){
                            $('#searchform .checkbox input.text')
                               .attr('checked',true);
                      });
+                     $('#searchform .searchbutton').click(search);
                   },
                   error: function(e){;
                      alert(e.responseText);
