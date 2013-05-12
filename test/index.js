@@ -85,6 +85,8 @@ $(window).bind('load', function(){
                function search(){
                   var search = $('#searchform .search').val();
                   var sr = $('#searchresult');
+                  var view = $('#viewfromsearchresult');
+                  var sf = $('#searchform');
                   if (search && search.length > 3) {
                      var data = {
                         search:search,
@@ -104,6 +106,47 @@ $(window).bind('load', function(){
                         success: function(data){
                            sr.html(data);
                            $wm.syntaxHighlight(sr);
+                           function viewart(pt){
+                              $.ajax({
+                                 type: 'POST', url: '/wm',
+                                 contentType:'application/json; charset=utf-8',
+                                 data: JSON.stringify({
+                                    call:"info.getPage",
+                                    data:{_id:pt.attr('_id')}
+                                 }),
+                                 success: function(data){
+                                    $('.view',view).html(data['html']);
+                                    $('.view-header',view).text(data['name']);
+                                    sr.addClass('hide');
+                                    sf.addClass('hide');
+                                    view.removeClass('hide');
+                                    $wm.syntaxHighlight(view);
+                                    $wm.loading.hide();
+                                 },
+                                 error: function(e){;
+                                    alert(e.responseText);
+                                    $wm.loading.hide();
+                                 }
+                              });
+                           };
+                           $('#searchresult .readmore').click(function(){
+                              $wm.loading.show();
+                              var pt = $(this.parentElement.parentElement);
+                              viewart(pt);
+                           });
+                           $('#searchresult .a-header').click(function(){
+                              $wm.loading.show();
+                              var pt = $(this.parentElement);
+                              viewart(pt);
+                           });
+                           $('#viewfromsearchresult .backtosearch')
+                           .click(function(){
+                              $wm.loading.show();
+                              view.addClass('hide');
+                              sr.removeClass('hide');
+                              sf.removeClass('hide');
+                              $wm.loading.hide();
+                           });
                            $wm.loading.hide();
                         },
                         error: function(e){;

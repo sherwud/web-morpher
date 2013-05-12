@@ -251,6 +251,14 @@ exports.POST.getSearch = function(){
    +'</div>'
    +'</div>'
    +'<div id="searchresult"></div>'
+   +'<div id="viewfromsearchresult" class="hide">'
+   +'<div class="vf-header">'
+   +'<a class="backtosearch" href="javascript: void(0)">'
+   +'&lt;- Назад к поиску</a>'
+   +'<span class="view-header"></span>'
+   +'</div>'
+   +'<div class="view"></div>'
+   +'</div>'
    ;return search;
 };
 exports.POST.search = function(req,res){
