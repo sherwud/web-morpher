@@ -474,3 +474,7 @@ img.wm{
 .toolbar>div.codecmd>div{
    width: 50px;
 }
+.toolbar>div.right{
+   float: right;
+   margin: 4px 4px 3px 1px;
+}

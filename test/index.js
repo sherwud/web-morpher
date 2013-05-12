@@ -281,6 +281,57 @@ $(window).bind('load', function(){
          elm.addClass('hide');
       };
    };
+   function appSelection(elm,before,after){
+      var de = elm.get(0);
+      var s = de.selectionStart;
+      var e = de.selectionEnd;
+      var c = e-s;
+      if (c > 0 && c < 10000){
+         var v = de.value;
+         var nv = v.substr(s,c);
+         if (nv[0] !== '\n') before = before+'\n';
+         if (nv[nv.length-1] !== '\n') after = '\n'+after;
+         if (s > 0 && v[s-1] !== '\n') before = '\n'+before;
+         if (e < v.length && v[e] !== '\n') after = after+'\n';
+         nv = before+$wm.escapeHTML(nv)+after;
+         de.value = v.substr(0,s)+nv+v.substr(e,v.length-1);
+         de.selectionStart = de.selectionEnd = s + nv.length+1;
+         de.focus();
+      } else {
+         if (c > 10000)
+            alert('Слишком большой текст для подсветки синтаксиса!');
+         de.focus();
+      }
+   }
+   /* доделать */
+   function EditerSetLength(){
+      $('.length',elm).html('<div></div>'+(this.value.length||''));
+   }
+   function EditerSetSelLength(){
+      
+   }
+   /**/
+   function appToolbarfunc(elm){
+      var edt = $('.html',elm);
+      $('.codejs',elm).click(function(){
+         appSelection(edt,'<span class="wm-code js">','</span>');
+      });
+      $('.codejson',elm).click(function(){
+         appSelection(edt,'<span class="wm-code json">','</span>');
+      });
+      $('.codehttp',elm).click(function(){
+         appSelection(edt,'<span class="wm-code http">','</span>');
+      });
+      $('.codecmd',elm).click(function(){
+         appSelection(edt,'<span class="wm-code cmd">','</span>');
+      });
+      edt.keyup(function(){
+         $('.length',elm).html('<div></div>'+(this.value.length||''));
+      });
+      edt.change(function(){
+         $('.length',elm).html('<div></div>'+(this.value.length||''));
+      });
+   }
    $wm.addmenuitem = new function(){
       var form = {
          name:$('.wm-additemform input.name'),
@@ -296,6 +347,7 @@ $(window).bind('load', function(){
       $('.wm-add',elm).click(function(){
          $wm.addmenuitem.add();
       });
+      appToolbarfunc(elm);
       this.eathmenuitems = function(){
          $('option',form.parent).remove();
          form.parent.append('<option value="null">Главное меню</option>');
@@ -375,6 +427,7 @@ $(window).bind('load', function(){
       $('.wm-del',elm).click(function(){
          $wm.edititemform.del();
       });
+      appToolbarfunc(elm);
       this.eathmenuitems = function(){
          $('option',form.parent).remove();
          form.parent.append('<option value="null">Главное меню</option>');

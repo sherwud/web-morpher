@@ -20,6 +20,8 @@ function itemform(type,button,header){
       +'<div class="codejson"><div></div>code:json</div>'
       +'<div class="codehttp"><div></div>code:http</div>'
       +'<div class="codecmd"><div></div>code:cmd</div>'
+      +'<div class="length right"><div></div></div>'
+      +'<div class="sellength right"><div></div></div>'
       +'</div>'
       +'<textarea class="html"></textarea>'
       +'</div>';
