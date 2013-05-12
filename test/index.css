@@ -361,7 +361,7 @@ h3{
 }
 #wm-content .res-images{
    display: table;
-   height: 100px;
+   height: 104px;
    width: 254px;
    float: left;
    margin: 4px;
@@ -370,9 +370,15 @@ h3{
     display: table;
     height: 100px;
     width: 100px;
-    background: none no-repeat scroll center center / contain transparent;
+    text-align: center;
     float: left;
     border: 1px solid #777;
+    line-height: 100px;
+}
+#wm-content .res-images .img>img{
+   vertical-align: middle;
+   max-height: 100px;
+   max-width: 100px;
 }
 #wm-content .res-images .info {
     display: table;
@@ -403,7 +409,8 @@ h3{
 }
 img.wm{
    float: right;
-   width: 250px;
+   max-height: 400px;
+   max-width: 400px;
    border: 1px solid #777777;
    margin: 4px 4px 8px 8px;
 }

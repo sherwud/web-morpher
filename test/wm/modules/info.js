@@ -356,13 +356,14 @@ exports.POST.upload = function(req,res){
                      +'<a style="margin-right: 8px;" href="/">'
                      +'Вернуться на главную</a>'
                      +'<span> | Ссылка</span>'
-                     +'<input style="width: 350px; margin-left: 4px;" value="'
+                     +'<input onclick="this.select();" '
+                     +'style="width: 350px; margin-left: 4px;" value="'
                      +'/wm/call/info/getImage?_id='+ins._id
                      +'"></input>'
-                     +'<div style="height:calc(100% - 36px); background: url(\''
-                     +'/wm/call/info/getImage?_id='+ins._id
-                     +'\') no-repeat scroll center center / contain transparent;'
-                     +'"></div>'
+                     +'<div>'
+                     +'<img style="max-width: 800px; max-height: 600px;" '
+                     +'src="'+'/wm/call/info/getImage?_id='+ins._id+'">'
+                     +'</div>'
                      +'</body></html>'
                   );
                   db.close();
@@ -395,8 +396,9 @@ exports.POST.getImages = function(req,res){
                if (items && items.length > 0) {
                   for (var i=0;i<items.length;i++){
                      html += '<div class="res-images">'
-                        +'<div class="img" style="background-image: url(\''
-                        +'/wm/call/info/getImage?_id='+items[i]._id+'\')">'
+                        +'<div class="img">'
+                        +'<img src="'+'/wm/call/info/getImage?_id='
+                        +items[i]._id+'">'
                         +'</div>'
                         +'<div class="info">'
                         +'<div class="del"'
@@ -409,8 +411,7 @@ exports.POST.getImages = function(req,res){
                         +'<span>Для статьи</span>'
                         +'<input onclick="this.select();" value="'
                         +'<img class=&quot;wm&quot; src=&quot;'
-                        +'/wm/call/info/getImage?_id='+items[i]._id
-                        +'&quot;></img>'
+                        +'/wm/call/info/getImage?_id='+items[i]._id+'&quot;>'
                         +'"></input>'
                         +'</div>'
                         +'</div>';
