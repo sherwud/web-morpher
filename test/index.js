@@ -1,4 +1,5 @@
 $(window).bind('load', function(){
+   /*перенести в подсветку синтаксиса*/
    $wm.escapeHTML = function(str){
       if (typeof str !== 'string') return str;
       return str
@@ -10,6 +11,7 @@ $(window).bind('load', function(){
       cnt = $(cnt);
       cnt.val($wm.escapeHTML(cnt.val()));
    };
+   /*---*/
    $wm.loadPage = function(){
       var item = $('.menuitem.dbitem.active');
       if (item.length > 0)
