@@ -333,5 +333,30 @@ h3{
 }
 #searchresult .a-header{
    display: table;
+}
+#searchresult .text{
+   display: table;
    width: 100%;
+}
+#searchresult .tags{
+   display: table;
+   width: 100%;
+   border-bottom: 1px solid #AAAAAA;
+   font-size: 9px;
+   color: #777;
+}
+#searchresult .article:last-child .tags{
+   border-bottom: none;
+}
+#searchresult .readmore{
+   margin-left: 8px;
+}
+#searchresult .tags span{
+   font-weight: bold;
+}
+#searchresult span b {
+    color: #333;
+}
+#searchresult a b {
+    color: #069;
 }

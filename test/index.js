@@ -69,12 +69,20 @@ $(window).bind('load', function(){
                   var search = $('#searchform .search').val();
                   var sr = $('#searchresult');
                   if (search && search.length > 3) {
+                     var data = {
+                        search:search,
+                        menu:!!$('#searchform .checkbox .menu').attr('checked'),
+                        tags:!!$('#searchform .checkbox .tags').attr('checked'),
+                        text:!!$('#searchform .checkbox .text').attr('checked'),
+                        and:!!$('#searchform .radio .o-and').attr('checked'),
+                        or:!!$('#searchform .radio .o-or').attr('checked')
+                     };
                      $wm.loading.show();
                      $.ajax({
                         type: 'POST', url: '/wm', contentType:'application/json; charset=utf-8',
                         data: JSON.stringify({
                            call:"info.search",
-                           data:{search:search}
+                           data:data
                         }),
                         success: function(data){
                            sr.html(data);
@@ -107,6 +115,7 @@ $(window).bind('load', function(){
                      $('#searchform .radio input').click(function(){
                         $('#searchform .radio input').attr('checked',false);
                         $(this).attr('checked',true);
+                        $('#searchform .search').focus();
                      });
                      $('#searchform .checkbox input').click(function(){
                         if ($(this).attr('checked'))
@@ -121,6 +130,7 @@ $(window).bind('load', function(){
                         if (nochecked)
                            $('#searchform .checkbox input.text')
                               .attr('checked',true);
+                        $('#searchform .search').focus();
                      });
                      $('#searchform .searchbutton').click(search);
                      $('#searchform .search').focus();

@@ -219,7 +219,7 @@ exports.POST.delmenu = function(req,send){
 };
 exports.POST.getSearch = function(){
    var search = '<div id="searchform">'
-   +'<input class="search" placeholder="Поиск статьи" type="text"></input>'
+   +'<input maxlength="50" class="search" placeholder="Поиск статьи" type="text"></input>'
    +'<div class="searchbutton"><div></div>Поиск</div>'
    +'<div class="checkbox">'
    +'<input class="menu" type="checkbox"></input><span>В меню</span>'
@@ -235,6 +235,40 @@ exports.POST.getSearch = function(){
    ;return search;
 };
 exports.POST.search = function(req,send){
+   function initsearch(data){
+      var repl = new RegExp(data.search,'i');
+      var fields = [];
+      if (data.menu) fields.push({name:repl});
+      if (data.tags) fields.push({tags:repl});
+      if (data.text) fields.push({text:repl});
+      if (data.and) return { $and: fields };
+      else return { $or: fields };
+   }
+   function cuttext(str,search){
+      var max = 500;
+      var len = str.length;
+      if (typeof str !== 'string') return str;
+      if (len < max) return str;
+      var readmore = '<a href="javascript: void(0)" class="readmore">'
+         +'Читать дальше...</a>';
+      var idx = str.search(new RegExp(search,'i'));
+      if (idx !== -1) {
+         var a = idx - (max / 2 ^ 0);
+         var b = idx + max / 2 ^ 0;
+         if (a < 0) { b+=Math.abs(a); a = 0;}
+         if (b > len) { a-=b-len; b = len; };
+         str = str.substring(a,b);
+         if (a>0) str = '...'+str;
+         if (b<len) str+='...';
+      } else str = str.substring(0,max-1);
+      str += readmore;
+      return str;
+   }
+   function selsearch(str,search,is){
+      if (typeof str !== 'string') return str;
+      if (is) str = str.replace(new RegExp('('+search+')','gi'),'<b>$1</b>');
+      return str;
+   }
    var getPath = this.getPath;
    var findNodeModule = this.findNodeModule;
    var mongodb = require(findNodeModule('mongodb'));
@@ -244,26 +278,28 @@ exports.POST.search = function(req,send){
    db.open(function(e, db){
       db.collection('mainmenu',function(e,collection){
          var data = req.body.data;
-         var search = removeSpecCharsSearch(data.search);
-         if (!search){
+         data.search = removeSpecCharsSearch(data.search);
+         if (!data.search){
             send(200,'Ничего не найдено');
             return;
          }
-         var repl = new RegExp('('+search+')','g');
-         search = new RegExp(search,'i');
-         collection.find({text:search},{name:1,text:1},
+         collection.find(initsearch(data),{name:1,text:1,tags:1},
                function(e,cursor){
             cursor.toArray(function(e,items){
-               if (items) {
+               if (items && items.length > 0) {
                   var html = '';
                   for (var i=0;i<items.length;i++){
+                     items[i].text = cuttext(items[i].text,data.search);
                      html += '<div'
                         +' rowid="'+String(items[i]._id)+'" '
                         +' class="article">'
                         +'<a href="javascript: void(0)" class="a-header">'
-                        +items[i].name+'</a>'
-                        +'<span>'
-                        +items[i].text.replace(repl,'<b>$1</b>')
+                        +selsearch(items[i].name,data.search,data.menu)+'</a>'
+                        +'<span class="text">'
+                        +selsearch(items[i].text,data.search,data.text)
+                        +'</span>'
+                        +'<span class="tags"><span>Теги: </span>'
+                        +selsearch(items[i].tags,data.search,data.tags)
                         +'</span>'
                         +'</div>';
                   }
