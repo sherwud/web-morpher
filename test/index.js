@@ -1,4 +1,15 @@
 $(window).bind('load', function(){
+   $wm.escapeHTML = function(str){
+      if (typeof str !== 'string') return str;
+      return str
+         .replace(/\</g,'&lt;')
+         .replace(/\>/g,'&gt;')
+         .replace(/''/g,'&prime;&prime;');
+   };
+   $wm.cntrlEscapeHTML = function(cnt){
+      cnt = $(cnt);
+      cnt.val($wm.escapeHTML(cnt.val()));
+   };
    $wm.loadmenu = function(){
       function itemclick(){
          var self = this;
