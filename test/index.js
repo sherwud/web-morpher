@@ -303,14 +303,6 @@ $(window).bind('load', function(){
          de.focus();
       }
    }
-   /* доделать */
-   function EditerSetLength(){
-      $('.length',elm).html('<div></div>'+(this.value.length||''));
-   }
-   function EditerSetSelLength(){
-      
-   }
-   /**/
    function appToolbarfunc(elm){
       var edt = $('.html',elm);
       $('.codejs',elm).click(function(){
@@ -326,10 +318,21 @@ $(window).bind('load', function(){
          appSelection(edt,'<span class="wm-code cmd">','</span>');
       });
       edt.keyup(function(){
-         $('.length',elm).html('<div></div>'+(this.value.length||''));
+         $('.length',elm).html(this.value.length||'');
+         $('.sellength',elm).html((this.selectionEnd-this.selectionStart)||'');
       });
-      edt.change(function(){
-         $('.length',elm).html('<div></div>'+(this.value.length||''));
+      edt.select(function(){
+         $('.sellength',elm).html((this.selectionEnd-this.selectionStart)||'');
+      });
+      edt.mousedown(function(){
+         $('.sellength',elm).html((this.selectionEnd-this.selectionStart)||'');
+      });
+      edt.mouseup(function(){
+         var e = this;
+         $('.sellength',elm).html((e.selectionEnd-e.selectionStart)||'');
+         setTimeout(function(){
+            $('.sellength',elm).html((e.selectionEnd-e.selectionStart)||'');
+         },10);
       });
    }
    $wm.addmenuitem = new function(){
@@ -503,6 +506,7 @@ $(window).bind('load', function(){
          form.sort.val($('.menuitem.dbitem.active').attr('sort'));
          form.tags.val($('.menuitem.dbitem.active').attr('tags'));
          form.html.val($('#wm-content-editing').html());
+         $('.length',elm).html(form.html.val().length||'');
       };
    };
    $wm.syntaxHighlight($('#wm-content'));

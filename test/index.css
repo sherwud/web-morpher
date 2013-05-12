@@ -440,7 +440,7 @@ img.wm{
    margin-top: 1px;
    width: calc(100% - 2px);
 }
-.toolbar>div{
+.toolbar>div.btn{
    border-radius: 2px;
    display: table;
    float: left;
@@ -453,11 +453,24 @@ img.wm{
    cursor: pointer;
    background-color: #F8F8F8;
 }
-.toolbar>div:hover{
+.toolbar>div.btn:hover{
    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
 }
-.toolbar>div:active{
+.toolbar>div.btn:active{
    background-color: #EEE;
+}
+.toolbar>div.txt{
+   border-radius: 2px;
+   display: table;
+   float: left;
+   margin: 4px 1px 3px 4px;
+   box-shadow: 0 0 1px rgba(0, 0, 0, 0.4);
+   font-size: 8pt;
+   line-height: 16px;
+   padding: 0 5px;
+   color: #777;
+   cursor: text;
+   background-color: #F8F8F8;
 }
 .toolbar>div>div{
    float: left;
