@@ -15,9 +15,9 @@
       }
    },
    "body":"{{HEADER}}\n\
-   <div class=\"aside-left\">\n\
-   <div class=\"aside-menu shadowbox\">{{MAINMENU}}{{ADDBUTTON}}</div>\n\
-   {{UPLOAD}}</div>\n\
+   <div class=\"aside-left\"><div class=\"aside-menu shadowbox\">\n\
+   {{MAINMENU}}{{ADDBUTTON}}\n\
+   </div></div>\n\
    <div id=\"wm-content\" class=\"shadowbox\">{{NODEJSINFO}}</div>\n\
    <div id=\"wm-content-editing\" class=\"hide\"></div>\n\
    {{EDITBUTTON}}\n\
@@ -60,13 +60,6 @@
          "system":false,
          "elemetn":"nodejsinfo"
       },
-      "UPLOAD":"<form class=\"wm-upload\" enctype=\"multipart/form-data\"\n\
-            method=\"post\" action=\"/wm\">\n\
-         Загрузить картинку\n\
-         <input type=\"text\" class=\"hide\" name=\"call\" value=\"info.upload\">\n\
-         <input size=\"17\" type=\"file\" accept=\"image/*\" name=\"image\">\n\
-         <input type=\"submit\" value=\"Отправить\">\n\
-         </form>",
       "loading":"<div class=\"wm-loading wm-blocked\"><div>Загрузка...</div></div>",
       "editing":"<div class=\"wm-editing wm-blocked hide\"></div>",
       "additemform":{

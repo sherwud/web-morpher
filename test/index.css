@@ -92,20 +92,20 @@ h3{
    color: #333;
    text-decoration: none !important;
 }
-#menucontainer div[level="0"]>a{
-   padding-left: 12px;
+.wm-mainmenu div[level="0"]>a{
+   padding-left: 18px;
 }
-#menucontainer div[level="1"]>a{
-   padding-left: 24px;
+.wm-mainmenu div[level="1"]>a{
+   padding-left: 30px;
 }
-#menucontainer div[level="2"]>a{
-   padding-left: 36px;
+.wm-mainmenu div[level="2"]>a{
+   padding-left: 42px;
 }
-#menucontainer div[level="3"]>a{
-   padding-left: 48px;
+.wm-mainmenu div[level="3"]>a{
+   padding-left: 54px;
 }
-#menucontainer div[level="4"]>a{
-   padding-left: 60px;
+.wm-mainmenu div[level="4"]>a{
+   padding-left: 66px;
 }
 .shadowbox {
    box-shadow: 0 0 3px rgba(0,0,0,0.4);
@@ -159,10 +159,9 @@ h3{
 }
 .wm-upload{
    float: left;
-   margin-bottom: 4px;
-   width: 200px;
-   display: block;
-   border-radius: 8px;
+   margin-bottom: 8px;
+   width: 100%;
+   display: table;
 }
 #wm-content{
    border-radius: 6px;
@@ -355,8 +354,56 @@ h3{
    font-weight: bold;
 }
 #searchresult span b {
-    color: #333;
+   color: #333;
 }
 #searchresult a b {
-    color: #069;
+   color: #069;
+}
+#wm-content .res-images{
+   display: table;
+   height: 100px;
+   width: 254px;
+   float: left;
+   margin: 4px;
+}
+#wm-content .res-images .img{
+    display: table;
+    height: 100px;
+    width: 100px;
+    background: none no-repeat scroll center center / contain transparent;
+    float: left;
+    border: 1px solid #777;
+}
+#wm-content .res-images .info {
+    display: table;
+    float: left;
+    margin-left: 8px;
+    padding-top: 2px;
+}
+#wm-content .res-images .info>span{
+   display: table;
+}
+#wm-content .res-images .info>input{
+   margin-bottom: 4px;
+}
+#wm-content .res-images .info>.del{
+   background: url("/img/delete.png");
+   float: right;
+   height: 16px;
+   width: 16px;
+   cursor: pointer;
+   display: none;
+   border-radius: 2px;
+}
+#wm-content .res-images .info>.del:hover{
+   box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+}
+#wm-content .res-images:hover .info>.del{
+   display: block;
+}
+img.wm{
+   float: right;
+   width: 250px;
+   border: 1px solid #777777;
+   margin: 4px 4px 8px 8px;
 }

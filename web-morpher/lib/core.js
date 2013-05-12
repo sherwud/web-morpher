@@ -63,8 +63,7 @@ function coreConstructor(serv){
    };
    /*
     * @info Функция для вызова POST методов из модулей сайта
-    * @param {string} module - Имя модуля
-    * @param {string} method - Имя функции
+    * @param {Array} call - Имя модуля и имя функции
     * @returns {function} - Возвращает функцию выполняющую заданный метод
     */
    serv.POSTcall = function(call){
@@ -82,6 +81,25 @@ function coreConstructor(serv){
                 && typeof mod[module].POST[method] === 'function'
          ){
             return mod[module].POST[method].apply($wm,arguments);
+         } else return false;
+      };
+   };
+   /*
+    * @info Функция для вызова GET методов из модулей сайта
+    * @param {string} module - Имя модуля
+    * @param {string} method - Имя функции
+    * @returns {function} - Возвращает функцию выполняющую заданный метод
+    */
+   serv.GETcall = function(module,method){
+      return function(){
+         if (
+                module in mod
+                && typeof mod[module].GET === 'object'
+                && !(mod[module].GET instanceof Array)
+                && method in mod[module].GET
+                && typeof mod[module].GET[method] === 'function'
+         ){
+            return mod[module].GET[method].apply($wm,arguments);
          } else return false;
       };
    };
@@ -196,7 +214,7 @@ function proxy(serv,$wm){
          res.send.apply(res,arguments);
       }
       var method = serv.POSTcall(req.body.call);
-      var result = method(req,send);
+      var result = method(req,res);
       if (typeof result !== 'undefined' && result !== false){
          if (result !== true)
             send(200,result);
@@ -204,14 +222,21 @@ function proxy(serv,$wm){
          send(404,'Метод не найден');
       }
    }
-   function modsGET(req,res,next){
-      res.send(200,req.query);
+   function modsGET(req,res){
+      var method = serv.GETcall(req.params.module,req.params.method);
+      var result = method(req,res);
+      if (typeof result !== 'undefined' && result !== false){
+         if (result !== true)
+            res.send(200,result);
+      } else {
+         res.send(404,'Метод не найден');
+      }
    }
    app.get('/wm/wi/lib/*',sendwi);
    app.get('/wm/wi/ext/*',sendwi);
    app.get('/wm/wi/ulib/*',sendulib);
    app.post('/wm',modsPOST);
-   app.get('/wm',modsGET);
+   app.get('/wm/call/:module/:method',modsGET);
    if (serv.conf.showInfo) {
       app.get('/wm',showinfo);
       app.get('/wm/*',showinfo);

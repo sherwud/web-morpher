@@ -155,6 +155,47 @@ $(window).bind('load', function(){
                   }
                });
             });
+            $('.menuitem.images').click(function(){
+               $wm.loading.show();
+               $('#menucontainer>div').addClass('hide');
+               $('.menuitem').removeClass('active');
+               $(this).addClass('active');
+               $.ajax({
+                  type: 'POST', url: '/wm', contentType:'application/json; charset=utf-8',
+                  data: JSON.stringify({
+                     call:"info.getImages"
+                  }),
+                  success: function(data){
+                     $('.menubutton.editPage').addClass('hide');
+                     $('#wm-content').html(data);
+                     $('#wm-content-editing').html('');
+                     $wm.loading.hide();
+                     $('#wm-content .info .del').click(function(){
+                        $wm.loading.show();
+                        var self = $(this);
+                        $.ajax({
+                           type: 'POST', url: '/wm', contentType:'application/json; charset=utf-8',
+                           data: JSON.stringify({
+                              call:"info.delImage",
+                              data:{_id:self.attr('_id')}
+                           }),
+                           success: function(data){
+                              self.parent().parent().remove();
+                              $wm.loading.hide();
+                           },
+                           error: function(e){;
+                              alert(e.responseText);
+                              $wm.loading.hide();
+                           }
+                        });
+                     });
+                  },
+                  error: function(e){;
+                     alert(e.responseText);
+                     $wm.loading.hide();
+                  }
+               });
+            });
             $wm.loading.hide();
          }
       });
@@ -297,6 +338,7 @@ $(window).bind('load', function(){
                   +'</option>'
                );
          });
+         form.parent.val($('.menuitem.dbitem.active').attr('parent'));
       };
       this.show = function(){
          $wm.edititemform.eathmenuitems();
@@ -357,7 +399,6 @@ $(window).bind('load', function(){
       this.set = function(){
          form.name.val($('.menuitem.dbitem.active').text());
          form.sort.val($('.menuitem.dbitem.active').attr('sort'));
-         form.parent.val($('.menuitem.dbitem.active').attr('parent'));
          form.tags.val($('.menuitem.dbitem.active').attr('tags'));
          form.html.val($('#wm-content-editing').html());
       };

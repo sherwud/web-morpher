@@ -37,9 +37,10 @@ exports.mainmenuSync = function(){
       +'<menuitem icon="img/edit.png" onclick="$wm.edititemform.set();'
       +' $wm.edititemform.show();">Редактировать статью</menuitem>'
       +'</menu>'
-      +'<a class="menuitem home active" href="/">Главная</a>'
+      +'<a class="menuitem home active" href="/">Главная</a><div level="0">'
       +'<a class="menuitem search" href="javascript: void(0)">Поиск</a>'
-      +'<div id="menucontainer"></div>';
+      +'<a class="menuitem images" href="javascript: void(0)">Картинки</a>'
+      +'</div><div id="menucontainer"></div>';
    return menu;
 };
 exports.itemformSync = function(type){
@@ -106,7 +107,7 @@ exports.NodeJS_Info = function(){
    ;return info;
 };
 exports.POST = {};
-exports.POST.menu = function(req,send){
+exports.POST.menu = function(req,res){
    var getPath = this.getPath;
    var findNodeModule = this.findNodeModule;
    var mongodb = require(findNodeModule('mongodb'));
@@ -142,7 +143,7 @@ exports.POST.menu = function(req,send){
                         +'></div>'
                      ;
                   }
-               send(200,html);
+               res.send(200,html);
                db.close();
             });
          });
@@ -150,7 +151,7 @@ exports.POST.menu = function(req,send){
    });
    return true;
 };
-exports.POST.getPage = function(req,send){
+exports.POST.getPage = function(req,res){
    var getPath = this.getPath;
    var findNodeModule = this.findNodeModule;
    var mongodb = require(findNodeModule('mongodb'));
@@ -163,8 +164,8 @@ exports.POST.getPage = function(req,send){
          collection.find({_id:mongodb.ObjectID(data._id)},{html:1},
                function(e,cursor){
             cursor.toArray(function(e,items){
-               if (items) send(200,items[0].html);
-               else send(404,'Страница не найдена');
+               if (items) res.send(200,items[0].html);
+               else res.send(404,'Страница не найдена');
                db.close();
             });
          });
@@ -172,7 +173,7 @@ exports.POST.getPage = function(req,send){
    });
    return true;
 };
-exports.POST.addmenu = function(req,send){
+exports.POST.addmenu = function(req,res){
    var getPath = this.getPath;
    var findNodeModule = this.findNodeModule;
    var mongodb = require(findNodeModule('mongodb'));
@@ -189,13 +190,13 @@ exports.POST.addmenu = function(req,send){
          if (data && data['sort'] && String(data['sort']).length < 2)
                data['sort'] = '0'+String(data['sort']);
          collection.insert(data);
-         send(200,'ok');
+         res.send(200,'ok');
          db.close();
       });
    });
    return true;
 };
-exports.POST.savemenu = function(req,send){
+exports.POST.savemenu = function(req,res){
    var getPath = this.getPath;
    var findNodeModule = this.findNodeModule;
    var mongodb = require(findNodeModule('mongodb'));
@@ -213,13 +214,13 @@ exports.POST.savemenu = function(req,send){
                data['sort'] = '0'+String(data['sort']);
          data._id = mongodb.ObjectID(data._id);
          collection.save(data);
-         send(200,'ok');
+         res.send(200,'ok');
          db.close();
       });
    });
    return true;
 };
-exports.POST.delmenu = function(req,send){
+exports.POST.delmenu = function(req,res){
    var getPath = this.getPath;
    var findNodeModule = this.findNodeModule;
    var mongodb = require(findNodeModule('mongodb'));
@@ -229,7 +230,7 @@ exports.POST.delmenu = function(req,send){
    db.open(function(e,db){
       db.collection('mainmenu',function(e,collection){
          collection.remove({_id:mongodb.ObjectID(req.body.data._id)});
-         send(200,'ok');
+         res.send(200,'ok');
          db.close();
       });
    });
@@ -252,7 +253,7 @@ exports.POST.getSearch = function(){
    +'<div id="searchresult"></div>'
    ;return search;
 };
-exports.POST.search = function(req,send){
+exports.POST.search = function(req,res){
    function initsearch(data){
       var repl = new RegExp(data.search,'i');
       var fields = [];
@@ -298,7 +299,7 @@ exports.POST.search = function(req,send){
          var data = req.body.data;
          data.search = removeSpecCharsSearch(data.search);
          if (!data.search){
-            send(200,'Ничего не найдено');
+            res.send(200,'Ничего не найдено');
             return;
          }
          collection.find(initsearch(data),{name:1,text:1,tags:1},
@@ -321,8 +322,8 @@ exports.POST.search = function(req,send){
                         +'</span>'
                         +'</div>';
                   }
-                  send(200,html);
-               } else send(200,'Ничего не найдено');
+                  res.send(200,html);
+               } else res.send(200,'Ничего не найдено');
                db.close();
             });
          });
@@ -330,15 +331,145 @@ exports.POST.search = function(req,send){
    });
    return true;
 };
-exports.POST.upload = function(req,send){
+exports.POST.upload = function(req,res){
+   var getPath = this.getPath;
+   var findNodeModule = this.findNodeModule;
    if (req.files && req.files['image'])
       fs.readFile(req.files.image.path,'base64',function(e, data){
-         if (e) send(e);
+         if (e) res.send(e);
          else {
-            var image = 'data:' + req.files.image.type + ';base64,'+data;
-            send(200,'<img src="'+image+'"/>');
+            var mongodb = require(findNodeModule('mongodb'));
+            var conf = require(path.join(getPath('sitewm'),'dbconfig.json'));
+            var db = new mongodb.Db(conf.dbname,
+               new mongodb.Server(conf.host,conf.port,{}),{safe:false});
+            db.open(function(e,db){
+               db.collection('images',function(e,collection){
+                  var ins = {
+                     base64:data,
+                     type:req.files.image.type
+                  };
+                  collection.insert(ins);
+                  res.send(200,'<html style="height: 100%;">'
+                     +'<body style="height:100%; margin:0; text-align:center;">'
+                     +'<span style="margin: 8px; display: inline-block;">'
+                     +'Картинка успешно отправлена | </span>'
+                     +'<a style="margin-right: 8px;" href="/">'
+                     +'Вернуться на главную</a>'
+                     +'<span> | Ссылка</span>'
+                     +'<input style="width: 350px; margin-left: 4px;" value="'
+                     +'/wm/call/info/getImage?_id='+ins._id
+                     +'"></input>'
+                     +'<div style="height:calc(100% - 36px); background: url(\''
+                     +'/wm/call/info/getImage?_id='+ins._id
+                     +'\') no-repeat scroll center center / contain transparent;'
+                     +'"></div>'
+                     +'</body></html>'
+                  );
+                  db.close();
+               });
+            });
          }
       });
    else return 'Картинка не передана';
+   return true;
+};
+exports.POST.getImages = function(req,res){
+   var html = '<form class=\"wm-upload\" enctype=\"multipart/form-data\"'
+         +'method=\"post\" action=\"/wm\">'
+         +'<span>Загрузить </span>'
+         +'<input type=\"text\" class=\"hide\" name=\"call\" value=\"info.upload\">'
+         +'<input required size=\"54\" type=\"file\" accept=\"image/*\" name=\"image\">'
+         +'<input type=\"submit\" value=\"Отправить\">'
+         +'</form>';
+   var getPath = this.getPath;
+   var findNodeModule = this.findNodeModule;
+   var mongodb = require(findNodeModule('mongodb'));
+   var conf = require(path.join(getPath('sitewm'),'dbconfig.json'));
+   var db = new mongodb.Db(conf.dbname,
+      new mongodb.Server(conf.host,conf.port,{}),{safe:false});
+   db.open(function(e, db){
+      db.collection('images',function(e,collection){
+         collection.find({},{data:0,type:0},
+               function(e,cursor){
+            cursor.toArray(function(e,items){
+               if (items && items.length > 0) {
+                  for (var i=0;i<items.length;i++){
+                     html += '<div class="res-images">'
+                        +'<div class="img" style="background-image: url(\''
+                        +'/wm/call/info/getImage?_id='+items[i]._id+'\')">'
+                        +'</div>'
+                        +'<div class="info">'
+                        +'<div class="del"'
+                        +'_id="'+items[i]._id+'"'
+                        +'></div>'
+                        +'<span>Ссылка</span>'
+                        +'<input onclick="this.select();" value="'
+                        +'/wm/call/info/getImage?_id='+items[i]._id
+                        +'"></input>'
+                        +'<span>Для статьи</span>'
+                        +'<input onclick="this.select();" value="'
+                        +'<img class=&quot;wm&quot; src=&quot;'
+                        +'/wm/call/info/getImage?_id='+items[i]._id
+                        +'&quot;></img>'
+                        +'"></input>'
+                        +'</div>'
+                        +'</div>';
+                  }
+                  res.send(200,html);
+               } else {
+                  html += '<span>Ничего не найдено</span>';
+                  res.send(200,html);
+               }
+               db.close();
+            });
+         });
+      });
+   });
+   return true;
+};
+exports.POST.delImage = function(req,res){
+   var getPath = this.getPath;
+   var findNodeModule = this.findNodeModule;
+   var mongodb = require(findNodeModule('mongodb'));
+   var conf = require(path.join(getPath('sitewm'),'dbconfig.json'));
+   var db = new mongodb.Db(conf.dbname,
+      new mongodb.Server(conf.host,conf.port,{}),{safe:false});
+   db.open(function(e,db){
+      db.collection('images',function(e,collection){
+         collection.remove({_id:mongodb.ObjectID(req.body.data._id)});
+         res.send(200,'ok');
+         db.close();
+      });
+   });
+   return true;
+};
+exports.GET = {};
+exports.GET.getImage = function(req,res){
+   var getPath = this.getPath;
+   var findNodeModule = this.findNodeModule;
+   var mongodb = require(findNodeModule('mongodb'));
+   var conf = require(path.join(getPath('sitewm'),'dbconfig.json'));
+   var db = new mongodb.Db(conf.dbname,
+      new mongodb.Server(conf.host,conf.port,{}),{safe:false});
+   db.open(function(e, db){
+      db.collection('images',function(e,collection){
+         var query = req.query;
+         collection.find({_id:mongodb.ObjectID(String(query._id))},{},
+               function(e,cursor){
+            cursor.toArray(function(e,items){
+               if (items && items.length > 0){
+                  res.set({
+                    'Accept-Ranges':'bytes',
+                    'Content-Type': items[0].type
+                  });
+                  res.send(200,new Buffer(items[0].base64, 'base64'));
+               } else res.sendfile(path.join(
+                  getPath('site'),'img','noimage.png'
+               ));
+               db.close();
+            });
+         });
+      });
+   });
    return true;
 };
