@@ -264,7 +264,8 @@ h3{
 .wm-itemform .html{
    resize: none; 
    width: calc(100% - 6px); 
-   height: calc(100% - 81px);
+   height: calc(100% - 109px);
+   margin-top: -2px;
 }
 #searchform{
    display: table;
@@ -430,4 +431,46 @@ img.wm{
 }
 #viewfromsearchresult .view{
    margin-top: 6px;
+}
+.toolbar{
+   box-shadow: 0 -1px 1px rgba(100, 100, 100, 0.4);
+   display: table;
+   margin-left: 1px;
+   padding-bottom: 3px;
+   margin-top: 1px;
+   width: calc(100% - 2px);
+}
+.toolbar>div{
+   border-radius: 2px;
+   display: table;
+   float: left;
+   margin: 4px 1px 3px 4px;
+   box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+   font-size: 8pt;
+   line-height: 16px;
+   padding: 0 5px;
+   color: #777;
+   cursor: pointer;
+   background-color: #F8F8F8;
+}
+.toolbar>div:hover{
+   box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+.toolbar>div:active{
+   background-color: #EEE;
+}
+.toolbar>div>div{
+   float: left;
+   height: 16px;
+   margin: 0 -2px;
+   position: absolute;
+}
+.toolbar>div.codejs>div{
+   width: 39px;
+}
+.toolbar>div.codehttp>div,.toolbar>div.codejson>div{
+   width: 51px;
+}
+.toolbar>div.codecmd>div{
+   width: 50px;
 }

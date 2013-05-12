@@ -15,6 +15,12 @@ function itemform(type,button,header){
       +'<span>Теги</span>'
       +'<input maxlength="30" class="tags" type="text"></input>'
       +'<span style="display: block;">HTML код статьи</span>'
+      +'<div class="toolbar">'
+      +'<div class="codejs"><div></div>code:js</div>'
+      +'<div class="codejson"><div></div>code:json</div>'
+      +'<div class="codehttp"><div></div>code:http</div>'
+      +'<div class="codecmd"><div></div>code:cmd</div>'
+      +'</div>'
       +'<textarea class="html"></textarea>'
       +'</div>';
 }
