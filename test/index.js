@@ -10,11 +10,34 @@ $(window).bind('load', function(){
       cnt = $(cnt);
       cnt.val($wm.escapeHTML(cnt.val()));
    };
+   $wm.loadPage = function(){
+      var item = $('.menuitem.dbitem.active');
+      if (item.length > 0)
+         $.ajax({
+            type: 'POST', url: '/wm', contentType:'application/json; charset=utf-8',
+            data: JSON.stringify({
+               call:"info.getPage",
+               data:{_id:item.attr('_id')}
+            }),
+            success: function(data){
+               $('.menubutton.editPage.hide').removeClass('hide');
+               item.text(data['name']);
+               $('#wm-content').html(data['html']);
+               $('#wm-content-editing').html(data['html']);
+               $wm.syntaxHighlight($('#wm-content'));
+               $wm.loading.hide();
+            },
+            error: function(e){;
+               alert(e.responseText);
+               $wm.loading.hide();
+            }
+         });
+   };
    $wm.loadmenu = function(){
       function itemclick(){
          var self = this;
-         var rowid = self.getAttribute('rowid');
-         var submenu = $('div[rowid="'+rowid+'"]');
+         var _id = self.getAttribute('_id');
+         var submenu = $('div[_id="'+_id+'"]');
          $('#menucontainer>div').addClass('hide');
          submenu.removeClass('hide');
          var i = submenu.parent();
@@ -31,7 +54,7 @@ $(window).bind('load', function(){
             type: 'POST', url: '/wm', contentType:'application/json; charset=utf-8',
             data: JSON.stringify({
                call:"info.menu",
-               data:{parent:rowid,level:submenu.attr('level')}
+               data:{parent:_id,level:submenu.attr('level')}
             }),
             success: function(data){
                submenu.html(data);
@@ -44,24 +67,7 @@ $(window).bind('load', function(){
                $wm.loading.hide();
             }
          });
-         $.ajax({
-            type: 'POST', url: '/wm', contentType:'application/json; charset=utf-8',
-            data: JSON.stringify({
-               call:"info.getPage",
-               data:{_id:rowid}
-            }),
-            success: function(data){
-               $('.menubutton.editPage.hide').removeClass('hide');
-               $('#wm-content').html(data);
-               $('#wm-content-editing').html(data);
-               $wm.syntaxHighlight($('#wm-content'));
-               $wm.loading.hide();
-            },
-            error: function(e){;
-               alert(e.responseText);
-               $wm.loading.hide();
-            }
-         });
+         $wm.loadPage();
       };
       $.ajax({
          type: 'POST', url: '/wm', contentType:'application/json; charset=utf-8',
@@ -254,7 +260,7 @@ $(window).bind('load', function(){
             var level = this.parentElement.getAttribute('level');
             if (level < 4)
                form.parent.append('<option value="'
-                  +this.getAttribute('rowid')+'">'
+                  +this.getAttribute('_id')+'">'
                   +this.text
                   +'</option>'
                );
@@ -333,7 +339,7 @@ $(window).bind('load', function(){
             var level = this.parentElement.getAttribute('level');
             if (level < 4)
                form.parent.append('<option value="'
-                  +this.getAttribute('rowid')+'">'
+                  +this.getAttribute('_id')+'">'
                   +this.text
                   +'</option>'
                );
@@ -358,7 +364,7 @@ $(window).bind('load', function(){
                data: JSON.stringify({
                   call:"info.savemenu",
                   data:{
-                     _id:$('.menuitem.dbitem.active').attr('rowid'),
+                     _id:$('.menuitem.dbitem.active').attr('_id'),
                      name:form.name.val(),
                      sort:form.sort.val(),
                      parent:form.parent.val(),
@@ -367,7 +373,7 @@ $(window).bind('load', function(){
                   }
                }),
                success: function(data){
-                  location.reload();
+                  $wm.loadPage();
                },
                error: function(e){
                   $wm.edititemform.show();
@@ -384,7 +390,7 @@ $(window).bind('load', function(){
             type: 'POST', url: '/wm', contentType:'application/json; charset=utf-8',
             data: JSON.stringify({
                call:"info.delmenu",
-               data:{_id:$('.menuitem.dbitem.active').attr('rowid')}
+               data:{_id:$('.menuitem.dbitem.active').attr('_id')}
             }),
             success: function(data){
                location.reload();

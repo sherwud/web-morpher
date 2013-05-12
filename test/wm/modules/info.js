@@ -130,7 +130,7 @@ exports.POST.menu = function(req,res){
                if (items)
                   for (var i=0;i<items.length;i++){
                      html += '<a '
-                        +'rowid="'+String(items[i]._id)+'" '
+                        +'_id="'+String(items[i]._id)+'" '
                         +'sort="'+String(items[i].sort)+'" '
                         +'parent="'+String(items[i].parent)+'" '
                         +'tags="'+String(items[i].tags)+'" '
@@ -138,7 +138,7 @@ exports.POST.menu = function(req,res){
                         +items[i].name
                         +'</a>'
                         +'<div '
-                        +'rowid="'+String(items[i]._id)+'" '
+                        +'_id="'+String(items[i]._id)+'" '
                         +'level="'+level+'" '
                         +'></div>'
                      ;
@@ -161,10 +161,10 @@ exports.POST.getPage = function(req,res){
    db.open(function(e, db){
       db.collection('mainmenu',function(e,collection){
          var data = req.body.data;
-         collection.find({_id:mongodb.ObjectID(data._id)},{html:1},
+         collection.find({_id:mongodb.ObjectID(data._id)},{name:1,html:1},
                function(e,cursor){
             cursor.toArray(function(e,items){
-               if (items) res.send(200,items[0].html);
+               if (items && items.length > 0) res.send(200,items[0]);
                else res.send(404,'Страница не найдена');
                db.close();
             });
@@ -310,7 +310,7 @@ exports.POST.search = function(req,res){
                   for (var i=0;i<items.length;i++){
                      items[i].text = cuttext(items[i].text,data.search);
                      html += '<div'
-                        +' rowid="'+String(items[i]._id)+'" '
+                        +' _id="'+String(items[i]._id)+'" '
                         +' class="article">'
                         +'<a href="javascript: void(0)" class="a-header">'
                         +selsearch(items[i].name,data.search,data.menu)+'</a>'
