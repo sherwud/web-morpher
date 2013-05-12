@@ -43,6 +43,8 @@
          <span>Спасибо: </span>\n\
          <a target=\"blank\" href=\"http://nodejs.org\">Node.js</a>\n\
          <span> | </span>\n\
+         <a target=\"blank\" href=\"http://expressjs.com\">Express</a>\n\
+         <span> | </span>\n\
          <a target=\"blank\" href=\"https://github.com\">GitHub</a>\n\
          <span> | </span>\n\
          <a target=\"blank\" href=\"http://jquery.com\">jQuery</a>\n\
