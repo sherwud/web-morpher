@@ -1,4 +1,23 @@
 $(window).bind('load', function(){
+   $wm.del = function(f){
+      var md = $('.wm-del');
+      var d = $('.del');
+      if (typeof f === 'undefined'){
+         var dh =  $('.wm-del.nodel');
+         if (dh.length)
+            d.addClass('nodel');
+         else
+            d.removeClass('nodel');
+      } else
+      if (f){
+         md.removeClass('nodel');
+         d.removeClass('nodel');
+      } else {
+         md.addClass('nodel');
+         d.addClass('nodel');
+      }
+   };
+   $wm.del(0);
    /*перенести в подсветку синтаксиса*/
    $wm.escapeHTML = function(str){
       if (typeof str !== 'string') return str;
@@ -221,6 +240,7 @@ $(window).bind('load', function(){
                      $('#wm-content').html(data);
                      $('#wm-content-editing').html('');
                      $wm.loading.hide();
+                     $wm.del();
                      $('#wm-content .info .del').click(function(){
                         $wm.loading.show();
                         var self = $(this);

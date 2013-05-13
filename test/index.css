@@ -186,6 +186,9 @@ h3{
 .hide {
    display: none !important;
 }
+.nodel {
+   display: none !important;
+}
 .wm-blocked{
    bottom: 0;
    left: 0;
