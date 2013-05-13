@@ -1,16 +1,28 @@
 $wm.syntaxHighlight = function(elm){
    var js = [
-      [/\n/g,'<br>'],
-      [/^<br>/g,''],
-      [/ /g,'&nbsp;'],
-      [/"([\s\S][^"]*)"/g,'<span class="comment">"$1"</span>'],
-      [/'([\s\S][^']*)'/g,'<span class="comment">\'$1\'</span>'],
-      [/(var)\s+(\w+)/g,'<span class="syntax">$1</span> <span class="var-key">$2</span>'],
+      [/\\'/g,'\\&prime;'],
+      [/\\"/g,'\\&Prime;'],
+      [/"([^"]*)"/g,'<span class="comment">"$1"</span>'],
+      [/'([^']*)'/g,'<span class="comment">\'$1\'</span>'],
+      [/(var)\W+(\w+)\W*\=/g,
+         '<span class="syntax">$1</span> <span class="var-key">$2 =</span>'],
+      [/(\w+)\W*\=\W*(function)/g,'<span class="func">$1</span> = $2'],
+      [/(if|else|typeof|function|return|window)/g
+         ,'<span class="syntax">$1</span>'],
       [/(\w+)\s*\(/g,'<span class="func">$1</span>('],
+      [/(\$?[a-zA-z]+\w*)\s*\./g,'<span class="obj">$1</span>.'],
       [/(\w+)\s*\:/g,'<span class="obj-elm">$1</span>:'],
+      [/\.\s*([a-zA-z]+\w*)/g,'.<span class="obj-elm">$1</span>'],
       [/([0-9]+)(\.*)([0-9]+)/g,'<span class="num">$1$2$3</span>'],
-      [/\/\*([\s\S]*)\*\//g,'<span class="comment">\/\*$1\*\/</span>'],
-      [/\*\//g,'\*\/<br>']
+      
+      
+      [/\n/g,'<br>'],
+      [/^<br>/g,'']
+      //[/ /g,'&nbsp;']
+
+
+      //[/\/\*([\s\S]*)\*\//g,'<span class="comment">\/\*$1\*\/</span>'],
+      //[/\*\//g,'\*\/<br>']
    ];
    var json = [
       [/\n/g,'<br>'],

@@ -139,9 +139,11 @@ function proxy(serv,$wm){
    function sendfile(req,res,file){
       fs.stat(file,function(err,stats){
          if (!err && stats.isFile())
-            if (req.header("Cache-Control"))
-               res.send(304,'Not Modified');
-            else
+            // Сделать проверку хеша файла, что бы при изменении слался 
+            // на клиент даже если он прислал Cache-Control
+            //if (req.header("Cache-Control"))
+            //   res.send(304,'Not Modified');
+            //else
                res.sendfile(file);
          else
             res.send(404,'Not found');

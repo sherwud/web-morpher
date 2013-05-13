@@ -25,6 +25,9 @@ span.wm-code.line {
 .wm-code > .obj-elm {
    color: forestgreen;
 }
+.wm-code > .obj {
+   font-weight: bold;
+}
 .wm-code > .num {
    color: darkred;
 }
