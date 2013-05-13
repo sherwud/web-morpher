@@ -18,19 +18,14 @@ $(window).bind('load', function(){
       }
    };
    $wm.del(0);
-   /*перенести в подсветку синтаксиса*/
    $wm.escapeHTML = function(str){
       if (typeof str !== 'string') return str;
-      return str
-         .replace(/\</g,'&lt;')
-         .replace(/\>/g,'&gt;')
-         .replace(/''/g,'&prime;&prime;');
+      return str.replace(/\</g,'&lt;').replace(/\>/g,'&gt;');
    };
    $wm.cntrlEscapeHTML = function(cnt){
       cnt = $(cnt);
       cnt.val($wm.escapeHTML(cnt.val()));
    };
-   /*---*/
    $wm.loadPage = function(){
       var item = $('.menuitem.dbitem.active');
       if (item.length > 0)
