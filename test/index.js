@@ -298,7 +298,7 @@ $(window).bind('load', function(){
          elm.addClass('hide');
       };
    };
-   function appSelection(elm,before,after){
+   function appSelection(elm,before,after,non){
       var de = elm.get(0);
       var s = de.selectionStart;
       var e = de.selectionEnd;
@@ -306,10 +306,12 @@ $(window).bind('load', function(){
       if (c > 0 && c < 10000){
          var v = de.value;
          var nv = v.substr(s,c);
-         if (nv[0] !== '\n') before = before+'\n';
-         if (nv[nv.length-1] !== '\n') after = '\n'+after;
-         if (s > 0 && v[s-1] !== '\n') before = '\n'+before;
-         if (e < v.length && v[e] !== '\n') after = after+'\n';
+         if (!non){
+            if (nv[0] !== '\n') before = before+'\n';
+            if (nv[nv.length-1] !== '\n') after = '\n'+after;
+            if (s > 0 && v[s-1] !== '\n') before = '\n'+before;
+            if (e < v.length && v[e] !== '\n') after = after+'\n';
+         }
          nv = before+$wm.escapeHTML(nv)+after;
          de.value = v.substr(0,s)+nv+v.substr(e,v.length-1);
          de.selectionStart = de.selectionEnd = s + nv.length+1;
@@ -317,6 +319,27 @@ $(window).bind('load', function(){
       } else {
          if (c > 10000)
             alert('Слишком большой текст для подсветки синтаксиса!');
+         de.focus();
+      }
+   }
+   function usespace(elm){
+      var de = elm.get(0);
+      var s = de.selectionStart;
+      var e = de.selectionEnd;
+      var c = e-s;
+      function re(s,s1,s2){
+         var a = '';
+         for (var i = 0; i < s2.length;i++) a += '&nbsp;';
+         return s1+a;
+      }
+      if (c > 0){
+         var v = de.value;
+         var nv = v.substr(s,c);
+         nv = nv.replace(/^(\n?)(\s+)/g,re);
+         nv = nv.replace(/(\n)(\s+)/g,re);
+         nv = nv.replace(/\n/g,'<br>\n');
+         de.value = v.substr(0,s)+nv+v.substr(e,v.length-1);
+         de.selectionStart = de.selectionEnd = s + nv.length+1;
          de.focus();
       }
    }
@@ -333,6 +356,30 @@ $(window).bind('load', function(){
       });
       $('.codecmd',elm).click(function(){
          appSelection(edt,'<span class="wm-code cmd">','</span>');
+      });
+      $('.font.b',elm).click(function(){
+         appSelection(edt,'<b>','</b>',1);
+      });
+      $('.font.i',elm).click(function(){
+         appSelection(edt,'<i>','</i>',1);
+      });
+      $('.font.s',elm).click(function(){
+         appSelection(edt,'<s>','</s>',1);
+      });
+      $('.font.h2',elm).click(function(){
+         appSelection(edt,'<h2>','</h2>');
+      });
+      $('.font.h4',elm).click(function(){
+         appSelection(edt,'<h4>','</h4>');
+      });
+      $('.font.size',elm).click(function(){
+         appSelection(edt,'<span style="font-size: 8pt;">','</span>');
+      });
+      $('.font.color',elm).click(function(){
+         appSelection(edt,'<span style="color: #A00;">','</span>');
+      });
+      $('.usespace',elm).click(function(){
+         usespace(edt);
       });
       edt.keyup(function(){
          $('.length',elm).html(this.value.length||'');

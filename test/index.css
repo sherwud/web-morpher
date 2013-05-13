@@ -493,6 +493,34 @@ img.wm{
 .toolbar>div.codecmd>div{
    width: 50px;
 }
+.toolbar>div.usespace>div{
+   width: 53px;
+}
+.toolbar>div.color>div{
+   width: 27px;
+}
+.toolbar>div.size>div{
+   width: 27px;
+}
+.toolbar>div.size>div{
+   width: 22px;
+}
+.toolbar>div.h2>div,.toolbar>div.h4>div{
+   width: 16px;
+}
+.toolbar>div.b>div,.toolbar>div.i>div,.toolbar>div.s>div{
+width: 11px;
+}
+.toolbar>div.sep{
+    color: #AAAAAA;
+    display: table;
+    float: left;
+    margin: 2px 0 0 3px;
+}
+.toolbar>div.font{
+   text-align: center;
+   width: 7px;
+}
 .toolbar>div.right{
    float: right;
    margin: 4px 4px 3px 1px;

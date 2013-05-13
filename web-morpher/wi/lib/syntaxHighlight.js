@@ -1,4 +1,9 @@
 $wm.syntaxHighlight = function(elm){
+   function space(s,s1,s2){
+      var a = '';
+      for (var i = 0; i < s2.length;i++) a += '&nbsp;';
+      return s1+a;
+   }
    var js = [
       [/\\'/g,'\\&prime;'],
       [/\\"/g,'\\&Prime;'],
@@ -14,12 +19,9 @@ $wm.syntaxHighlight = function(elm){
       [/(\w+)\s*\:/g,'<span class="obj-elm">$1</span>:'],
       [/\.\s*([a-zA-z]+\w*)/g,'.<span class="obj-elm">$1</span>'],
       [/([0-9]+)(\.*)([0-9]+)/g,'<span class="num">$1$2$3</span>'],
-      
-      
+      [/(\n)(\s+)/g,space],
       [/\n/g,'<br>'],
       [/^<br>/g,'']
-      //[/ /g,'&nbsp;']
-
 
       //[/\/\*([\s\S]*)\*\//g,'<span class="comment">\/\*$1\*\/</span>'],
       //[/\*\//g,'\*\/<br>']
