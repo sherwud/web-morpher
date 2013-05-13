@@ -377,10 +377,13 @@ h3{
     line-height: 100px;
     border-radius: 4px
 }
-#wm-content .res-images .img>img{
+#wm-content .res-images .img img{
    vertical-align: middle;
    max-height: 100px;
    max-width: 100px;
+}
+#wm-content .res-images .img a{
+   display: block;
 }
 #wm-content .res-images .info {
     display: table;

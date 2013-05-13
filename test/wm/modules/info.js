@@ -413,8 +413,11 @@ exports.POST.getImages = function(req,res){
                   for (var i=0;i<items.length;i++){
                      html += '<div class="res-images">'
                         +'<div class="img">'
+                        +'<a target="blank" href="'
+                        +'/wm/call/info/getImage?_id='+items[i]._id+'">'
                         +'<img src="'+'/wm/call/info/getImage?_id='
                         +items[i]._id+'">'
+                        +'</a>'
                         +'</div>'
                         +'<div class="info">'
                         +'<div class="del"'
