@@ -544,3 +544,9 @@ width: 11px;
    float: right;
    margin: 4px 4px 3px 1px;
 }
+.usedel{
+   color: #AAAAAA;
+   display: block;
+   float: left;
+   font-size: 7pt;
+}

@@ -40,6 +40,7 @@
       "ADDBUTTON":"<div class=\"menubutton add\"><div></div>add</div>",
       "EDITBUTTON":"<div class=\"menubutton editPage hide\"><div></div>edit</div>",
       "FOOTER":"<div class=\"wm-footer\">\n\
+         <a class=\"usedel\" href=\"javascript: void(0)\">Разрешить удаление</a>\n\
          <span>Спасибо: </span>\n\
          <a target=\"blank\" href=\"http://nodejs.org\">Node.js</a>\n\
          <span> | </span>\n\

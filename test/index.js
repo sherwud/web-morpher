@@ -17,6 +17,18 @@ $(window).bind('load', function(){
          d.addClass('nodel');
       }
    };
+   var isdel = false;
+   $('.usedel').click(function(){
+      if (isdel){
+         isdel = false;
+         $wm.del(0);
+         this.innerHTML = 'Разрешить удаление';
+      } else {
+         isdel = true;
+         $wm.del(1);
+         this.innerHTML = 'Запретить удаление';
+      }
+   });
    $wm.del(0);
    $wm.escapeHTML = function(str){
       if (typeof str !== 'string') return str;

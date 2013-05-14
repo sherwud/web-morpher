@@ -9,6 +9,10 @@ $wm.syntaxHighlight = function(elm){
          return s1+s2.replace(/\*/g,'#')+s3;
       })+'*/';      
    }
+   var syntax = new RegExp('('
+      +'if |else |function|typeof |return|window|false|true|this|while |for '
+      +'| in |new '
+      +')','g');
    var js = [
       [/\\'/g,'\\&prime;'],
       [/\\"/g,'\\&Prime;'],
@@ -17,8 +21,7 @@ $wm.syntaxHighlight = function(elm){
       [/(var)\W+(\w+)\W*\=/g,
          '<span class="syntax">$1</span> <span class="var-key">$2 =</span>'],
       [/(\w+)\W*\=\W*(function)/g,'<span class="func">$1</span> = $2'],
-      [/(if|else|typeof|function|return|window)/g
-         ,'<span class="syntax">$1</span>'],
+      [syntax,'<span class="syntax">$1</span>'],
       [/(\w+)\s*\(/g,'<span class="func">$1</span>('],
       [/(\$?[a-zA-z]+\w*)\s*\./g,'<span class="obj">$1</span>.'],
       [/(\w+)\s*\:/g,'<span class="obj-elm">$1</span>:'],
