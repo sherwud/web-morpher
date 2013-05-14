@@ -260,10 +260,10 @@ h3{
    width: 16px;
 }
 .wm-itemform .parent{
+   margin-right: 0;
    width: 165px;
 }
 .wm-itemform .tags{
-   margin-right: 0;
    width: calc(100% - 597px);
 }
 .wm-itemform .html{
