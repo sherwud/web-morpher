@@ -4,6 +4,11 @@ $wm.syntaxHighlight = function(elm){
       for (var i = 0; i < s2.length;i++) a += '&nbsp;';
       return s1+a;
    }
+   function comment(s,s1){
+      return '/*'+s1.replace(/([^/])(\*+)([^/])/g,function(s,s1,s2,s3){
+         return s1+s2.replace(/\*/g,'#')+s3;
+      })+'*/';      
+   }
    var js = [
       [/\\'/g,'\\&prime;'],
       [/\\"/g,'\\&Prime;'],
@@ -22,6 +27,7 @@ $wm.syntaxHighlight = function(elm){
       [/(\n)(\s+)/g,space],
       [/\n/g,'<br>'],
       [/^<br>/g,''],
+      [/\/\*([\s\S]*)\*\//g,comment],
       [/\/\*([^*]*)\*\//g,'<span class="comment">\/\*$1\*\/</span>']
    ];
    var json = [
