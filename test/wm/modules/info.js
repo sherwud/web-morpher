@@ -30,10 +30,13 @@ function itemform(type,button,header){
       +'<div class="font color btn"><div></div>color</div>'
       +'<div class="sep">|</div>'
       +'<div class="usespace btn"><div></div>use:space</div>'
+      +'<div class="sep">|</div>'
+      +'<div class="preview btn"><div></div>use:preview</div>'
       +'<div class="length right txt"></div>'
       +'<div class="sellength right txt"></div>'
       +'</div>'
       +'<textarea class="html"></textarea>'
+      +'<div class="previewhtml hide"></div>'
       +'</div>';
 }
 function removeSpecChars(str){

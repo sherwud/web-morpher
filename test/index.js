@@ -382,6 +382,19 @@ $(window).bind('load', function(){
       $('.usespace',elm).click(function(){
          usespace(edt);
       });
+      $('.preview',elm).click(function(){
+         var view = $('.previewhtml',elm);
+         if ($('.previewhtml.hide',elm).size() !== 0){
+            edt.addClass('hide');
+            view.html(edt.val());
+            $wm.syntaxHighlight(view);
+            view.removeClass('hide');
+         } else {
+            view.addClass('hide');
+            view.html('');
+            edt.removeClass('hide');
+         }
+      });
       edt.keyup(function(){
          $('.length',elm).html(this.value.length||'');
          $('.sellength',elm).html((this.selectionEnd-this.selectionStart)||'');

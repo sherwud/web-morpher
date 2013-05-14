@@ -270,6 +270,15 @@ h3{
    height: calc(100% - 109px);
    margin-top: -2px;
 }
+.wm-itemform .previewhtml{
+   box-shadow: 0 0 1px rgba(100, 100, 100, 0.4);
+   width: calc(100% - 6px); 
+   height: calc(100% - 109px);
+   margin-left: 1px;
+   margin-top: -1px;
+   padding: 2px;
+   overflow-y: scroll;
+}
 #searchform{
    display: table;
    width: 100%;
@@ -504,6 +513,9 @@ img.wm{
 }
 .toolbar>div.size>div{
    width: 22px;
+}
+.toolbar>div.preview>div{
+   width: 63px;
 }
 .toolbar>div.h2>div,.toolbar>div.h4>div{
    width: 16px;
