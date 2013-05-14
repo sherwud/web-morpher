@@ -432,6 +432,7 @@ $(window).bind('load', function(){
          $wm.addmenuitem.eathmenuitems();
          $wm.editing.show();
          elm.removeClass('hide');
+         $('.name',elm).focus();
       };
       this.hide = function(){
          $wm.editing.hide();
@@ -513,6 +514,7 @@ $(window).bind('load', function(){
          $wm.edititemform.eathmenuitems();
          $wm.editing.show();
          elm.removeClass('hide');
+         $('.html',elm).focus();
       };
       this.hide = function(){
          $wm.editing.hide();
@@ -571,6 +573,9 @@ $(window).bind('load', function(){
          form.tags.val($('.menuitem.dbitem.active').attr('tags'));
          form.html.val($('#wm-content-editing').html());
          $('.length',elm).html(form.html.val().length||'');
+         $('.sellength',elm).html('');
+         var html = form.html.get(0);
+         html.selectionEnd = html.selectionStart = 0;
       };
    };
    $wm.syntaxHighlight($('#wm-content'));
