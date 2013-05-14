@@ -38,6 +38,7 @@ $(window).bind('load', function(){
             success: function(data){
                $('.menubutton.editPage.hide').removeClass('hide');
                item.text(data['name']);
+               item.attr('tags',data['tags']);
                $('#wm-content').html(data['html']);
                $('#wm-content-editing').html(data['html']);
                $wm.syntaxHighlight($('#wm-content'));

@@ -179,7 +179,7 @@ exports.POST.getPage = function(req,res){
    db.open(function(e, db){
       db.collection('mainmenu',function(e,collection){
          var data = req.body.data;
-         collection.find({_id:mongodb.ObjectID(data._id)},{name:1,html:1},
+         collection.find({_id:mongodb.ObjectID(data._id)},{name:1,html:1,tags:1},
                function(e,cursor){
             cursor.toArray(function(e,items){
                if (items && items.length > 0) res.send(200,items[0]);
