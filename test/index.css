@@ -166,9 +166,9 @@ h3{
 #wm-content{
    border-radius: 6px;
    height: calc(100% - 109px);
-   width: calc(100% - 229px);
+   width: calc(100% - 233px);
    float: left;
-   margin: 5px 3px 0 0;
+   margin: 5px 0 0 2px;
    display: table;
    padding: 8px;
    text-align: justify;
