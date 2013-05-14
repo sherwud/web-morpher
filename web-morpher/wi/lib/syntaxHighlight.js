@@ -53,23 +53,31 @@ $wm.syntaxHighlight = function(elm){
       
    ];
    $('.wm-code.js',elm).each(function(i, elem) {
+      var html = elem.innerHTML;
       for (var i in js) {
-         elem.innerHTML = elem.innerHTML.replace(js[i][0],js[i][1]);
+         html = html.replace(js[i][0],js[i][1]);
       }
+      elem.innerHTML = html;
    });
    $('.wm-code.json',elm).each(function(i, elem) {
+      var html = elem.innerHTML;
       for (var i in json) {
-         elem.innerHTML = elem.innerHTML.replace(json[i][0],json[i][1]);
+         html = html.replace(json[i][0],json[i][1]);
       }
+      elem.innerHTML = html;
    });
    $('.wm-code.http',elm).each(function(i, elem) {
+      var html = elem.innerHTML;
       for (var i in http) {
-         elem.innerHTML = elem.innerHTML.replace(http[i][0],http[i][1]);
+         html = html.replace(http[i][0],http[i][1]);
       }
+      elem.innerHTML = html;
    });
    $('.wm-code.cmd',elm).each(function(i, elem) {
+      var html = elem.innerHTML;
       for (var i in cmd) {
-         elem.innerHTML = elem.innerHTML.replace(cmd[i][0],cmd[i][1]);
+         html = html.replace(cmd[i][0],cmd[i][1]);
       }
+      elem.innerHTML = html;
    });
 };

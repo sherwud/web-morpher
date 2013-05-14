@@ -344,55 +344,67 @@ $(window).bind('load', function(){
          de.focus();
       }
    }
+   var isedit = true;
    function appToolbarfunc(elm){
       var edt = $('.html',elm);
       $('.codejs',elm).click(function(){
-         appSelection(edt,'<span class="wm-code js">','</span>');
+         if (isedit) appSelection(edt,'<span class="wm-code js">','</span>');
       });
       $('.codejson',elm).click(function(){
-         appSelection(edt,'<span class="wm-code json">','</span>');
+         if (isedit) appSelection(edt,'<span class="wm-code json">','</span>');
       });
       $('.codehttp',elm).click(function(){
-         appSelection(edt,'<span class="wm-code http">','</span>');
+         if (isedit) appSelection(edt,'<span class="wm-code http">','</span>');
       });
       $('.codecmd',elm).click(function(){
-         appSelection(edt,'<span class="wm-code cmd">','</span>');
+         if (isedit) appSelection(edt,'<span class="wm-code cmd">','</span>');
       });
       $('.font.b',elm).click(function(){
-         appSelection(edt,'<b>','</b>',1);
+         if (isedit) appSelection(edt,'<b>','</b>',1);
       });
       $('.font.i',elm).click(function(){
-         appSelection(edt,'<i>','</i>',1);
+         if (isedit) appSelection(edt,'<i>','</i>',1);
       });
       $('.font.s',elm).click(function(){
-         appSelection(edt,'<s>','</s>',1);
+         if (isedit) appSelection(edt,'<s>','</s>',1);
       });
       $('.font.h2',elm).click(function(){
-         appSelection(edt,'<h2>','</h2>');
+         if (isedit) appSelection(edt,'<h2>','</h2>');
       });
       $('.font.h4',elm).click(function(){
-         appSelection(edt,'<h4>','</h4>');
+         if (isedit) appSelection(edt,'<h4>','</h4>');
       });
       $('.font.size',elm).click(function(){
-         appSelection(edt,'<span style="font-size: 8pt;">','</span>');
+         if(isedit)appSelection(edt,'<span style="font-size: 8pt;">','</span>');
       });
       $('.font.color',elm).click(function(){
-         appSelection(edt,'<span style="color: #A00;">','</span>');
+         if (isedit) appSelection(edt,'<span style="color: #A00;">','</span>');
       });
       $('.usespace',elm).click(function(){
-         usespace(edt);
+         if (isedit) usespace(edt);
       });
       $('.preview',elm).click(function(){
          var view = $('.previewhtml',elm);
-         if ($('.previewhtml.hide',elm).size() !== 0){
-            edt.addClass('hide');
+         var btn = $('.toolbar .btn',elm);
+         var vievbtn = $(this);
+         if (isedit){
+            isedit = false;
             view.html(edt.val());
-            $wm.syntaxHighlight(view);
-            view.removeClass('hide');
+            btn.addClass('disable');
+            vievbtn.removeClass('disable');
+            $wm.loading.show();
+            setTimeout(function(){
+               $wm.syntaxHighlight(view);
+               edt.addClass('hide');
+               view.removeClass('hide');
+               $wm.loading.hide();
+            },50);
          } else {
+            isedit = true;
             view.addClass('hide');
             view.html('');
             edt.removeClass('hide');
+            btn.removeClass('disable');
          }
       });
       edt.keyup(function(){
@@ -451,6 +463,7 @@ $(window).bind('load', function(){
       this.hide = function(){
          $wm.editing.hide();
          elm.addClass('hide');
+         if (!isedit) $('.preview',elm).click();
       };
       this.add = function(data){
          if (form.name.val() && form.html.val()) {
@@ -533,6 +546,7 @@ $(window).bind('load', function(){
       this.hide = function(){
          $wm.editing.hide();
          elm.addClass('hide');
+         if (!isedit) $('.preview',elm).click();
       };
       this.save = function(data){
          if (form.name.val() && form.html.val()) {

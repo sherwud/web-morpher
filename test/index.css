@@ -195,9 +195,11 @@ h3{
    position: fixed;
    right: 0;
    top: 0;
-   z-index: 1000000;
+   z-index: 100;
    background: rgba(50, 50, 50, 0.5);
-   
+}
+.wm-loading{
+   z-index: 200;
 }
 .wm-loading>div{
    text-align: center;
@@ -215,7 +217,7 @@ h3{
    width: 80%;
    height: 80%;
    border-radius: 8px;
-   z-index: 1000001;
+   z-index: 101;
    padding: 8px;
    min-height: 300px;
    min-width: 400px;
@@ -473,6 +475,11 @@ img.wm{
 }
 .toolbar>div.btn:active{
    background-color: #EEE;
+}
+.toolbar>div.btn.disable{
+   box-shadow: 0 0 1px rgba(0, 0, 0, 0.3)!important;
+   background-color: #EEE!important;
+   cursor: auto !important;
 }
 .toolbar>div.txt{
    border-radius: 2px;
