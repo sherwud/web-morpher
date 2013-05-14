@@ -21,10 +21,8 @@ $wm.syntaxHighlight = function(elm){
       [/([0-9]+)(\.*)([0-9]+)/g,'<span class="num">$1$2$3</span>'],
       [/(\n)(\s+)/g,space],
       [/\n/g,'<br>'],
-      [/^<br>/g,'']
-
-      //[/\/\*([\s\S]*)\*\//g,'<span class="comment">\/\*$1\*\/</span>'],
-      //[/\*\//g,'\*\/<br>']
+      [/^<br>/g,''],
+      [/\/\*([^*]*)\*\//g,'<span class="comment">\/\*$1\*\/</span>']
    ];
    var json = [
       [/\n/g,'<br>'],
