@@ -312,7 +312,7 @@ $(window).bind('load', function(){
       var s = de.selectionStart;
       var e = de.selectionEnd;
       var c = e-s;
-      if (c > 0 && c < 10000){
+      if (c > 0 && c < 50000){
          var v = de.value;
          var nv = v.substr(s,c);
          if (!non){
