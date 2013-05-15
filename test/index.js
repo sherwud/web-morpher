@@ -67,7 +67,7 @@ $(window).bind('load', function(){
          var self = this;
          var _id = self.getAttribute('_id');
          var submenu = $('div[_id="'+_id+'"]');
-         $('#menucontainer>div').addClass('hide');
+         $('#menucontainer div').addClass('hide');
          submenu.removeClass('hide');
          var i = submenu.parent();
          while (i && i.get(0).id !== 'menucontainer') {
@@ -116,7 +116,7 @@ $(window).bind('load', function(){
                   var sr = $('#searchresult');
                   var view = $('#viewfromsearchresult');
                   var sf = $('#searchform');
-                  if (search && search.length > 3) {
+                  if (search && search.length > 2) {
                      var data = {
                         search:search,
                         menu:!!$('.checkbox .menu',sf).get(0).checked,
@@ -184,7 +184,7 @@ $(window).bind('load', function(){
                         }
                      });
                   } else {
-                     sr.html('Введите более 3х символов');
+                     sr.html('Введите не менее 3х символов');
                   }
                }
                $wm.loading.show();
