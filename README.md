@@ -2,8 +2,6 @@ Web Morpher
 =
 **version: 0.0.0.pre-alpha**
 
--
-
 #Запуск
 
 **Параметры запуска**
