@@ -18,21 +18,6 @@ Web Morpher
     Конфиг сайта поддерживает: {"node_modules":<пути>,"port":<номер порта>}
     Глобальный конфиг поддерживает: {"node_modules":<пути>}
 
-**Наследование параметров**
-
-Параметры с меньшим приоритетом заменяются или дополняются параметрами с большим.
-
-    path - заменяется
-    port - заменяется
-    node_modules - расширяется
-
-Параметры по убыванию приоритета:
-
-    Из файла `app.js`
-    Из конфига сайта `demo/web-morpher/config.json`
-    Из глобального конфига `web-morpher/config.json`
-    По умолчанию из `web-morpher/index.js`
-
 **Примеры**
 
     node app
@@ -43,9 +28,8 @@ Windows
 
 #Зависимости
 
-  - `demo/ext/jquery.js` >= 1.8.3 ([jquery.com](http://jquery.com/))
-  - `docs/ext/jquery.js` >= 1.8.3 ([jquery.com](http://jquery.com/))
-  - `docs/ext/bootstrap/` >= 2.2.2 ([twitter bootstrap](http://twitter.github.com/bootstrap/))
+  - `web-morpher/wi/ext/jquery.js` >= 1.8.3 ([jquery.com](http://jquery.com/))    
+  - `web-morpher/wi/ext/bootstrap/` >= 2.2.2 ([twitter bootstrap](http://twitter.github.com/bootstrap/))
 
 -
 
