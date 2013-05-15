@@ -119,11 +119,11 @@ $(window).bind('load', function(){
                   if (search && search.length > 3) {
                      var data = {
                         search:search,
-                        menu:!!$('#searchform .checkbox .menu').attr('checked'),
-                        tags:!!$('#searchform .checkbox .tags').attr('checked'),
-                        text:!!$('#searchform .checkbox .text').attr('checked'),
-                        and:!!$('#searchform .radio .o-and').attr('checked'),
-                        or:!!$('#searchform .radio .o-or').attr('checked')
+                        menu:!!$('.checkbox .menu',sf).get(0).checked,
+                        tags:!!$('.checkbox .tags',sf).get(0).checked,
+                        text:!!$('.checkbox .text',sf).get(0).checked,
+                        and:!!$('.radio .o-and',sf).get(0).checked,
+                        or:!!$('.radio .o-or',sf).get(0).checked
                      };
                      $wm.loading.show();
                      $.ajax({
@@ -202,23 +202,19 @@ $(window).bind('load', function(){
                      $('#wm-content-editing').html('');
                      $wm.loading.hide();
                      $('#searchform .radio input').click(function(){
-                        $('#searchform .radio input').attr('checked',false);
-                        $(this).attr('checked',true);
+                        var oand = $('#searchform .radio .o-and').get(0);
+                        var oor = $('#searchform .radio .o-or').get(0);
+                        if (oand !== this) oand.checked = false;
+                        if (oor !== this) oor.checked = false;
                         $('#searchform .search').focus();
                      });
                      $('#searchform .checkbox input').click(function(){
-                        if ($(this).attr('checked'))
-                           $(this).attr('checked','checked'); 
-                        else
-                           $(this).removeAttr('checked');
-                        var nochecked = true;
-                        $('#searchform .checkbox input').each(function(){
-                           if ($(this).attr('checked') === 'checked')
-                              nochecked = false;
-                        });
-                        if (nochecked)
-                           $('#searchform .checkbox input.text')
-                              .attr('checked',true);
+                        var menu = $('#searchform .checkbox .menu').get(0);
+                        var tags = $('#searchform .checkbox .tags').get(0);
+                        var text = $('#searchform .checkbox .text').get(0);
+                        if (!menu.checked && !tags.checked && !text.checked){
+                           text.checked = true;
+                        }
                         $('#searchform .search').focus();
                      });
                      $('#searchform .searchbutton').click(search);
