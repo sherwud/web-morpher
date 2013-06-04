@@ -1,3 +1,3 @@
 @echo off
-TASKKILL /FI "WINDOWTITLE eq web-morpher" /F
-start "web-morpher" node app.js
+TASKKILL /FI "WINDOWTITLE eq Web Morpher" /F
+start "Web Morpher" node app.js
