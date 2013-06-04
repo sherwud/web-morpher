@@ -1,6 +1,0 @@
-{
-   "body":"{{info}}",
-   "builders":{
-      "info":"return this.modcall('info','NodeJS_Info')()"
-   }
-}

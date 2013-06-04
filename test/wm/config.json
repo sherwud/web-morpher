@@ -1,6 +1,0 @@
-{
-   "port":777,
-   "showInfo":true,
-   "bodyParser":true,
-   "maxFileSize":1
-}
