@@ -13,40 +13,214 @@ $wm.parser = function($parser,runOnServer){
       this.CID = function(){ return String(2+Number(runOnServer))+CID++; };
    }();
    /* Элементы html
-    * get(name,callback) - получает элементы
+    * get( - получает элементы
     *    name - имя элемента
     *    standard - стандартный элемент
     *    callback(e,data) - функция для передачи результатов
+    * )
     */
    var elements = new function(){
       var elements ={};
       this.get = function(name,standard,callback){
+         var getElement = this.syscall('filemanager','getElement');
          var key = Number(standard)+name;
          if (key in elements){
-            callback(elements[key]);
+            callback(0,elements[key]);
          } else {
-            console.error('загрузка элементов');
+            getElement(name,standard,function(e,data){
+               if (e) callback(e);
+               else {
+                  elements[key] = data;
+                  callback(0,data);
+               }
+            });
          }
       };
    }();
    /* Строит элемент
     * name - имя элемента
-    * data - данные для элемента
     * standard - стандартный элемент
+    * data - данные для элемента
     * callback(e,data) - функция для передачи результатов
     */
-   $parser.element = function(name,data,standard,callback){
+   $parser.element = function(name,standard,data,callback){
       if (typeof callback !== 'function'){
-         console.error('"callback" не задан!'); return;
+         console.error('$parser.element: "callback" не задан!'); return;
       };
       if (typeof name !== 'string'){
-         callback('"name" не задан!');
+         callback('$parser.element: "name" не задан!'); return;
       };
-
-      elements.get(name,standard,function(e,element){
-         
+      var self = this;
+      elements.get.call(this,name,standard,function(e,element){
+         if (e) callback(e);
+         else {
+            var reg = /{{(\w+)}}/;
+            var html = element.body;
+            var replaceKey = function(callback){
+               var key = reg.exec(html);
+               if (key === null) { callback(0,html); return; };
+               key = key[1];
+               var val = '';
+               if (key in element.builders){
+                  try {
+                     val = String(element.builders[key]
+                        .call(self,data,element));
+                  }
+                  catch(e){
+                     e = {e:e};
+                     e.method = '$parser.element';
+                     e.element = Number(standard)+name;
+                     e.key = key;
+                     console.error(e);
+                  }
+                  html = html.replace(reg,val);
+                  setTimeout(function(){replaceKey(callback);},1);
+               } else {
+                  switch (key) {
+                     case 'id':
+                        val = String(data[key]||'');
+                        val = 'id="'+val+'"';
+                     break;
+                     case 'wmname':
+                        val = String(data[key]||'');
+                        if (val)
+                           val = 'wmname="'+val+'"';
+                        else val = '';
+                     break;
+                     case 'wmtype':
+                        val = 'wmtype="element:'+Number(standard)+name+'"';
+                     break;
+                     case 'class':
+                        val = String(data[key]||'');
+                        val = val?(' '+val):val;
+                        if (val||element.class)
+                           val = 'class="'+(element.class||'')+val+'"';
+                        else val = '';
+                     break;
+                     default: val = String(data[key]||'');
+                  }
+                  
+                  html = html.replace(reg,val);
+                  setTimeout(function(){replaceKey(callback);},1);
+               }
+            };
+            replaceKey(callback);
+         }
       });
    };
+   /* Контролы
+    * get( - получает элементы
+    *    name - имя элемента
+    *    standard - стандартный контрол
+    *    callback(e,data) - функция для передачи результатов
+    * )
+    */
+   var controls = new function(){
+      var controls ={};
+      this.get = function(name,standard,callback){
+         var key = Number(standard)+name;
+         if (key in controls){
+            callback(0,controls[key]);
+         } else {
+            $parser.loder.getСontrol(name,standard,function(e,data){
+               if (e) callback(e);
+               else {
+                  controls[key] = data;
+                  callback(0,data);
+               }
+            });
+         }
+      };
+   }();
+   /* Строит контрол
+    * 
+    */
+   $parser.control = function(){};
+   /* Строит страницу из json файла
+    * data - данные страницы из json
+    * inputParams - входные параметры
+    * callback(e,data) - функция для передачи результатов
+    * setPageJS(pid,js,callback) - функция сохранения скриптов страницы
+    */
+   $parser.page = function(data,inputParams,callback,setPageJS){
+      if (typeof callback !== 'function'){
+         console.error('$parser.page: "callback" не задан!'); return;
+      }
+      if (typeof data === 'undefined' || !data instanceof Object) {
+         callback('$parser.page: "data" не задан!'); return;
+      }
+      if (typeof data.body !== 'string')
+         callback('$parser.page: "data.body" не задан!');
+      var buildObject = this.syscall('parser','buildObject');
+      var element = this.syscall('parser','element');
+      var reg = /{{(\w+)}}/;
+      var regAll = /{{(\w+)}}/g;
+      var removeKey = function(callback){
+         data.body = data.body.replace(reg,'');
+         setTimeout(function(){replaceKey(callback);},1);
+      };
+      var pageJS = '';
+      var params = data.params||{};
+      var replaceKey = function(callback){
+         var key = reg.exec(data.body);
+         if (key === null) { callback(0,data.body,pageJS); }
+         else {
+            var val = params[key[1]];
+            switch (typeof val) {
+               case 'string':
+                  if (val.search(reg) !== -1)
+                     params[key[1]] = val = val.replace(regAll,'');
+                  data.body = data.body.replace(reg,val);
+                  setTimeout(function(){replaceKey(callback);},1);
+               break;
+               case 'object':
+                  if (val instanceof Array) {
+                     removeKey(callback);
+                  } else {
+                     buildObject(val,inputParams,function(e,val,js){
+                        if (e) { callback(e); }
+                        else {
+                           if (js) pageJS+=js;
+                           params[key[1]] = val;
+                           data.body = data.body.replace(reg,val);
+                           setTimeout(function(){replaceKey(callback);},1);
+                        }
+                     });
+                  }
+               break;
+               default: removeKey(callback);
+            }
+         }
+      };
+      replaceKey(function(e,html,js){
+         if (e) callback(e);
+         else {
+            var config = data.config;
+            if (config) {
+               var name = config.element||'page';
+               var standard = config.standard;
+               if (typeof standard !== 'boolean') standard = true;
+               var params = config.params||{};
+               params.page = html;
+               var pid = params.id = idGen.PID();
+               element(name,standard,params,function(e,data){
+                  if (e) callback(e);
+                  else {
+                     if (js) {
+                        js = '$(document).ready(function(){'+js+'});';
+                        setPageJS(pid,js,function(){
+                           callback(0,data,pid);
+                        });
+                     } else {
+                        callback(0,data,false);
+                     }
+                  }
+               });
+            } else { callback(0,html); }
+         }
+      });
+   };   
+   
    /* Строит страницу по пути к файлу
     * path - путь к странице
     * params - входные параметры для построения страницы
@@ -60,36 +234,32 @@ $wm.parser = function($parser,runOnServer){
          callback('parser.build - ошибка вызова метода');
          return;
       }
-      var $wm = this;
-      var httpMethod = params.httpMethod;
-      $parser.loder.getPage.call($wm,path,httpMethod,
-            function(e,data,cache,setPageJS){
-         if (e) { callback(e); }
+      var getPage = this.syscall('filemanager','getPage');
+      var page = this.syscall('parser','page');
+      var setTemplate = this.syscall('parser','setTemplate');
+      getPage(path,function(e,data,cache,setPageJS){
+         if (e) { callback(e,data); }
          else {
-            if (typeof data === 'string') callback(0,data);
-            else {
-               var inputParams = params.inputParams;
-               $parser.buildPage.call($wm,data,inputParams,function(e,html,pid){
-                  if (e) { callback(e); }
-                  else {
-                     var tmpl = data.config.template;
-                     if (httpMethod === 'get' && typeof tmpl === 'object'){
-                        $parser.setTemplate.call($wm,tmpl,inputParams,html,pid,
-                           function(e,data){
-                              if (e) { callback(e); }
-                              else {
-                                 cache(data);
-                                 callback(0,data);
-                              }
+            page(data,params,function(e,html,pid){
+               if (e) { callback(e); }
+               else {
+                  var tmpl = data.config.template;
+                  if (typeof tmpl === 'object'){
+                     setTemplate(tmpl,params,html,pid,
+                        function(e,data){
+                           if (e) { callback(e); }
+                           else {
+                              cache(data);
+                              callback(0,data);
                            }
-                        );
-                     } else {
-                        cache(html);
-                        callback(0,html);
-                     }
+                        }
+                     );
+                  } else {
+                     cache(html);
+                     callback(0,html);
                   }
-               },setPageJS);
-            }
+               }
+            },setPageJS);
          }
       });
    };
@@ -101,8 +271,9 @@ $wm.parser = function($parser,runOnServer){
     * callback - функция для передачи результатов
     */
    $parser.setTemplate = function(params,inputParams,html,pid,callback){
-      var $wm = this;
-      $parser.loder.getTemplate.call($wm,params,function(e,data){
+      var getTemplate = this.syscall('filemanager','getTemplate');
+      var buildPage = this.syscall('parser','buildPage');
+      getTemplate(params,function(e,data){
          if (e) { callback(e); }
          else {
             if (typeof data === 'string')
@@ -113,14 +284,14 @@ $wm.parser = function($parser,runOnServer){
                      inputParams[i] = params.input[i];
                   }
                delete params.input;
-               $parser.buildPage.call($wm,data,inputParams,function(e,data){
+               buildPage(data,inputParams,function(e,data){
                   if (e) { callback(e); }
                   else {
                      var script =
                         '<script type="text/javascript" src="{{src}}"></script>';
                      data = data.replace(/{\$coreScript\$}/,
-                        script.replace(/{{src}}/,'web-morpher/ui/ext/jquery.js')
-                       +script.replace(/{{src}}/,'web-morpher/ui/core.js')
+                        script.replace(/{{src}}/,'wm/wi/ext/jquery.js')
+                       +script.replace(/{{src}}/,'wm/wi/lib/core.js')
                      );
                      if (pid)
                         data = data.replace(/{\$pageScript\$}/,
@@ -148,6 +319,7 @@ $wm.parser = function($parser,runOnServer){
          callback('parser.buildPage - ошибка вызова метода');
          return;
       }
+      var buildObject = this.syscall('parser','buildObject');
       if (typeof data.body !== 'string') 
          callback('parser.buildPage - data.body не является string');
       var reg = /{{(\w+)}}/;
@@ -173,7 +345,7 @@ $wm.parser = function($parser,runOnServer){
                   if (val instanceof Array) {
                      removeKey(callback);
                   } else {
-                     $parser.buildObject(val,inputParams,function(e,val,js){
+                     buildObject(val,inputParams,function(e,val,js){
                         if (e) { callback(e); }
                         else {
                            if (js) alljs+=js;
@@ -221,6 +393,7 @@ $wm.parser = function($parser,runOnServer){
          callback('parser.buildObject - не задан формат объекта');
          return;
       }
+      var element = this.syscall('parser','element');
       var mergeInputParams = function(){
          if (typeof data.data === 'object' && !(data.data instanceof Array))
             for (var i in data.data){
@@ -249,6 +422,11 @@ $wm.parser = function($parser,runOnServer){
             mergeInputParams();
             if (typeof data.system !== 'boolean') data.system = true;
             $parser.buildControl(data.control,data.system,inputParams,callback);
+         break;
+         case 'elemetn':
+            mergeInputParams();
+            if (typeof data.system !== 'boolean') data.system = true;
+            element(data.elemetn,data.system,inputParams,callback);
          break;
          default: callback(0,'');
       }
@@ -349,9 +527,7 @@ $wm.parser = function($parser,runOnServer){
    return $parser;
 };
 if (typeof window === 'undefined') {
-   exports = module.exports;
-   exports.loder = require('../lib/parserLoder.js');
-   $wm.parser = $wm.parser(exports,true);
+   $wm.parser = $wm.parser(exports = module.exports,true);
 } else {
    $wm.parser = $wm.parser({},false);
 };

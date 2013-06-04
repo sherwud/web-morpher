@@ -1,0 +1,41 @@
+{
+   "body": "<!DOCTYPE html>\n\
+<html lang=\"ru\">\n\
+   <head>\n\
+      <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n\
+      <title>{{title}}</title>\n\
+      {$coreScript$}\n\
+      {$pageScript$}\n\
+      {{script}}\n\
+      {{style}}\n\
+   </head>\n\
+   <body>{$page$}</body>\n\
+</html>",
+   "title":{
+      "format":"input",
+      "type":"text",
+      "name":"title"
+   },
+   "script":{
+      "format":"control",
+      "system":true,
+      "control":"scriptList",
+      "data":{
+         "scripts":[
+            "index.js",
+            "wm/wi/lib/syntaxHighlight.js"
+         ]
+      }
+   },
+   "style":{
+      "format":"control",
+      "system":true,
+      "control":"styleList",
+      "data":{
+         "styles":[
+            "index.css",
+            "wm/wi/lib/css/syntaxHighlight.css"
+         ]
+      }
+   }
+}

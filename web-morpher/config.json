@@ -1,3 +1,4 @@
 {
-   "node_modules":["C:\\Program Files\\nodejs\\node_modules"]
+   "node_modules_root":"C:\\Program Files\\nodejs\\node_modules",
+   "node_modules":{}
 }

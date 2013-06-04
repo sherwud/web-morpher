@@ -1,8 +1,11 @@
 *.log
+/_prog
 *local*.bat
-/ext/
-/demo/web-morpher/~cache/
-/demo/js
+/web-morpher/wi/ext/
+/demo/wm/~cache/
+/demo/wm/~upload/
+/demo/js/
 /demo/*.html
 /docs/ext/
-web-morpher/ui/ext/
+/test/js/
+/test/*.html
