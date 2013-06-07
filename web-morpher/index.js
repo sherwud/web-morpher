@@ -1,4 +1,5 @@
 "use strict";
+global.wm = {};
 exports = module.exports = {};
 var spawn = require('child_process').spawn;
 /*
@@ -6,28 +7,9 @@ var spawn = require('child_process').spawn;
  * @param {string/object} param - параметры запуска
  * @returns {object} - объект для управления системой
  */
-exports.app = function (param){
+wm.app = function (param){
    let a = 1;
    let exp1 = require('express');
-   console.log(a);
+   console.log(global);
    
-};
-/* @info Проведет тестирование на наличие возможных ошибко
- * 
- */
-exports.test = function(){
-   var test;
-   try{
-      test = require('express');
-   }catch(e){
-      console.log('Модуль "express" не найден!');
-      
-      var cp = spawn('npm.cmd',['install'],{cwd:'web-morpher'});
-      cp.stdout.on('data', function (data) {
-        console.log('stdout: ' + data);
-      });
-      cp.on('close', function (code) {
-        console.log('child process exited with code ' + code);
-      });
-   }
 };

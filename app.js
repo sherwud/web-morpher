@@ -1,3 +1,2 @@
-var $wm = require('./web-morpher');
-$wm.test()
-$wm.app()
+require('./web-morpher');
+wm.app()
