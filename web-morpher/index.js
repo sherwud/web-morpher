@@ -1,7 +1,5 @@
 "use strict";
 global.wm = {};
-exports = module.exports = {};
-var spawn = require('child_process').spawn;
 /*
  * @info Выполняет запуск системы по переданным параметрам
  * @param {string/object} param - параметры запуска

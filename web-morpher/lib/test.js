@@ -1,4 +1,5 @@
 exports = module.exports = {};
+var spawn = require('child_process').spawn;
 /* @info Проведет тестирование на наличие возможных ошибко
  * 
  */
