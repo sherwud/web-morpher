@@ -1,2 +1,3 @@
 require('./web-morpher');
-wm.test.test(wm.app)
+console.log(wm.info());
+wm.test.test(wm.app);
