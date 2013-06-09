@@ -1,2 +1,2 @@
 require('./web-morpher');
-wm.app()
+wm.test.test(wm.app)

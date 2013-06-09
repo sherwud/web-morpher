@@ -1,5 +1,6 @@
 "use strict";
 global.wm = {};
+wm.test = require('./lib/test');
 /*
  * @info Выполняет запуск системы по переданным параметрам
  * @param {string/object} param - параметры запуска

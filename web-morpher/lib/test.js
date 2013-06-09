@@ -3,10 +3,11 @@ var spawn = require('child_process').spawn;
 /* @info Проведет тестирование на наличие возможных ошибко
  * 
  */
-exports.test = function(){
+exports.test = function(callback){
    var test;
    try{
       test = require('express');
+      callback()
    }catch(e){
       console.log('Модуль "express" не найден!');
       
@@ -16,6 +17,7 @@ exports.test = function(){
       });
       cp.on('close', function (code) {
         console.log('child process exited with code ' + code);
+        callback()
       });
    }
 };
