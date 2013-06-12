@@ -1,5 +1,6 @@
 "use strict";
-var fs = require('fs');
+//var fs = require('fs');
+/*
 var packageInfo = require('./package.json');
 try{
    let config = wm.config = require('./config.json');
@@ -18,12 +19,13 @@ try{
    console.log(e);
    wm.config = {};
 }
-
+*/
 /*
 * @info Получение общей информации о системе
 * @param {string} name - имя параметра для получения
 * @returns {any} - значение параметра, или стандартный набор
 */
+/*
 wm.info = function(name){
    if (name) {
       return packageInfo[name]?packageInfo[name]:null;
@@ -36,3 +38,4 @@ wm.info = function(name){
       };
    }
 };
+*/

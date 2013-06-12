@@ -8,7 +8,7 @@ exports.test = function(callback){
    var test;
    try{
       test = require('express');
-      callback()
+      callback();
    }catch(e){
       console.log('Модуль "express" не найден!');
       
@@ -18,7 +18,7 @@ exports.test = function(callback){
       });
       cp.on('close', function (code) {
         console.log('child process exited with code ' + code);
-        callback()
+        callback();
       });
    }
 };

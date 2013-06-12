@@ -1,13 +1,15 @@
 "use strict";
-require('./lib');
-/*
-require('./config.js');
-require('./log.js');
-*/
+global.wm = require('./lib')({
+   config: require('./config.js'),
+   log: require('./log.js'),
+   app: app
+});
 /*
  * @info Выполняет запуск системы по переданным параметрам
  * @param {string/object} param - параметры запуска
  * @returns {object} - объект для управления системой
  */
-
-//wm.app = function (param){ console.log('wm'); };
+function app(param){
+   wm.path;
+   wm.selflog();
+};
