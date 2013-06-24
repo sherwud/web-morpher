@@ -17,20 +17,6 @@ function abstractError(dir){
       }
    });
 }
-function createProxy(mod,dir){
-   return Proxy.create({
-      get: function(proxy, name){
-         if (!(name in mod)) {
-            try {
-               mod[name] = exports(dir+'/'+name);
-            } catch (e){
-               wmlog(e);
-            }
-         }
-         return mod[name];
-      }
-   });
-}
 exports = module.exports = function(dir){
    var way = path.join(root,dir);
    var mod = false;
@@ -64,3 +50,17 @@ exports = module.exports = function(dir){
    mod.getThis = function(){return mod;};
    return createProxy(mod,dir);
 };
+function createProxy(mod,dir){
+   return Proxy.create({
+      get: function(proxy, name){
+         if (!(name in mod)) {
+            try {
+               mod[name] = exports(dir+'/'+name);
+            } catch (e){
+               wmlog(e);
+            }
+         }
+         return mod[name];
+      }
+   });
+}
