@@ -1,10 +1,10 @@
 "use strict";
 var fs = require('fs');
 exports = module.exports = {};
-var packageInfo = require('./package.json');
+var packageInfo = require('../package.json');
 try{
-   let config = require('./config.json');
-   let tmp = String(config['modules_root']);
+   var config = require('../config.json');
+   var tmp = String(config['modules_root']);
    if (!fs.existsSync(tmp)) tmp = '';
    config['modules_root'] = tmp;
    tmp = config['modules'];
@@ -15,8 +15,8 @@ try{
          if (!fs.existsSync(tmp[i])) delete tmp[i];
       }
    }
-   for(let i in config) exports[i] = config[i];
-}catch(e){ console.log(e); }
+   for(var i in config) exports[i] = config[i];
+}catch(e){ wmlog(e); }
 /*
 * @info Получение общей информации о системе
 * @param {string} name - имя параметра для получения
