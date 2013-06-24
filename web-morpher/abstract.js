@@ -27,9 +27,22 @@ function createProxy(mod,dir){
                wmlog(e);
             }
          }
+         if (typeof mod[name] === 'function')
+            return createProxyFunc(mod[name],dir+'/'+name);
          return mod[name];
       }
    });
+}
+function createProxyFunc(mod,dir){
+   return function(){
+      try {
+         return mod.apply(this,arguments);
+      } catch(e){
+         wmlog('Ошибка выполнения "'+dir+'"');
+         wmlog(e);
+         return undefined;
+      }
+   };
 }
 exports = module.exports = function(dir){
    var way = path.join(root,dir);
@@ -51,14 +64,7 @@ exports = module.exports = function(dir){
       wmlog('Модуль "'+dir+'" не найден');
       return abstractError(dir);
    }
-   if (typeof mod === 'function') return function(){
-      try {
-         return mod.apply(this,arguments);
-      } catch(e){
-         wmlog(e);
-         return undefined;
-      }
-   };
+   if (typeof mod === 'function') return createProxyFunc(mod,dir);
    if (mod.isProxy) return mod;
    mod.isProxy = true;
    mod.getThis = function(){return mod;};
