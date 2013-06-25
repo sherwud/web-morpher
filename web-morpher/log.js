@@ -11,11 +11,26 @@ function toString(date,rev){
    return date+' '+h+':'+min+':'+sec+':'+ms;
 }
 exports = module.exports = function(e){
+   if (!e) return;
    var d = toString(new Date);
-   if (e && e.isProxy) e = e.getThis();
-   if (typeof e === 'string')
+   var isProxy = false;
+   if (e && e.isProxy){
+      isProxy = true;
+      e = e.getThis;
+   }
+   if (typeof e !== 'object'){
       e = d+' - '+e;
-   else
-      console.log(d)
-   console.log(e);
+      console.log(e);
+   }else{
+      if (isProxy) {
+         console.log(d+' - {')
+         for (var i in e) {
+            console.log('   '+i+': '+typeof e[i]);
+         }
+         console.log('}')
+      } else {
+         console.log(d+' ->');
+         console.log(e);
+      }
+   }
 };
