@@ -2,7 +2,7 @@
 var path = require('path');
 var fs = require('fs');
 var root = path.dirname(module.filename);
-function createAbstract(mod,modPath){
+function createAbstract(mod,modPath,modLogic){
    return Proxy.createFunction(
       {
          get: function(self, name){
@@ -11,19 +11,23 @@ function createAbstract(mod,modPath){
                case 'getThis': return mod; break;
             }
             var newModPath = modPath+'/'+name;
+            var newModLogic = modLogic;
             if (!(name in mod)) {
+               newModLogic += '/'+name;
                try {
-                  mod[name] = exports(newModPath);
+                  mod[name] = exports(newModPath,newModLogic);
                } catch (e){
-                  mod[name] = createAbstract({},newModPath);
+                  mod[name] = createAbstract({},newModPath,newModLogic);
                   wmlog(e);
                }
             }
             if (!mod[name].isProxy) {
                if (typeof mod[name] === 'function'
                   || typeof mod[name] === 'object'
-                     && !(mod[name] instanceof Array))
-                  mod[name] = createAbstract(mod[name],newModPath);
+                     && !(mod[name] instanceof Array)) {
+                  newModLogic += '.'+name;
+                  mod[name] = createAbstract(mod[name],newModPath,newModLogic);
+               }
             }
             return mod[name];
          }
@@ -44,9 +48,10 @@ function createAbstract(mod,modPath){
       }
    );
 }
-exports = module.exports = function(dir){
-   var way = path.join(root,dir);
+exports = module.exports = function(modPath,modLogic){
+   var way = path.join(root,modPath);
    var mod = false;
+   if (!modLogic) modLogic = modPath;
    function checkWay(e){
       if (e.code === 'MODULE_NOT_FOUND'){
          if (fs.existsSync(way) && fs.statSync(way).isDirectory()) mod = {};
@@ -55,15 +60,15 @@ exports = module.exports = function(dir){
          wmlog(e);
       }
    }
-   try { mod = require(dir);}
+   try { mod = require(modPath);}
    catch(e){
       try { mod = require(way);}
       catch(e){ checkWay(e); }
    }
    if (!mod) {
-      wmlog('Модуль "'+dir+'" не найден');
+      wmlog('Модуль "'+modLogic+'" не найден');
       mod = {};
    }
    if (mod.isProxy) return mod;
-   return createAbstract(mod,dir);
+   return createAbstract(mod,modPath,modLogic);
 };
