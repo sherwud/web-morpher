@@ -48,7 +48,7 @@ function createAbstract(mod,modPath,modLogic){
       }
    );
 }
-exports = module.exports = function(modPath,modLogic){
+exports = module.exports = function abstract(modPath,modLogic){
    var way = path.join(root,modPath);
    var mod = false;
    if (!modLogic) modLogic = modPath;
