@@ -1,5 +1,5 @@
 "use strict";
-function toString(date,rev){
+function DateToString(date,rev){
    var y = date.getFullYear();
    var m =   ('0' +(date.getMonth()+1)   ).slice(-2);
    var d =   ('0' +date.getDate()        ).slice(-2);
@@ -10,27 +10,42 @@ function toString(date,rev){
    date = rev?(y+'.'+m+'.'+d):(d+'.'+m+'.'+y);
    return date+' '+h+':'+min+':'+sec+':'+ms;
 }
-exports = module.exports = function(e){
-   if (!e) return;
-   var d = toString(new Date);
-   var isProxy = false;
-   if (e && e.isProxy){
-      isProxy = true;
-      e = e.getThis;
-   }
-   if (typeof e !== 'object'){
-      e = d+' - '+e;
-      console.log(e);
-   }else{
-      if (isProxy) {
-         console.log(d+' - {')
-         for (var i in e) {
-            console.log('   '+i+': '+typeof e[i]);
-         }
-         console.log('}')
-      } else {
-         console.log(d+' ->');
-         console.log(e);
+function AbstractToString(obj,l){
+   if (typeof obj !== 'object' && typeof obj !== 'function')
+      return obj+'';
+   if (obj.isProxy) obj = obj.getThis;
+   if (typeof obj === 'function') return '[function]';
+   else if (typeof obj !== 'object') return obj;
+   else {
+      var space = '';
+      for (var i=0; i<l; i++){space+='   ';}
+      l+=1;
+      var str = '{\n';
+      for (i in obj) {
+         if (obj[i] && obj[i].isProxy) {
+            if (l<5)
+               str+=space+i+': '+AbstractToString(obj[i],l)+'\n';
+            else
+               str+=space+i+': [Proxy]\n';
+         } else if (typeof obj[i] === '[function]')
+            str+=space+i+': '+'[function]\n';
+         else if (typeof obj[i] !== 'object') str+=space+i+': '
+                  +(obj[i]?obj[i]:'\''+obj[i]+'\'')+'\n';
+         else if (l<5)
+            str+=space+i+': '+AbstractToString(obj[i],l)+'\n';
+         else
+            str+=space+i+': '+obj[i]+'\n';
       }
+      str+=space.substr(0,space.length-3)+'}';
+      return str;
    }
+}
+exports = module.exports = function(e){
+   if (!e) return e;
+   var d = DateToString(new Date);
+   if (e && e.isProxy) e = e.getThis;
+   if (typeof e !== 'object' || e instanceof Array)
+      console.log(d+' - '+e);
+   else
+      console.log(d+' - '+AbstractToString(e,1));
 };
