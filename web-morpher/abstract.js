@@ -5,7 +5,7 @@ var root = path.dirname(module.filename);
 function createAbstract(mod,modPath,modLogic){
    return Proxy.createFunction(
       {
-         get: function(self, name){
+         get: function getAbstractProperty(self, name){
             switch (name) {
                case 'isProxy': return true; break;
                case 'getThis': return mod; break;
@@ -32,7 +32,7 @@ function createAbstract(mod,modPath,modLogic){
             return mod[name];
          }
       },
-      function(){
+      function callAbstract(){
          try {
             if (typeof mod === 'function'){
                return mod.apply(this,arguments);
