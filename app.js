@@ -9,4 +9,4 @@ for (var i in global.process.argv) {
 require('./web-morpher');
 wmlog(wm.config.info());
 wmlog(wm.app(args.path));
-wmlog('well done!');
+wmlog('Well done!');
