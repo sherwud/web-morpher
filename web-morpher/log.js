@@ -40,12 +40,14 @@ function AbstractToString(obj,l){
       return str;
    }
 }
-exports = module.exports = function(e){
-   if (!e) return e;
-   var d = DateToString(new Date);
-   if (e && e.isProxy) e = e.getThis;
-   if (typeof e !== 'object' || e instanceof Array)
-      console.log(d+' - '+e);
+exports = module.exports = function(msg,prm){
+   if (!msg) return msg;
+   prm = prm || {};
+   var d = DateToString(new Date)+' ';
+   var title = (prm.title ? (prm.title+' ') : '');
+   if (msg && msg.isProxy) msg = msg.getThis;
+   if (typeof msg !== 'object' || msg instanceof Array)
+      console.log(d+title+'- '+msg);
    else
-      console.log(d+' - '+AbstractToString(e,1));
+      console.log(d+title+'- '+AbstractToString(msg,1));
 };

@@ -7,6 +7,6 @@ for (var i in global.process.argv) {
    }
 }
 require('./web-morpher');
-wmlog(wm.config.info());
+wmlog(wm.config.info(),{title:'О системе'});
 wmlog(wm.app(args.path));
 wmlog('well done!');
