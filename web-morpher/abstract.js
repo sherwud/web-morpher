@@ -55,9 +55,10 @@ exports = module.exports = function abstract(modPath,modLogic){
    function checkWay(e){
       if (e.code === 'MODULE_NOT_FOUND'){
          if (fs.existsSync(way) && fs.statSync(way).isDirectory()) mod = {};
-         else wmlog(e);
+         else wmlog(e,{'title':modPath});
       } else {
-         wmlog(e);
+         e.a='123';
+         wmlog(e,{'title':modPath});
       }
    }
    try { mod = require(modPath);}

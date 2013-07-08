@@ -15,12 +15,16 @@ function AbstractToString(obj,l){
       return obj+'';
    if (obj.isProxy) obj = obj.getThis;
    if (typeof obj === 'function') return '[function]';
-   else if (typeof obj !== 'object') return obj;
-   else {
+   else if (typeof obj !== 'object' || obj instanceof Error){
+      return obj+'';
+   } else {
       var space = '';
       for (var i=0; i<l; i++){space+='   ';}
       l+=1;
-      var str = '{\n';
+      var ds = '{';
+      var de = '}';
+      if (obj instanceof Array) {ds = '['; de = ']';};
+      var str = ds+'\n';
       for (i in obj) {
          if (obj[i] && obj[i].isProxy) {
             if (l<5)
@@ -33,21 +37,30 @@ function AbstractToString(obj,l){
                   +(obj[i]?obj[i]:'\''+obj[i]+'\'')+'\n';
          else if (l<5)
             str+=space+i+': '+AbstractToString(obj[i],l)+'\n';
-         else
-            str+=space+i+': '+obj[i]+'\n';
+         else {
+            var type = typeof obj[i];
+            if (obj[i] instanceof Array) type = 'Array';
+            if (obj[i] instanceof Error) type = 'Error';
+            str+=space+i+': ['+type+']\n';
+         }
       }
-      str+=space.substr(0,space.length-3)+'}';
+      str+=space.substr(0,space.length-3)+de;
       return str;
    }
 }
+var errorCode = {
+   0:'DONE',
+   1:'ERROR',
+   2:'INFO'
+};
 exports = module.exports = function(msg,prm){
    if (!msg) return msg;
    prm = prm || {};
    var d = DateToString(new Date)+' ';
    var title = (prm.title ? (prm.title+' ') : '');
+   var type = errorCode[prm.type] || 'ERROR';
    if (msg && msg.isProxy) msg = msg.getThis;
-   if (typeof msg !== 'object' || msg instanceof Array)
-      console.log(d+title+'- '+msg);
-   else
-      console.log(d+title+'- '+AbstractToString(msg,1));
+   if (typeof msg === 'object')
+      msg = AbstractToString(msg,1);
+   console.log(type+' '+d+title+'- '+msg);
 };
