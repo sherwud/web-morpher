@@ -60,7 +60,6 @@ exports = module.exports = function(msg,prm){
    var title = (prm.title ? (prm.title+' ') : '');
    var type = errorCode[prm.type] || 'ERROR';
    if (msg && msg.isProxy) msg = msg.getThis;
-   if (typeof msg === 'object')
-      msg = AbstractToString(msg,1);
+   if (typeof msg === 'object') msg = AbstractToString(msg,1);
    console.log(type+' '+d+title+'- '+msg);
 };

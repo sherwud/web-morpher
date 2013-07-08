@@ -57,7 +57,6 @@ exports = module.exports = function abstract(modPath,modLogic){
          if (fs.existsSync(way) && fs.statSync(way).isDirectory()) mod = {};
          else wmlog(e,{'title':modPath});
       } else {
-         e.a='123';
          wmlog(e,{'title':modPath});
       }
    }
