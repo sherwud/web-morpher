@@ -27,7 +27,7 @@ function AbstractToString(obj,l){
                str+=space+i+': '+AbstractToString(obj[i],l)+'\n';
             else
                str+=space+i+': [Proxy]\n';
-         } else if (typeof obj[i] === '[function]')
+         } else if (typeof obj[i] === 'function')
             str+=space+i+': '+'[function]\n';
          else if (typeof obj[i] !== 'object') str+=space+i+': '
                   +(obj[i]?obj[i]:'\''+obj[i]+'\'')+'\n';

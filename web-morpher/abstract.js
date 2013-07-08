@@ -41,7 +41,7 @@ function createAbstract(mod,modPath,modLogic){
             }
          } catch(e){
             wmlog('Ошибка выполнения "'+modPath+'"');
-            wmlog(mod)
+            wmlog(mod);
             wmlog(e);
             return undefined;
          }
