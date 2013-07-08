@@ -57,9 +57,9 @@ exports = module.exports = function(msg,prm){
    if (!msg) return msg;
    prm = prm || {};
    var d = DateToString(new Date)+' ';
-   var title = (prm.title ? (prm.title+' ') : '');
-   var type = errorCode[prm.type] || 'ERROR';
+   var title = (prm.title ? (prm.title+' - ') : '');
+   var type = (errorCode[prm.type] || 'ERROR')+': ';
    if (msg && msg.isProxy) msg = msg.getThis;
    if (typeof msg === 'object') msg = AbstractToString(msg,1);
-   console.log(type+' '+d+title+'- '+msg);
+   console.log(d+type+title+msg);
 };
