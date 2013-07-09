@@ -1,1 +1,1 @@
-node --harmony --harmony_typeof app.js --path:./sites/test
+node --harmony --harmony_typeof app.js --path:./apps/cluster
