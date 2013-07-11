@@ -1,36 +1,39 @@
 "use strict";
 var fs = require('fs');
-exports = module.exports = {};
-var packageInfo = require('../package.json');
-try{
-   var config = require('../config.json');
-   var tmp = String(config['modules_root']);
-   if (!fs.existsSync(tmp)) tmp = '';
-   config['modules_root'] = tmp;
-   tmp = config['modules'];
-   if (typeof tmp !== 'object' || tmp instanceof Array) {
-      config['modules'] = {};
-   } else {
-      for (var i in tmp) {
-         if (!fs.existsSync(tmp[i])) delete tmp[i];
-      }
-   }
-   for(var i in config) exports[i] = config[i];
-}catch(e){ wmlog(e); }
-/*
-* @info Получение общей информации о системе
-* @param {string} name - имя параметра для получения
-* @returns {any} - значение параметра, или стандартный набор
-*/
-exports.info = function(name){
-   if (name) {
-      return packageInfo[name]?packageInfo[name]:null;
-   } else {
-      return {
-         name: packageInfo.name,
-         version: packageInfo.version,
-         versionName: packageInfo.versionName,
-         author: packageInfo.author
-      };
+var path = require('path');
+var configs = ['node_modules'];
+var check = {
+   'node_modules':function(val){
+      val = String(val);
+      if (!fs.existsSync(val))
+         if (fs.existsSync(path.join(wm.path.wmroot,val)))
+            val = path.join(wm.path.wmroot,val);
+         else
+            return undefined;
+      return val;
    }
 };
+try{
+   exports = module.exports = new config;
+}catch(e){
+   exports = module.exports = {};
+   wmlog(e);
+}
+function config(){
+   var config = require('../config.json')[global.process.platform];
+   var configAll = require('../config.json')['all'];
+   if (typeof config !== 'object' && configAll !== 'object')
+      throw 'Настройки для платформы '+global.process.platform+' не найдены';
+   config = config || configAll;
+   for (var i in configs) {
+      var cfn = configs[i];
+      if (typeof check[cfn] === 'function') {
+         config[cfn] = check[cfn](config[cfn]);
+         if (typeof config[cfn] === 'undefined')
+            config[cfn] = check[cfn](configAll[cfn]);
+      } else
+         if (typeof config[cfn] === 'undefined')
+            config[cfn] = configAll[cfn];
+   }
+   for(var i in config) this[i] = config[i];
+}

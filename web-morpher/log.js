@@ -31,17 +31,24 @@ function AbstractToString(obj,l){
                str+=space+i+': '+AbstractToString(obj[i],l)+'\n';
             else
                str+=space+i+': [Proxy]\n';
-         } else if (typeof obj[i] === 'function')
-            str+=space+i+': '+'[function]\n';
-         else if (typeof obj[i] !== 'object') str+=space+i+': '
-                  +(obj[i]?obj[i]:'\''+obj[i]+'\'')+'\n';
-         else if (l<5)
-            str+=space+i+': '+AbstractToString(obj[i],l)+'\n';
-         else {
-            var type = typeof obj[i];
-            if (obj[i] instanceof Array) type = 'Array';
-            if (obj[i] instanceof Error) type = 'Error';
-            str+=space+i+': ['+type+']\n';
+         } else {
+            var val;
+            switch (typeof obj[i]) {
+               case 'string': val = '\''+obj[i]+'\''; break;
+               case 'function': val = '[function]'; break;
+               case 'object':
+                  if (l<5)
+                     val = AbstractToString(obj[i],l);
+                  else {
+                     var type = typeof obj[i];
+                     if (obj[i] instanceof Array) type = 'Array';
+                     if (obj[i] instanceof Error) type = 'Error';
+                     val = '['+type+']';
+                  }
+               break;
+               default: val = obj[i]+'';
+            }
+            str+=space+i+': '+val+'\n';
          }
       }
       str+=space.substr(0,space.length-3)+de;
