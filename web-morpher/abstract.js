@@ -21,7 +21,7 @@ function createAbstract(mod,modPath,modLogic){
                   wmlog(e);
                }
             }
-            if (!mod[name].isProxy) {
+            if (mod[name] && !mod[name].isProxy) {
                if (typeof mod[name] === 'function'
                   || typeof mod[name] === 'object'
                      && !(mod[name] instanceof Array)) {

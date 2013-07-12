@@ -1,6 +1,6 @@
 "use strict";
-var fs = require('fs');
-var path = require('path');
+var fs = wm.ext.fs;
+var path = wm.ext.path;
 var configs = ['node_modules'];
 var check = {
    'node_modules':function(val){
