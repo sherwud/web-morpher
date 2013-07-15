@@ -1,7 +1,4 @@
 "use strict";
-var path = require('path');
-var fs = require('fs');
-var root = path.dirname(module.filename);
 function createAbstract(mod,modPath,modLogic){
    return Proxy.createFunction(
       {
@@ -50,25 +47,30 @@ function createAbstract(mod,modPath,modLogic){
    );
 }
 exports = module.exports = function abstract(modPath,modLogic){
-   var way = path.join(root,modPath);
    var mod = false;
    if (!modLogic) modLogic = modPath;
-   function checkWay(e){
-      if (e.code === 'MODULE_NOT_FOUND'){
-         if (fs.existsSync(way) && fs.statSync(way).isDirectory()) mod = {};
-         else wmlog(e,{'title':modPath});
-      } else {
-         wmlog(e,{'title':modPath});
+   function requireWay(){
+      var path = wm.ext.path;
+      var fs = wm.ext.fs;
+      var root = path.dirname(module.filename);
+      var way = path.join(root,modPath);
+      try { mod = require(way); }
+      catch(e){
+         if (e.code === 'MODULE_NOT_FOUND'){
+            if (fs.existsSync(way) && fs.statSync(way).isDirectory()) mod = {};
+            else throw e;
+         } else throw e;
       }
    }
    try { mod = require(modPath);}
-   catch(e){
-      try { mod = require(way);}
-      catch(e){ checkWay(e); }
-   }
-   if (!mod) {
-      wmlog('Модуль "'+modLogic+'" не найден');
-      mod = {};
+   catch(global_e){
+      try { requireWay(); }
+      catch(e){
+         wmlog(global_e,{'title':modPath});
+         wmlog(e,{'title':modPath});
+         wmlog('Модуль "'+modLogic+'" не найден');
+         mod = {};
+      }
    }
    if (mod.isProxy) return mod;
    return createAbstract(mod,modPath,modLogic);
