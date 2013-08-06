@@ -1,4 +1,3 @@
 *local*.bat
 web-morpher/node_modules
 *.log
-/apps/*/cache/
