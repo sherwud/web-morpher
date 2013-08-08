@@ -1,8 +1,12 @@
 {
-   "apps":{
-      "test":{
-         "path":"./apps/test"
-      }
-   },
-   "autostart":["test"]
+   "siteroot":"./www/cluster",
+   "always_convert":true,
+   "additional":{
+      "apps":{
+         "test":{
+            "path":"./projects/test"
+         }
+      },
+      "autostart":["test"]
+   }
 }
