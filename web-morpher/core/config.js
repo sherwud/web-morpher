@@ -4,10 +4,11 @@ var path = wm.ext.path;
 var configs = ['node_modules'];
 var check = {
    'node_modules':function(val){
+      var wmpath = wm.path.wm;
       val = String(val);
       if (!fs.existsSync(val))
-         if (fs.existsSync(path.join(wm.path.wmroot,val)))
-            val = path.join(wm.path.wmroot,val);
+         if (fs.existsSync(path.join(wmpath,val)))
+            val = path.join(wmpath,val);
          else
             return undefined;
       return val;

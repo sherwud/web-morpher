@@ -12,9 +12,9 @@ exports = module.exports = function app(way){
        return;
    }
    if (!fs.existsSync(way)) {
-       way = path.join(wm.path.siteroot,way);
+       way = path.join(wm.path.startupdir,way);
        if (!fs.existsSync(way)) {
-       wmlog('Файл или каталог запуска не найден!',logprm);
+       wmlog('Файл или каталог запуска "'+way+'" не найден!',logprm);
        return;
        }
    }
