@@ -11,19 +11,26 @@ exports = module.exports = function app(way){
        wmlog('Файл или каталог запуска не задан!',logprm);
        return;
    }
+   if (way[0] === '.') {
+      way = path.join(wm.path.startupdir,way);
+   }
    if (!fs.existsSync(way)) {
-       way = path.join(wm.path.startupdir,way);
-       if (!fs.existsSync(way)) {
        wmlog('Файл или каталог запуска "'+way+'" не найден!',logprm);
        return;
-       }
    }
-   var state = fs.statSync(way);
-   if (state.isFile()) {
-       wmlog('isFile');
+   if (fs.statSync(way).isDirectory()) {
+      way+='/config.json';
+      try {
+         var config = require(way);
+      } catch (e){
+         wmlog('Файл "'+config+'"!',logprm);
+         wmlog(e,logprm);
+         return;
+      }
+      wmlog(config,logprm);
    } else {
-       wmlog('isDirectory');
+       wmlog('way isFile',logprm);
+       return;
    }
-   wmlog(way);
    return way||{};
 };
