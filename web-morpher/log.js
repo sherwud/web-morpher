@@ -1,5 +1,6 @@
 "use strict";
 function DateToString(date,rev){
+   date = date?date:new Date;
    var y = date.getFullYear();
    var m =   ('0' +(date.getMonth()+1)   ).slice(-2);
    var d =   ('0' +date.getDate()        ).slice(-2);

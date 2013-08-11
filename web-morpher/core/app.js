@@ -27,7 +27,9 @@ exports = module.exports = function app(way){
          wmlog(e,logprm);
          return;
       }
-      wmlog(config,logprm);
+      wm.builder.deploy(config);
+      
+      //wmlog(config,logprm);
    } else {
        wmlog('way isFile',logprm);
        return;

@@ -1,3 +1,4 @@
 *local*.bat
 web-morpher/node_modules
 *.log
+www/cluster
