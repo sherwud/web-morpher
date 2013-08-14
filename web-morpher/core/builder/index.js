@@ -2,27 +2,35 @@ var fs = wm.ext.fs;
 var path = wm.ext.path;
 exports = module.exports = {};
 function  createVerFile(siteroot){
-   wmlog({
-      data: wm.util.DateToString(),
+   fs.writeFileSync(siteroot+'/ver.json',JSON.stringify({
+      date: wm.util.DateToString(),
       platform:wm.info()
-   });
+   },null,'   '),'utf8');
 }
-exports.deploy = function(config){
+exports.deploy = function(way,config){
    var logprm = {'title':'function builder.deploy'};
    var siteroot = path.join(wm.path.startupdir,config.siteroot);
    if (!fs.existsSync(path.dirname(siteroot))) {
       wmlog('Каталог сайта '+path.dirname(siteroot),logprm);
       return;
    }
-   var newsite = false;
+   var deploy = false;
    if (!fs.existsSync(siteroot)) {
-      newsite = true;
+      deploy = true;
       fs.mkdirSync(siteroot);
-      createVerFile(siteroot);
    } else if (!fs.existsSync(siteroot+'/ver.json')) {
+      deploy = true;
+   } else if (config.always_convert) {
+      deploy = true;
+   }
+   if (deploy) {
       createVerFile(siteroot);
+      
+      wmlog('deploy new',logprm);
+   } else {
+      wmlog('deploy ok',logprm);
    }
    
-   wmlog('ok',logprm);
-   wmlog(path.dirname(siteroot),logprm);
+   wmlog(way);
+   
 };

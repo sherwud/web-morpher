@@ -18,16 +18,17 @@ exports = module.exports = function app(way){
        wmlog('Файл или каталог запуска "'+way+'" не найден!',logprm);
        return;
    }
+   var config;
    if (fs.statSync(way).isDirectory()) {
-      way+='/config.json';
+      config = way+'/config.json';
       try {
-         var config = require(way);
+         var config = require(config);
       } catch (e){
          wmlog('Файл "'+config+'"!',logprm);
          wmlog(e,logprm);
          return;
       }
-      wm.builder.deploy(config);
+      wm.builder.deploy(way,config);
       
       //wmlog(config,logprm);
    } else {
