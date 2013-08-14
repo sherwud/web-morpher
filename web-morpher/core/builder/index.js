@@ -7,6 +7,23 @@ function  createVerFile(siteroot){
       platform:wm.info()
    },null,'   '),'utf8');
 }
+function createDirectoryStructure(siteroot,config){
+   if (config.dynamic) {
+      if (!fs.existsSync(siteroot+'/dynamic'))
+         fs.mkdirSync(siteroot+'/dynamic');
+      if (!fs.existsSync(siteroot+'/dynamic/modules'))
+         fs.mkdirSync(siteroot+'/dynamic/modules');
+   } else {
+      if (fs.existsSync(siteroot+'/dynamic'))
+         fs.rmdirSync(siteroot+'/dynamic')
+   }
+   if (config.static) {
+      if (!fs.existsSync(siteroot+'/static'))
+         fs.mkdirSync(siteroot+'/static');
+   } else {
+      
+   }
+}
 exports.deploy = function(way,config){
    var logprm = {'title':'function builder.deploy'};
    var siteroot = path.join(wm.path.startupdir,config.siteroot);
@@ -25,6 +42,7 @@ exports.deploy = function(way,config){
    }
    if (deploy) {
       createVerFile(siteroot);
+      createDirectoryStructure(siteroot,config)
       
       wmlog('deploy new',logprm);
    } else {
