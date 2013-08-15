@@ -3,7 +3,7 @@ function createAbstract(mod,modPath,modLogic){
    return Proxy.createFunction(
       {
          get: function getAbstractProperty(self, name){
-            if (name in mod) return mod[name];
+            if (name in mod && mod[name].isProxy) return mod[name];
             switch (name) {
                case 'isProxy': return true; break;
                case 'getThis': return mod; break;
