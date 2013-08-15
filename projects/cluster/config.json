@@ -1,8 +1,6 @@
 {
    "siteroot":"./www/cluster",
-   "dynamic":true,
-   "static":true,
-   "always_convert":true,
+   "always_deploy":true,
    "additional":{
       "apps":{
          "test":{
