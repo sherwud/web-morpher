@@ -1,9 +1,10 @@
 var fs = wm.ext.fs;
+var path = wm.ext.path;
 exports = module.exports = {isProxy:true};
 exports.DateToString = DateToString;
-exports.fsmkdirSync = fsmkdirSync;
 exports.fsCopySync = fsCopySync;
 exports.fsRemoveSync = fsRemoveSync;
+exports.fsClearSync = fsClearSync;
 function DateToString(date,rev){
    date = date?date:new Date;
    var y = date.getFullYear();
@@ -16,33 +17,39 @@ function DateToString(date,rev){
    date = rev?(y+'.'+m+'.'+d):(d+'.'+m+'.'+y);
    return date+' '+h+':'+min+':'+sec+':'+ms;
 }
-function fsmkdirSync(path){
-   if (!fs.existsSync(path))
-      return fs.mkdirSync(path);
-   else return true;
-}
-function fsCopySync(srcpath, dstpath, options){
-   options = !(options instanceof Object)?options:{};
-   fsmkdirSync(dstpath);
+function fsCopySync(srcpath, dstpath){
+   if (!fs.existsSync(dstpath)) fs.mkdirSync(dstpath);
    var list = fs.readdirSync(srcpath);
-   wmlog(list)
-   /*
-	mkdir(dest);
-	var files = fs.readdirSync(src);
-	for(var i = 0; i < files.length; i++) {
-		var current = fs.lstatSync(path.join(src, files[i]));
-		if(current.isDirectory()) {
-			copyDir(path.join(src, files[i]), path.join(dest, files[i]));
-		} else if(current.isSymbolicLink()) {
-			var symlink = fs.readlinkSync(path.join(src, files[i]));
-			fs.symlinkSync(symlink, path.join(dest, files[i]));
-		} else {
-			copy(path.join(src, files[i]), path.join(dest, files[i]));
-		}
-	}
-      */
+   for(var i = 0; i < list.length; i++) {
+      var src = path.join(srcpath, list[i]);
+      var dst = path.join(dstpath, list[i]);
+      var current = fs.lstatSync(src);
+      if(current.isDirectory()) {
+         fsCopySync(src, dst);
+      } else if(current.isSymbolicLink()) {
+         var symlink = fs.readlinkSync(src);
+         fs.symlinkSync(symlink, dst);
+      } else {
+         var r = fs.createReadStream(src);
+         var w = fs.createWriteStream(dst);
+         r.pipe(w);
+      }
+   }
 }
-function fsRemoveSync(path, options){
-   options = !(options instanceof Object)?options:{};
-
+function fsRemoveSync(rempath){
+   fsClearSync(rempath);
+   fs.rmdirSync(rempath);
+}
+function fsClearSync(rempath){
+   var list = fs.readdirSync(rempath);
+   for(var i = 0; i < list.length; i++) {
+      var rem = path.join(rempath, list[i]);
+      var current = fs.statSync(rem);
+      if(current.isDirectory()) {
+         fsClearSync(rem);
+         fs.rmdirSync(rem);
+      } else {
+         fs.unlinkSync(rem);
+      }
+   }
 }
