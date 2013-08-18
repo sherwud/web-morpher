@@ -10,7 +10,7 @@ function  createVerFile(siteroot){
 }
 exports.deploy = function(project,config){
    var logprm = {'title':'function builder.deploy'};
-   var siteroot = path.join(wm.path.startupdir,config.siteroot);
+   var siteroot = config.siteroot;
    if (!fs.existsSync(path.dirname(siteroot))) {
       wmlog('Каталог сайта "'+path.dirname(siteroot)+'" не найден!',logprm);
       return;

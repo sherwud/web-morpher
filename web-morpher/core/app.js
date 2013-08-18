@@ -28,6 +28,10 @@ exports = module.exports = function app(way){
          wmlog(e,logprm);
          return;
       }
+      var siteroot = path.join(wm.path.startupdir,config.siteroot);
+      if (fs.existsSync(path.dirname(siteroot))) {
+         config.siteroot = siteroot;
+      }
       wm.builder.deploy(way,config);
       
       //wmlog(config,logprm);
