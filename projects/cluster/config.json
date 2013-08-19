@@ -1,6 +1,10 @@
 {
    "siteroot":"./www/cluster",
    "always_deploy":true,
+   "server":{
+      "port":777,
+      "bodyParser":false
+   },
    "additional":{
       "apps":{
          "test":{

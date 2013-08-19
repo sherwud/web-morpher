@@ -3,7 +3,7 @@ var path = wm.ext.path;
 /*
  * @info Выполняет запуск системы по переданным параметрам
  * @param {string} way - файл или каталог запуска
- * @returns {object} - объект для управления системой
+ * @returns undefined
  */
 exports = module.exports = function app(way){
    var logprm = {'title':'function app'};
@@ -33,11 +33,10 @@ exports = module.exports = function app(way){
          config.siteroot = siteroot;
       }
       wm.builder.deploy(way,config);
-      
-      //wmlog(config,logprm);
+      wm.server.prepare(config);
+      wm.server.listen();
    } else {
        wmlog('way isFile',logprm);
        return;
    }
-   return way||{};
 };
