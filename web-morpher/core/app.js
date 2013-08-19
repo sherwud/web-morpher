@@ -33,8 +33,7 @@ exports = module.exports = function app(way){
          config.siteroot = siteroot;
       }
       wm.builder.deploy(way,config);
-      wm.server.prepare(config);
-      wm.server.listen();
+      wm.server.prepare(config).listen();
    } else {
        wmlog('way isFile',logprm);
        return;

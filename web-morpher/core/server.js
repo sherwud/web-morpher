@@ -10,6 +10,7 @@ function serverPrepare(conf){
       app.use(express.bodyParser());
    
    app.use(express.static(config.siteroot+'/static'));
+   return exports;
 }
 function serverListen(port){
    var logprm = {type:0};
