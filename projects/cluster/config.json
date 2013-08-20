@@ -2,6 +2,7 @@
    "siteroot":"./www/cluster",
    "always_deploy":true,
    "server":{
+      "dynamicPrefix":"call/",
       "port":777,
       "bodyParser":false
    },
