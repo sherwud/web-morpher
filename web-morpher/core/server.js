@@ -10,6 +10,12 @@ function handlerGET(req,res){
       method:req.params.method
    });
 }
+function handlerPOST(req,res){
+   res.send(200,{
+      module:req.params.module,
+      method:req.params.method
+   });
+}
 function serverPrepare(conf){
    config = conf;
    if (config.server.bodyParser)
@@ -21,6 +27,7 @@ function serverPrepare(conf){
       dynURL = dynURL.replace('{dynamicPrefix}','call/');
    }
    app.get(dynURL,handlerGET);
+   app.post(dynURL,handlerPOST);
    app.use(express.static(config.siteroot+'/static'));
    return exports;
 }
