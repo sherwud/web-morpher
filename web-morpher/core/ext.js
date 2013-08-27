@@ -6,8 +6,8 @@ exports = module.exports = Proxy.createFunction(
       get: function getExtAbstractProperty(self, name){
          if (name in mod) return mod[name];
          switch (name) {
-            case 'isProxy': return true; break;
-            case 'getThis': return mod; break;
+            case '__isProxy': return true; break;
+            case '__getThis': return mod; break;
          }
          if (!(name in mod)) {
             try {

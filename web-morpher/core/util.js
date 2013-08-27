@@ -1,6 +1,6 @@
 var fs = wm.ext.fs;
 var path = wm.ext.path;
-exports = module.exports = {isProxy:true};
+exports = module.exports = {__isProxy:true};
 exports.DateToString = DateToString;
 exports.fsCopySync = fsCopySync;
 exports.fsRemoveSync = fsRemoveSync;

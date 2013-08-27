@@ -14,7 +14,7 @@ function DateToString(date,rev){
 function AbstractToString(obj,l){
    if (typeof obj !== 'object' && typeof obj !== 'function')
       return obj+'';
-   if (obj.isProxy) obj = obj.getThis;
+   if (obj.__isProxy) obj = obj.__getThis;
    if (typeof obj === 'function') return '[function]';
    else if (typeof obj !== 'object' || obj instanceof Error){
       return obj+'';
@@ -27,7 +27,7 @@ function AbstractToString(obj,l){
       if (obj instanceof Array) {ds = '['; de = ']';};
       var str = ds+'\n';
       for (i in obj) {
-         if (obj[i] && obj[i].isProxy) {
+         if (obj[i] && obj[i].__isProxy) {
             if (l<5)
                str+=space+i+': '+AbstractToString(obj[i],l)+'\n';
             else
@@ -67,7 +67,7 @@ exports = module.exports = function(msg,prm){
    var d = DateToString(new Date)+' ';
    var title = (prm.title ? (prm.title+' - ') : '');
    var type = (errorCode[prm.type] || 'ERROR')+': ';
-   if (msg && msg.isProxy) msg = msg.getThis;
+   if (msg && msg.__isProxy) msg = msg.__getThis;
    if (typeof msg === 'object') msg = AbstractToString(msg,1);
    console.log(d+type+title+msg);
 };

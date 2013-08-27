@@ -3,10 +3,22 @@ function createAbstract(mod,modPath,modLogic){
    return Proxy.createFunction(
       {
          get: function getAbstractProperty(self, name){
-            if (name in mod && mod[name].isProxy) return mod[name];
+            if (name in mod && mod[name].__isProxy) return mod[name];
             switch (name) {
-               case 'isProxy': return true; break;
-               case 'getThis': return mod; break;
+               case '__isProxy': return true; break;
+               case '__getThis': return mod; break;
+               case '__initProperty':
+                  return function initProperty(name,val){
+                     if (!(name in mod)) {
+                     mod[name]=val;
+                     } else {
+                        wmlog(modLogic);
+                        wmlog('Свойство "'+name+'" уже инициализировано',{
+                           'title':'function initProperty'
+                        });
+                     }
+                  };
+                  break;
             }
             var newModPath = modPath+'/'+name;
             var newModLogic = modLogic;
@@ -19,7 +31,7 @@ function createAbstract(mod,modPath,modLogic){
                   wmlog(e);
                }
             }
-            if (mod[name] && !mod[name].isProxy) {
+            if (mod[name] && !mod[name].__isProxy) {
                if (typeof mod[name] === 'function'
                   || typeof mod[name] === 'object'
                      && !(mod[name] instanceof Array)) {
@@ -72,6 +84,6 @@ exports = module.exports = function abstract(modPath,modLogic){
          mod = {};
       }
    }
-   if (mod.isProxy) return mod;
+   if (mod.__isProxy) return mod;
    return createAbstract(mod,modPath,modLogic);
 };
