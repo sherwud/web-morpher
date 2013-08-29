@@ -9,14 +9,31 @@ exports = module.exports = {};
 exports.prepare = serverPrepare;
 exports.listen = serverListen;
 function defineMethod(type,module,method){
+   var logprm = {'title':'function defineMethod'};
    if (module in modules[type] && method in modules[type][module])
       return [0,modules[type][module][method]];
    else {
       if (!(module in modules[type])) {
-         return [404,'Модуль "'+module+'" не найден!'];
+         try{
+            modules[type][module] = wmabstract(
+               config.siteroot+'/dynamic/modules/'+module+'_'+type,null,true
+            );
+         } catch (e) {
+            if (e[0].code !== 'MODULE_NOT_FOUND'
+             || e[1].code !== 'MODULE_NOT_FOUND'){
+               wmlog(e,logprm);
+               return [500,'Ошибка загрузки модуля "'+module+'"!'];
+            } else {
+               wmlog('Модуль "'+module+'_'+type+'" не найден!',logprm);
+               return [404,'Модуль "'+module+'" не найден!'];
+            }
+         }
       }
       if (!(method in modules[type][module])) {
+         wmlog('Метод "'+module+'_'+type+'.'+method+'" не найден!',logprm);
          return [404,'Метод "'+module+'.'+method+'" не найден!'];
+      } else {
+         return [0,modules[type][module][method]];
       }
    }
 }
@@ -33,10 +50,11 @@ function handler(req,res){
       res.send(handler[0],handler[1]);
       return;
    } else handler = handler[1];
-   res.send(200,{
-      module:req.params.module,
-      method:req.params.method
-   });
+   var result = handler(req,res);
+   if (result === false)
+      res.send(500,'Ошибка выполнения метода "'+module+'.'+method+'"');
+   else if (result !== true && result !== undefined)
+      res.send(200,result);
 }
 function serverPrepare(conf){
    config = conf;
