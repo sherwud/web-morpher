@@ -16,7 +16,8 @@ function AbstractToString(obj,l){
       return obj+'';
    if (obj.__isProxy) obj = obj.__getThis;
    if (typeof obj === 'function') return '[function]';
-   else if (typeof obj !== 'object' || obj instanceof Error){
+   else if (obj instanceof Error) return ErrorToString(obj);
+   else if (typeof obj !== 'object'){
       return obj+'';
    } else {
       var space = '';
@@ -55,6 +56,15 @@ function AbstractToString(obj,l){
       str+=space.substr(0,space.length-3)+de;
       return str;
    }
+}
+Error.stackTraceLimit = 15;
+function ErrorToString(err){
+   return AbstractToString({
+      name:err.name,
+      code:err.code,
+      type:err.type,
+      stack:err.stack
+   },1);
 }
 var errorCode = {
    0:'DONE',
