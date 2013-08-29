@@ -4,21 +4,28 @@ function createAbstract(mod,modPath,modLogic){
       {
          get: function getAbstractProperty(self, name){
             if (name in mod && mod[name].__isProxy) return mod[name];
-            switch (name) {
-               case '__isProxy': return true; break;
-               case '__getThis': return mod; break;
-               case '__initProperty':
-                  return function initProperty(name,val){
-                     if (!(name in mod)) {
-                     mod[name]=val;
-                     } else {
-                        wmlog(modLogic);
-                        wmlog('Свойство "'+name+'" уже инициализировано',{
-                           'title':'function initProperty'
-                        });
+            if (name.substr(0,2) === '__') {
+               switch (name) {
+                  case '__isProxy': return true; break;
+                  case '__getThis': return mod; break;
+                  case '__initProperty':
+                     return function initProperty(name,val){
+                        if (!(name in mod)) {
+                        mod[name]=val;
+                        } else {
+                           wmlog(modLogic);
+                           wmlog('Свойство "'+name+'" уже инициализировано',{
+                              'title':'function initProperty'
+                           });
+                        }
+                     };
+                     break;
+                  case '__hasProperty':
+                     return function hasProperty(name){
+                        return name in mod;
                      }
-                  };
-                  break;
+                     break;
+               }
             }
             var newModPath = modPath+'/'+name;
             var newModLogic = modLogic;
