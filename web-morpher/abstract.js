@@ -2,6 +2,21 @@
 function createAbstract(mod,modPath,modLogic){
    return Proxy.createFunction(
       {
+         has: function hasAbstractProperty(name) {
+            return name in mod;
+         },
+         enumerate: function enumerateAbstractProperty(){
+            return Object.keys(mod);
+         },
+         keys: function keysAbstractProperty(){
+            return Object.keys(mod);
+         },
+         set: function setAbstractProperty(){
+            throw 'Нельзя модифицировать абстрактный класс "'+modLogic+'"!';
+         },
+         delete: function deleteAbstractProperty(){
+            throw 'Нельзя модифицировать абстрактный класс "'+modLogic+'"!'
+         },
          get: function getAbstractProperty(self, name){
             if (name in mod && mod[name].__isProxy) return mod[name];
             if (name.substr(0,2) === '__') {
@@ -19,11 +34,6 @@ function createAbstract(mod,modPath,modLogic){
                            });
                         }
                      };
-                     break;
-                  case '__hasProperty':
-                     return function hasProperty(name){
-                        return name in mod;
-                     }
                      break;
                }
             }
