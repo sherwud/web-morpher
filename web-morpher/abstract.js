@@ -95,7 +95,7 @@ exports = module.exports = function abstract(modPath,modLogic,critical){
    catch(global_e){
       try { requireWay(); }
       catch(e){
-         if (critical) throw {require:global_e,requireWay:e};
+         if (critical) throw [global_e,e];
          wmlog([global_e,e],{'title':modPath});
          wmlog('Модуль "'+modLogic+'" не найден');
          mod = {};
