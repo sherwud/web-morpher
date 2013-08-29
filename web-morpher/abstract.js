@@ -75,7 +75,7 @@ function createAbstract(mod,modPath,modLogic){
       }
    );
 }
-exports = module.exports = function abstract(modPath,modLogic){
+exports = module.exports = function abstract(modPath,modLogic,critical){
    var mod = false;
    if (!modLogic) modLogic = modPath;
    function requireWay(){
@@ -95,8 +95,8 @@ exports = module.exports = function abstract(modPath,modLogic){
    catch(global_e){
       try { requireWay(); }
       catch(e){
-         wmlog(global_e,{'title':modPath});
-         wmlog(e,{'title':modPath});
+         if (critical) throw {require:global_e,requireWay:e};
+         wmlog([global_e,e],{'title':modPath});
          wmlog('Модуль "'+modLogic+'" не найден');
          mod = {};
       }
