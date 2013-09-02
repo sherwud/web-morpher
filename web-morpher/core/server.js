@@ -1,15 +1,60 @@
 var express = wm.ext.express;
 var app = express();
 var config = {};
-var modules = {
-   'get':{},
-   'post':{}
-};
+var modules = wm.modules;
 exports = module.exports = {};
 exports.prepare = serverPrepare;
 exports.listen = serverListen;
 function defineMethod(type,module,method){
+
+   // сразу отдавать обработчик если есть
+
    var logprm = {'title':'function defineMethod'};
+   var eMNF = 'MODULE_NOT_FOUND';
+   if (!(module in modules)) {
+      try {
+         var cur_module = modules[module];
+      } catch(e) {
+         if (e[0].code !== eMNF || e[1].code !== eMNF) {
+            if (e[0].code !== eMNF) wmlog(e[0],logprm);
+            if (e[1].code !== eMNF) wmlog(e[1],logprm);
+            return [500,'Ошибка загрузки модуля "'+module+'"!'];
+         } else {
+            wmlog('Модуль "'+module+'" не найден!',logprm);
+            return [404,'Модуль "'+module+'" не найден!'];
+         }
+      }
+   } else cur_module = modules[module];
+   try {
+      var web_handlers = cur_module.web_handlers;
+      if (web_handlers
+            && typeof web_handlers !== 'object'
+            && !web_handlers.__isProxy
+            && typeof web_handlers.__getThis !== 'object'
+         )
+      {
+         wmlog('Модуль "'+module+'": web_handlers is not object',logprm);
+         return [404,'Модуль "'+module+'" не содержит внешних методов!'];
+      }
+   } catch(e) {
+      if (e[0].code !== eMNF || e[1].code !== eMNF) {
+         if (e[0].code !== eMNF) wmlog(e[0],logprm);
+         if (e[1].code !== eMNF) wmlog(e[1],logprm);
+         return [500,'Ошибка загрузки внешних методов модуля "'+module+'"!'];
+      } else {
+         wmlog('Модуль "'+module+'": web_handlers is not defined',logprm);
+         return [404,'Модуль "'+module+'" не содержит внешних методов!'];
+      }
+   }
+   
+   // проверка наличия нужного обработчика для get/post
+   /*if (!(type in modules)){
+      res.send(404,'Обработка методов "'+type+'" не реализована!');
+      return;
+   }*/
+
+   return [200,'TEST OK!'];
+   
    if (module in modules[type] && method in modules[type][module])
       return [0,modules[type][module][method]];
    else {
@@ -41,10 +86,6 @@ function handler(req,res){
    var module = req.params.module;
    var method = req.params.method;
    var type = req.route.method;
-   if (!(type in modules)){
-      res.send(404,'Обработка методов "'+type+'" не реализована!');
-      return;
-   }
    var handler = defineMethod(type,module,method);
    if (handler[0]) {
       res.send(handler[0],handler[1]);

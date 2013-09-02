@@ -1,0 +1,1 @@
+exports = module.exports = {a:function(){return 'test web_handlers ok';}};
