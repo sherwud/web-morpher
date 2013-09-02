@@ -1,5 +1,5 @@
 "use strict";
-function createAbstract(mod,modPath,modLogic){
+function createAbstract(mod,modPath,modLogic,critical){
    return Proxy.createFunction(
       {
          has: function hasAbstractProperty(name) {
@@ -42,9 +42,11 @@ function createAbstract(mod,modPath,modLogic){
             if (!(name in mod)) {
                newModLogic += '/'+name;
                try {
-                  mod[name] = exports(newModPath,newModLogic);
+                  mod[name] = exports(newModPath,newModLogic,critical);
                } catch (e){
-                  mod[name] = createAbstract({},newModPath,newModLogic);
+                  if (critical) throw e;
+                  mod[name] =
+                     createAbstract({},newModPath,newModLogic,critical);
                   wmlog(e);
                }
             }
@@ -53,7 +55,8 @@ function createAbstract(mod,modPath,modLogic){
                   || typeof mod[name] === 'object'
                      && !(mod[name] instanceof Array)) {
                   newModLogic += '.'+name;
-                  mod[name] = createAbstract(mod[name],newModPath,newModLogic);
+                  mod[name] =
+                     createAbstract(mod[name],newModPath,newModLogic,critical);
                }
             }
             return mod[name];
@@ -104,5 +107,5 @@ exports = module.exports = function abstract(modPath,modLogic,critical){
       }
    }
    if (mod.__isProxy) return mod;
-   return createAbstract(mod,modPath,modLogic);
+   return createAbstract(mod,modPath,modLogic,critical);
 };
