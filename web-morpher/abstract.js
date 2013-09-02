@@ -78,22 +78,24 @@ function createAbstract(mod,modPath,modLogic){
 exports = module.exports = function abstract(modPath,modLogic,critical){
    var mod = false;
    if (!modLogic) modLogic = modPath;
-   function requireWay(){
-      var path = wm.ext.path;
-      var fs = wm.ext.fs;
-      var root = path.dirname(module.filename);
-      var way = path.join(root,modPath);
+   function requirePath(way){
       try { mod = require(way); }
       catch(e){
+         var fs = wm.ext.fs;
          if (e.code === 'MODULE_NOT_FOUND'){
             if (fs.existsSync(way) && fs.statSync(way).isDirectory()) mod = {};
             else throw e;
          } else throw e;
       }
    }
-   try { mod = require(modPath);}
+   function requireLocalPath(){
+      var path = wm.ext.path;
+      var way = path.join(path.dirname(module.filename),modPath);
+      requirePath(way);
+   }
+   try { requirePath(modPath); }
    catch(global_e){
-      try { requireWay(); }
+      try { requireLocalPath(); }
       catch(e){
          if (critical) throw [global_e,e];
          wmlog([global_e,e],{'title':modPath});
