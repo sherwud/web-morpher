@@ -5,6 +5,7 @@ exports.DateToString = DateToString;
 exports.fsCopySync = fsCopySync;
 exports.fsRemoveSync = fsRemoveSync;
 exports.fsClearSync = fsClearSync;
+exports.typeis = typeis;
 function DateToString(date,rev){
    date = date?date:new Date;
    var y = date.getFullYear();
@@ -52,4 +53,11 @@ function fsClearSync(rempath){
          fs.unlinkSync(rem);
       }
    }
+}
+function typeis(value,type){
+   if (typeof value === type
+         || value && value.__isProxy && typeof value.__getThis === type)
+      return true;
+   else
+      return false;
 }
