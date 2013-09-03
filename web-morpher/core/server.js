@@ -6,18 +6,38 @@ exports = module.exports = {};
 exports.prepare = serverPrepare;
 exports.listen = serverListen;
 function defineMethod(type,module,method){
-
-   // сразу отдавать обработчик если есть
-
+   var typeis = wm.util.typeis;
+   if (module in modules) {
+      var cur_module = modules[module];
+      if (cur_module && 'web_handlers' in cur_module) {
+         var web_handlers = cur_module['web_handlers'];
+         if (web_handlers && type in web_handlers) {
+            var web_type = web_handlers[type];
+            if (web_type && method in web_type) {
+               var handler = web_type[method];
+               if (typeis(handler,'function')) {
+                  return [0,handler];
+               }
+            }
+         }
+      }
+   }
    var logprm = {'title':'function defineMethod'};
-   var eMNF = 'MODULE_NOT_FOUND';
+   var iserror = function iserror(e){
+      var eMNF = 'MODULE_NOT_FOUND';
+      if (e[0].code !== eMNF || e[1].code !== eMNF) {
+         if (e[0].code !== eMNF) wmlog(e[0],logprm);
+         if (e[1].code !== eMNF) wmlog(e[1],logprm);
+         return true;
+      } else {
+         return false;
+      }
+   };
    if (!(module in modules)) {
       try {
-         var cur_module = modules[module];
+         cur_module = modules[module];
       } catch(e) {
-         if (e[0].code !== eMNF || e[1].code !== eMNF) {
-            if (e[0].code !== eMNF) wmlog(e[0],logprm);
-            if (e[1].code !== eMNF) wmlog(e[1],logprm);
+         if (iserror(e)) {
             return [500,'Ошибка загрузки модуля "'+module+'"!'];
          } else {
             wmlog('Модуль "'+module+'" не найден!',logprm);
@@ -26,61 +46,54 @@ function defineMethod(type,module,method){
       }
    } else cur_module = modules[module];
    try {
-      var web_handlers = cur_module.web_handlers;
-      if (web_handlers
-            && typeof web_handlers !== 'object'
-            && !web_handlers.__isProxy
-            && typeof web_handlers.__getThis !== 'object'
-         )
-      {
+      web_handlers = cur_module.web_handlers;
+      if (!typeis(web_handlers,'object')) {
          wmlog('Модуль "'+module+'": web_handlers is not object',logprm);
          return [404,'Модуль "'+module+'" не содержит внешних методов!'];
       }
    } catch(e) {
-      if (e[0].code !== eMNF || e[1].code !== eMNF) {
-         if (e[0].code !== eMNF) wmlog(e[0],logprm);
-         if (e[1].code !== eMNF) wmlog(e[1],logprm);
+      if (iserror(e)) {
          return [500,'Ошибка загрузки внешних методов модуля "'+module+'"!'];
       } else {
          wmlog('Модуль "'+module+'": web_handlers is not defined',logprm);
          return [404,'Модуль "'+module+'" не содержит внешних методов!'];
       }
    }
-   
-   // проверка наличия нужного обработчика для get/post
-   /*if (!(type in modules)){
-      res.send(404,'Обработка методов "'+type+'" не реализована!');
-      return;
-   }*/
-
-   return [200,'TEST OK!'];
-   
-   if (module in modules[type] && method in modules[type][module])
-      return [0,modules[type][module][method]];
-   else {
-      if (!(module in modules[type])) {
-         try{
-            modules[type][module] = wmabstract(
-               config.siteroot+'/dynamic/modules/'+module+'_'+type,null,true
-            );
-         } catch (e) {
-            if (e[0].code !== 'MODULE_NOT_FOUND'
-             || e[1].code !== 'MODULE_NOT_FOUND'){
-               wmlog(e,logprm);
-               return [500,'Ошибка загрузки модуля "'+module+'"!'];
-            } else {
-               wmlog('Модуль "'+module+'_'+type+'" не найден!',logprm);
-               return [404,'Модуль "'+module+'" не найден!'];
-            }
-         }
+   try {
+      web_type = web_handlers[type];
+      if (!typeis(web_type,'object')) {
+         wmlog('Модуль "'+module+'": web_handlers.'+type
+               +' is not object',logprm);
+         return [404,'Модуль "'+module
+                     +'" не содержит обработчиков для метода "'+type+'"!'];
       }
-      if (!(method in modules[type][module])) {
-         wmlog('Метод "'+module+'_'+type+'.'+method+'" не найден!',logprm);
-         return [404,'Метод "'+module+'.'+method+'" не найден!'];
+   } catch(e) {
+      if (iserror(e)) {
+         return [500,'Ошибка загрузки обработчиков метода "'
+                     +type+'" из модуля "'+module+'"!'];
       } else {
-         return [0,modules[type][module][method]];
+         wmlog('Модуль "'+module+'": web_handlers.'+type
+               +' is not defined',logprm);
+         return [404,'Модуль "'+module
+                     +'" не содержит обработчиков для метода "'+type+'"!'];
       }
    }
+   var handlerName = type+':'+module+'.'+method;
+   try {
+      handler = web_type[method];
+      if (!typeis(handler,'function')) {
+         wmlog(handlerName+' is not function',logprm);
+         return [404,'Метод "'+handlerName+'" не найден!'];
+      }
+   } catch(e) {
+      if (iserror(e)) {
+         return [500,'Ошибка загрузки метода "'+handlerName+'"!'];
+      } else {
+         wmlog('Метод "'+handlerName+' is not defined',logprm);
+         return [404,'Метод "'+handlerName+'" не найден!'];
+      }
+   }
+   return [0,handler];
 }
 function handler(req,res){
    var module = req.params.module;
@@ -93,7 +106,7 @@ function handler(req,res){
    } else handler = handler[1];
    var result = handler(req,res);
    if (result === false)
-      res.send(500,'Ошибка выполнения метода "'+module+'.'+method+'"');
+      res.send(500,'Ошибка выполнения метода "'+type+':'+module+'.'+method+'"');
    else if (result !== true && result !== undefined)
       res.send(200,result);
 }

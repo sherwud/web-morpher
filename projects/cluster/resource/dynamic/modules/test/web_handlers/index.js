@@ -1,1 +1,7 @@
-exports = module.exports = {a:function(){return 'test web_handlers ok';}};
+exports = module.exports = {
+   post:{
+      test:function(){
+         return 'test web_handlers.post OK';
+      }
+   }
+};
