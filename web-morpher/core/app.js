@@ -1,3 +1,4 @@
+"use strict";
 var fs = wm.ext.fs;
 var path = wm.ext.path;
 /*
@@ -32,7 +33,6 @@ exports = module.exports = function app(way){
       if (fs.existsSync(path.dirname(siteroot))) {
          config.siteroot = siteroot;
       }
-      wm.path.__initProperty('siteroot',config.siteroot);
       wm.builder.deploy(way,config);
       wm.server.prepare(config).listen();
    } else {

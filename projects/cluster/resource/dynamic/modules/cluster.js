@@ -1,4 +1,5 @@
 /* Модуль кластера */
+"use strict";
 exports = module.exports = {
    web_handlers:{
       get:{

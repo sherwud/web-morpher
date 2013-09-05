@@ -27,10 +27,10 @@ exports.deploy = function(project,config){
       wmutil.fsClearSync(siteroot);
    }
    if (deploy) {
-      createVerFile(siteroot);
+      /* тут вызов конвертации source */
       if (fs.existsSync(project+'/resource')){
          wmutil.fsCopySync(project+'/resource',siteroot);
       }
-      /* далее вызов конвертации source */
+      createVerFile(siteroot);
    }
 };

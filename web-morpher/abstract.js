@@ -11,11 +11,11 @@ function createAbstract(mod,modPath,modLogic,critical){
          keys: function keysAbstractProperty(){
             return Object.keys(mod);
          },
-         set: function setAbstractProperty(){
-            throw 'Нельзя модифицировать абстрактный класс "'+modLogic+'"!';
+         set: function setAbstractProperty(self, name, val){
+            mod[name]=val;
          },
-         delete: function deleteAbstractProperty(){
-            throw 'Нельзя модифицировать абстрактный класс "'+modLogic+'"!'
+         delete: function deleteAbstractProperty(name){
+            delete mod[name];
          },
          get: function getAbstractProperty(self, name){
             if (name in mod && mod[name].__isProxy) return mod[name];
@@ -23,18 +23,6 @@ function createAbstract(mod,modPath,modLogic,critical){
                switch (name) {
                   case '__isProxy': return true; break;
                   case '__getThis': return mod; break;
-                  case '__initProperty':
-                     return function initProperty(name,val){
-                        if (!(name in mod)) {
-                        mod[name]=val;
-                        } else {
-                           wmlog(modLogic);
-                           wmlog('Свойство "'+name+'" уже инициализировано',{
-                              'title':'function initProperty'
-                           });
-                        }
-                     };
-                     break;
                }
             }
             var newModPath = modPath+'/'+name;
@@ -62,7 +50,7 @@ function createAbstract(mod,modPath,modLogic,critical){
             return mod[name];
          }
       },
-      function callAbstract(){
+      function(){
          try {
             if (typeof mod === 'function'){
                return mod.apply(this,arguments);

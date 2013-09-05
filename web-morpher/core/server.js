@@ -1,10 +1,12 @@
+"use strict";
+var path = wm.ext.path;
 var express = wm.ext.express;
 var app = express();
-var config = {};
-var modules = wm.modules;
+var modules = {};
 exports = module.exports = {};
-exports.prepare = serverPrepare;
-exports.listen = serverListen;
+var config = exports.config = {};
+exports.prepare = prepare;
+exports.listen = listen;
 function defineMethod(type,module,method){
    var typeis = wm.util.typeis;
    if (module in modules) {
@@ -110,8 +112,8 @@ function handler(req,res){
    else if (result !== true && result !== undefined)
       res.send(200,result);
 }
-function serverPrepare(conf){
-   config = conf;
+function prepare(conf){
+   config = exports.config = conf;
    if (config.server.bodyParser)
       app.use(express.bodyParser());
    var dynURL = '/{dynamicPrefix}:module/:method';
@@ -120,12 +122,32 @@ function serverPrepare(conf){
    } catch (e){
       dynURL = dynURL.replace('{dynamicPrefix}','call/');
    }
+   modules = wm.modules;
+   /* не выполняется, т.к. копирование файлов в deploy асинхронное */
+   if (config.initfile) {
+      try {
+         var initfile = path.join(config.siteroot,'dynamic',config.initfile);
+         console.log('!!!!!!!');
+         console.log(initfile);
+
+         console.log(wm.ext.fs.readFileSync(initfile,'utf8'));
+         
+         initfile = require(initfile);
+         if (typeof initfile === 'function') {
+            initfile();
+         }
+         console.log(initfile);
+         console.log('!!!!!!!');
+      }catch(e){
+         wmlog(e,{'title':'function server.prepare'});
+      }
+   }
    app.get(dynURL,handler);
    app.post(dynURL,handler);
    app.use(express.static(config.siteroot+'/static'));
    return exports;
 }
-function serverListen(port){
+function listen(port){
    var logprm = {type:0};
    app.listen(port||config.server.port);
    wmlog('Сайт: '+config.siteroot,logprm);
