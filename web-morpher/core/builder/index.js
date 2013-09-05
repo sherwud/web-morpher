@@ -8,9 +8,16 @@ function  createVerFile(siteroot){
       platform:wm.info()
    },null,'   '),'utf8');
 }
-exports.deploy = function(project,config){
+exports.deploy = function(project,config,callback){
    var logprm = {'title':'function builder.deploy'};
    var siteroot = config.siteroot;
+   function resourceDeploy(callback){
+      if (fs.existsSync(project+'/resource')){
+         wmutil.fsCopy(project+'/resource',siteroot,callback);
+      } else {
+         callback();
+      }
+   }
    if (!fs.existsSync(path.dirname(siteroot))) {
       wmlog('Каталог сайта "'+path.dirname(siteroot)+'" не найден!',logprm);
       return;
@@ -27,10 +34,12 @@ exports.deploy = function(project,config){
       wmutil.fsClearSync(siteroot);
    }
    if (deploy) {
-      /* тут вызов конвертации source */
-      if (fs.existsSync(project+'/resource')){
-         wmutil.fsCopySync(project+'/resource',siteroot);
-      }
-      createVerFile(siteroot);
+      resourceDeploy(function(){
+         /* тут вызов конвертации source */
+         createVerFile(siteroot);
+         callback();
+      });
+   } else {
+      callback();
    }
 };

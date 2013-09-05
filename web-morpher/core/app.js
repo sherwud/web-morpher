@@ -33,8 +33,9 @@ exports = module.exports = function app(way){
       if (fs.existsSync(path.dirname(siteroot))) {
          config.siteroot = siteroot;
       }
-      wm.builder.deploy(way,config);
-      wm.server.prepare(config).listen();
+      wm.builder.deploy(way,config,function(){
+         wm.server.prepare(config).listen();
+      });
    } else {
        wmlog('way isFile',logprm);
        return;

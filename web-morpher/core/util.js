@@ -2,7 +2,7 @@ var fs = wm.ext.fs;
 var path = wm.ext.path;
 exports = module.exports = {__isProxy:true};
 exports.DateToString = DateToString;
-exports.fsCopySync = fsCopySync;
+exports.fsCopy = fsCopy;
 exports.fsRemoveSync = fsRemoveSync;
 exports.fsClearSync = fsClearSync;
 exports.typeis = typeis;
@@ -18,7 +18,7 @@ function DateToString(date,rev){
    date = rev?(y+'.'+m+'.'+d):(d+'.'+m+'.'+y);
    return date+' '+h+':'+min+':'+sec+':'+ms;
 }
-function fsCopySync(srcpath, dstpath){
+function fsCopySync(srcpath, dstpath, callback){
    if (!fs.existsSync(dstpath)) fs.mkdirSync(dstpath);
    var list = fs.readdirSync(srcpath);
    for(var i = 0; i < list.length; i++) {
@@ -26,7 +26,7 @@ function fsCopySync(srcpath, dstpath){
       var dst = path.join(dstpath, list[i]);
       var current = fs.lstatSync(src);
       if(current.isDirectory()) {
-         fsCopySync(src, dst);
+         fsCopy(src, dst, function(){});
       } else if(current.isSymbolicLink()) {
          var symlink = fs.readlinkSync(src);
          fs.symlinkSync(symlink, dst);
@@ -34,8 +34,20 @@ function fsCopySync(srcpath, dstpath){
          var r = fs.createReadStream(src);
          var w = fs.createWriteStream(dst);
          r.pipe(w);
+         TESTfinish(w,dst);
       }
    }
+   callback();
+}
+function TESTfinish(w,p){
+   console.error('start: ' + p);
+   w.on('finish', function() {
+      console.error('finish: ' + p);
+    });
+};
+function fsCopy(srcpath, dstpath, callback){
+   throw 'допилить асинхронное копирование'
+   callback();
 }
 function fsRemoveSync(rempath){
    fsClearSync(rempath);
