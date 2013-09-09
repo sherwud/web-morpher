@@ -69,14 +69,15 @@ function ErrorToString(err){
 var errorCode = {
    0:'DONE',
    1:'ERROR',
-   2:'INFO'
+   2:'INFO',
+   3:'SYSTEM'
 };
 exports = module.exports = function(msg,prm){
    if (!msg) return msg;
    prm = prm || {};
    var d = DateToString(new Date)+' ';
    var title = (prm.title ? (prm.title+' - ') : '');
-   var type = (errorCode[prm.type] || 'ERROR')+': ';
+   var type = (errorCode[prm.type] || errorCode[1])+': ';
    if (msg && msg.__isProxy) msg = msg.__getThis;
    if (typeof msg === 'object') msg = AbstractToString(msg,1);
    console.log(d+type+title+msg);

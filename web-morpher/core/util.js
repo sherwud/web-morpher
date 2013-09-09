@@ -46,7 +46,7 @@ function fsCopy(srcpath, dstpath, callback){
       var current = fs.lstatSync(src);
       if(current.isDirectory()) {
          fsCopy(src, dst, function(){
-             wmlog('copied: '+pathReduce(src)+' -> '+pathReduce(dst),{type:0});
+             wmlog('copied: '+pathReduce(src)+' -> '+pathReduce(dst),{type:3});
              copyList(list,callback);
          });
       } else if(current.isSymbolicLink()) {
@@ -57,7 +57,7 @@ function fsCopy(srcpath, dstpath, callback){
          var r = fs.createReadStream(src);
          var w = fs.createWriteStream(dst);
          r.pipe(w).on('finish', function() {
-            wmlog('copied: '+pathReduce(src)+' -> '+pathReduce(dst),{type:0});
+            wmlog('copied: '+pathReduce(src)+' -> '+pathReduce(dst),{type:3});
             copyList(list,callback);
          });
       }
