@@ -34,7 +34,8 @@ exports.deploy = function(project,config,callback){
       wmutil.fsClearSync(siteroot);
    }
    if (deploy) {
-      resourceDeploy(function(){
+      resourceDeploy(function(e){
+         if (e) { throw e; }
          /* тут вызов конвертации source */
          createVerFile(siteroot);
          callback();

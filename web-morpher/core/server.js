@@ -116,28 +116,27 @@ function prepare(conf){
    config = exports.config = conf;
    if (config.server.bodyParser)
       app.use(express.bodyParser());
-   var dynURL = '/{dynamicPrefix}:module/:method';
+   var dynURLpt = '/{dynamicPrefix}:module/:method';
+   var dynURL = '';
    try {
-      dynURL = dynURL.replace('{dynamicPrefix}',config.server.dynamicPrefix);
+      dynURL = dynURLpt.replace('{dynamicPrefix}',config.server.dynamicPrefix);
    } catch (e){
-      dynURL = dynURL.replace('{dynamicPrefix}','call/');
+      dynURL = dynURLpt.replace('{dynamicPrefix}','call/');
    }
    modules = wm.modules;
-   /* не выполняется, т.к. копирование файлов в deploy асинхронное */
    if (config.initfile) {
       try {
          var initfile = path.join(config.siteroot,'dynamic',config.initfile);
-         console.log('!!!!!!!');
-         console.log(initfile);
-
-         console.log(wm.ext.fs.readFileSync(initfile,'utf8'));
-         
          initfile = require(initfile);
          if (typeof initfile === 'function') {
-            initfile();
+            initfile({
+               dynURLpt:dynURLpt,
+               dynURL:dynURL,
+               handler:handler,
+               defineMethod:defineMethod,
+               app:app
+            });
          }
-         console.log(initfile);
-         console.log('!!!!!!!');
       }catch(e){
          wmlog(e,{'title':'function server.prepare'});
       }

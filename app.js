@@ -10,5 +10,6 @@ require('./web-morpher');
 //wmlog(wm.config,{title:'config',type:2});
 //wmlog(wm.info(),{title:'О системе',type:2});
 //wmlog(wm.path,{title:'Пути',type:2});
-wm.app(args.path);
-wmlog('well done!',{type:0});
+wm.app(args.path,function(){
+   wmlog('well done!',{type:0});
+});

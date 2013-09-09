@@ -6,7 +6,7 @@ var path = wm.ext.path;
  * @param {string} way - файл или каталог запуска
  * @returns undefined
  */
-exports = module.exports = function app(way){
+exports = module.exports = function app(way,callback){
    var logprm = {'title':'function app'};
    if (typeof way !== 'string' && way !== '') {
        wmlog('Файл или каталог запуска не задан!',logprm);
@@ -35,6 +35,7 @@ exports = module.exports = function app(way){
       }
       wm.builder.deploy(way,config,function(){
          wm.server.prepare(config).listen();
+         callback();
       });
    } else {
        wmlog('way isFile',logprm);
