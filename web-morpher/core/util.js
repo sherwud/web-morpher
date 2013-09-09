@@ -46,8 +46,24 @@ function TESTfinish(w,p){
     });
 };
 function fsCopy(srcpath, dstpath, callback){
-   throw 'допилить асинхронное копирование'
-   callback();
+   function copy(list,callback){
+      var item = list.shift();
+      var src = path.join(srcpath, item);
+      var dst = path.join(dstpath, item);
+      var current = fs.lstatSync(src);
+      if(current.isDirectory()) {
+         fsCopy(src, dst, function(e){
+            
+         });
+      }
+   }
+   if (!fs.existsSync(dstpath)) fs.mkdirSync(dstpath);
+   var list = fs.readdirSync(srcpath);
+   try{
+      copy(list, callback);
+   }catch(e){
+      callback(e);
+   }
 }
 function fsRemoveSync(rempath){
    fsClearSync(rempath);
