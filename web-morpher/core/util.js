@@ -2,6 +2,7 @@ var fs = wm.ext.fs;
 var path = wm.ext.path;
 exports = module.exports = {__isProxy:true};
 exports.DateToString = DateToString;
+exports.pathReduce = pathReduce;
 exports.fsCopy = fsCopy;
 exports.fsRemoveSync = fsRemoveSync;
 exports.fsClearSync = fsClearSync;
@@ -18,49 +19,53 @@ function DateToString(date,rev){
    date = rev?(y+'.'+m+'.'+d):(d+'.'+m+'.'+y);
    return date+' '+h+':'+min+':'+sec+':'+ms;
 }
-function fsCopySync(srcpath, dstpath, callback){
-   if (!fs.existsSync(dstpath)) fs.mkdirSync(dstpath);
-   var list = fs.readdirSync(srcpath);
-   for(var i = 0; i < list.length; i++) {
-      var src = path.join(srcpath, list[i]);
-      var dst = path.join(dstpath, list[i]);
-      var current = fs.lstatSync(src);
-      if(current.isDirectory()) {
-         fsCopy(src, dst, function(){});
-      } else if(current.isSymbolicLink()) {
-         var symlink = fs.readlinkSync(src);
-         fs.symlinkSync(symlink, dst);
-      } else {
-         var r = fs.createReadStream(src);
-         var w = fs.createWriteStream(dst);
-         r.pipe(w);
-         TESTfinish(w,dst);
+function pathReduce(str,len,space){
+   if (typeof str !== 'string') return str;
+   len = len ? Number(len) / 2 ^ 0 : 32;
+   space = (typeof space !== 'undefined') ? space : true;
+   var flen = len*2+3;
+   if (str.length > flen)
+      return str.substr(0,len)+'...'+str.substr(-len,len);
+   else {
+      if (space) {
+         var spc = '';
+         for (var i = 0; i < (flen-str.length); i++){
+            spc += ' '; 
+         }
+         return str + spc;
       }
+      return str;
    }
-   callback();
 }
-function TESTfinish(w,p){
-   console.error('start: ' + p);
-   w.on('finish', function() {
-      console.error('finish: ' + p);
-    });
-};
 function fsCopy(srcpath, dstpath, callback){
-   function copy(list,callback){
+   function copyList(list,callback){
       var item = list.shift();
+      if (typeof item === 'undefined') return callback();
       var src = path.join(srcpath, item);
       var dst = path.join(dstpath, item);
       var current = fs.lstatSync(src);
       if(current.isDirectory()) {
-         fsCopy(src, dst, function(e){
-            
+         fsCopy(src, dst, function(){
+             wmlog('copied: '+pathReduce(src)+' -> '+pathReduce(dst),{type:0});
+             copyList(list,callback);
+         });
+      } else if(current.isSymbolicLink()) {
+         var symlink = fs.readlinkSync(src);
+         fs.symlinkSync(symlink, dst);
+         copyList(list,callback);
+      } else {
+         var r = fs.createReadStream(src);
+         var w = fs.createWriteStream(dst);
+         r.pipe(w).on('finish', function() {
+            wmlog('copied: '+pathReduce(src)+' -> '+pathReduce(dst),{type:0});
+            copyList(list,callback);
          });
       }
    }
    if (!fs.existsSync(dstpath)) fs.mkdirSync(dstpath);
    var list = fs.readdirSync(srcpath);
    try{
-      copy(list, callback);
+      copyList(list, callback);
    }catch(e){
       callback(e);
    }
