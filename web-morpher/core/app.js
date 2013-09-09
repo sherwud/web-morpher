@@ -22,23 +22,23 @@ exports = module.exports = function app(way,callback){
    var config;
    if (fs.statSync(way).isDirectory()) {
       config = way+'/config.json';
-      try {
-         var config = require(config);
-      } catch (e){
-         wmlog('Файл "'+config+'"!',logprm);
-         wmlog(e,logprm);
-         return;
-      }
-      var siteroot = path.join(wm.path.startupdir,config.siteroot);
-      if (fs.existsSync(path.dirname(siteroot))) {
-         config.siteroot = siteroot;
-      }
-      wm.builder.deploy(way,config,function(){
-         wm.server.prepare(config).listen();
-         callback();
-      });
    } else {
-       wmlog('way isFile',logprm);
-       return;
+      config = way;
+      way = path.dirname(way);
    }
+   try {
+      config = require(config);
+   } catch (e){
+      wmlog('Файл "'+config+'"!',logprm);
+      wmlog(e,logprm);
+      return;
+   }
+   var siteroot = path.join(wm.path.startupdir,config.siteroot);
+   if (fs.existsSync(path.dirname(siteroot))) {
+      config.siteroot = siteroot;
+   }
+   wm.builder.deploy(way,config,function(){
+      wm.server.prepare(config).listen();
+      callback();
+   });
 };
