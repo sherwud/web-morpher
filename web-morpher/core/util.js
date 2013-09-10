@@ -37,37 +37,39 @@ function pathReduce(str,len,space){
       return str;
    }
 }
-function fsCopy(srcpath, dstpath, callback){
-   function copyList(list,callback){
-      var item = list.shift();
-      if (typeof item === 'undefined') return callback();
-      var src = path.join(srcpath, item);
-      var dst = path.join(dstpath, item);
-      var current = fs.lstatSync(src);
-      if(current.isDirectory()) {
-         fsCopy(src, dst, function(){
-             wmlog('copied: '+pathReduce(src)+' -> '+pathReduce(dst),{type:3});
-             copyList(list,callback);
-         });
-      } else if(current.isSymbolicLink()) {
-         var symlink = fs.readlinkSync(src);
-         fs.symlinkSync(symlink, dst);
-         copyList(list,callback);
-      } else {
-         var r = fs.createReadStream(src);
-         var w = fs.createWriteStream(dst);
-         r.pipe(w).on('finish', function() {
-            wmlog('copied: '+pathReduce(src)+' -> '+pathReduce(dst),{type:3});
-            copyList(list,callback);
-         });
+function fsCopy(src, dst, callback){
+   function copyDir(){
+      function copyList(){
+         var item = list.shift();
+         if (typeof item === 'undefined') return callback();
+         fsCopy(path.join(src, item), path.join(dst, item), copyList);
       }
+      if (!fs.existsSync(dst)) fs.mkdirSync(dst);
+      wmlog('copied: '+pathReduce(src)+' -> '+pathReduce(dst),{type:3});
+      var list = fs.readdirSync(src);
+      copyList();
    }
-   if (!fs.existsSync(dstpath)) fs.mkdirSync(dstpath);
-   var list = fs.readdirSync(srcpath);
-   try{
-      copyList(list, callback);
-   }catch(e){
-      callback(e);
+   function copyFile(){
+      var r = fs.createReadStream(src);
+      var w = fs.createWriteStream(dst);
+      r.pipe(w).on('finish', function() {
+         wmlog('copied: '+pathReduce(src)+' -> '+pathReduce(dst),{type:3});
+         callback();
+      });
+   }
+   function copyLink(){
+      var symlink = fs.readlinkSync(src);
+      fs.symlinkSync(symlink, dst);
+      wmlog('copied: '+pathReduce(src)+' -> '+pathReduce(dst),{type:3});
+      callback();
+   }
+   var current = fs.lstatSync(src);
+   if(current.isDirectory()) {
+      copyDir(src, dst, callback);
+   } else if(current.isSymbolicLink()) {
+      copyLink(src, dst, callback);
+   } else {
+      copyFile(src, dst, callback);
    }
 }
 function fsRemoveSync(rempath){
