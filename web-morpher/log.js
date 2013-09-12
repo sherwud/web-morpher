@@ -1,15 +1,20 @@
 "use strict";
-function DateToString(date,rev){
+var config = require('./log.json');
+Error.stackTraceLimit = config.stackTraceLimit;
+function DateToString(date,rev,istime){
    date = date?date:new Date;
+   istime = (typeof istime !== 'undefined') ? istime : true;
    var y = date.getFullYear();
    var m =   ('0' +(date.getMonth()+1)   ).slice(-2);
    var d =   ('0' +date.getDate()        ).slice(-2);
-   var h =   ('0' +date.getHours()       ).slice(-2);
-   var min = ('0' +date.getMinutes()     ).slice(-2);
-   var sec = ('0' +date.getSeconds()     ).slice(-2);
-   var ms =  ('00'+date.getMilliseconds()).slice(-3);
+   if (istime) {
+      var h =   ('0' +date.getHours()       ).slice(-2);
+      var min = ('0' +date.getMinutes()     ).slice(-2);
+      var sec = ('0' +date.getSeconds()     ).slice(-2);
+      var ms =  ('00'+date.getMilliseconds()).slice(-3);
+   }
    date = rev?(y+'.'+m+'.'+d):(d+'.'+m+'.'+y);
-   return date+' '+h+':'+min+':'+sec+':'+ms;
+   return (istime?(date+' '+h+':'+min+':'+sec+':'+ms):date);
 }
 function AbstractToString(obj,l){
    if (typeof obj !== 'object' && typeof obj !== 'function')
@@ -57,7 +62,6 @@ function AbstractToString(obj,l){
       return str;
    }
 }
-Error.stackTraceLimit = 15;
 function ErrorToString(err){
    return AbstractToString({
       name:err.name,
@@ -66,19 +70,26 @@ function ErrorToString(err){
       stack:err.stack
    },1);
 }
-var errorCode = {
-   0:'DONE',
-   1:'ERROR',
-   2:'INFO',
-   3:'SYSTEM'
-};
+function logCode(code){
+   return config.logCode[code]
+      || config.logCode[config.defaultLogCode]
+      || {type: 'UNDEFINED ERROR ' + code};
+}
 exports = module.exports = function(msg,prm){
    if (!msg) return msg;
    prm = prm || {};
-   var d = DateToString(new Date)+' ';
+   var code = String(prm.type);
+   var logPrm = logCode(code);
+   if (logPrm.hide) return;
+   var date = DateToString()+' ';
    var title = (prm.title ? (prm.title+' - ') : '');
-   var type = (errorCode[prm.type] || errorCode[1])+': ';
+   var type = logPrm.type+': ';
    if (msg && msg.__isProxy) msg = msg.__getThis;
    if (typeof msg === 'object') msg = AbstractToString(msg,1);
-   console.log(d+type+title+msg);
+   msg = date+type+title+msg;
+   if (logPrm.inFile) {
+      msg = 'inFile '+DateToString(0,1,0)+' - '+msg;
+      console.log(msg);
+   } else
+      console.log(msg);
 };

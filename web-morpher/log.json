@@ -1,0 +1,25 @@
+{
+   "stackTraceLimit":15,
+   "defaultLogCode":"100",
+   "logCode":{
+      "0":{
+         "type":"DONE"
+      },
+      "1":{
+         "type":"ERROR"
+      },
+      "100":{
+         "type":"UNDEFINED ERROR"
+      },
+      "2":{
+         "type":"INFO"
+      },
+      "3":{
+         "hide": true,
+         "type":"SYSTEM",
+         "inFile":true,
+         "path":"./log/system.log",
+         "addDate":true
+      }
+   }
+}
