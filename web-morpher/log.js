@@ -1,4 +1,5 @@
 "use strict";
+var fs = require('fs');
 var config = require('./log.json');
 Error.stackTraceLimit = config.stackTraceLimit;
 function DateToString(date,rev,istime){
@@ -88,8 +89,9 @@ exports = module.exports = function(msg,prm){
    if (typeof msg === 'object') msg = AbstractToString(msg,1);
    msg = date+type+title+msg;
    if (logPrm.inFile) {
-      msg = 'inFile '+DateToString(0,1,0)+' - '+msg;
-      console.log(msg);
+      fs.appendFile(logPrm.path,msg+'\n');
+      //msg = 'inFile '+DateToString(0,1,0)+' - '+msg;
+      //console.log(msg);
    } else
       console.log(msg);
 };
