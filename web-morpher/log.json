@@ -9,7 +9,11 @@
          "type":"ERROR"
       },
       "100":{
-         "type":"UNDEFINED ERROR"
+         "type":"UNDEFINED ERROR",
+         "inFile":true,
+         "path":"./log/error.log",
+         "DateInPath":true,
+         "sync":true
       },
       "2":{
          "type":"INFO"
@@ -19,7 +23,8 @@
          "type":"SYSTEM",
          "inFile":true,
          "path":"./log/system.log",
-         "addDate":true
+         "DateInPath":true,
+         "sync":false
       }
    }
 }

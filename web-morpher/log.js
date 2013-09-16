@@ -1,21 +1,27 @@
 "use strict";
 var fs = require('fs');
+var path = require('path');
 var config = require('./log.json');
 Error.stackTraceLimit = config.stackTraceLimit;
-function DateToString(date,rev,istime){
+function DateToString(date,rev,istime,isdate){
+   var sdate = '';
    date = date?date:new Date;
    istime = (typeof istime !== 'undefined') ? istime : true;
-   var y = date.getFullYear();
-   var m =   ('0' +(date.getMonth()+1)   ).slice(-2);
-   var d =   ('0' +date.getDate()        ).slice(-2);
+   isdate = (typeof isdate !== 'undefined') ? isdate : true;
+   if (isdate || !istime) {
+      var y = date.getFullYear();
+      var m =   ('0' +(date.getMonth()+1)   ).slice(-2);
+      var d =   ('0' +date.getDate()        ).slice(-2);
+      sdate = rev?(y+'.'+m+'.'+d):(d+'.'+m+'.'+y);
+   }
    if (istime) {
       var h =   ('0' +date.getHours()       ).slice(-2);
       var min = ('0' +date.getMinutes()     ).slice(-2);
       var sec = ('0' +date.getSeconds()     ).slice(-2);
       var ms =  ('00'+date.getMilliseconds()).slice(-3);
+      sdate += sdate?(' '+h+':'+min+':'+sec+':'+ms):(h+':'+min+':'+sec+':'+ms);
    }
-   date = rev?(y+'.'+m+'.'+d):(d+'.'+m+'.'+y);
-   return (istime?(date+' '+h+':'+min+':'+sec+':'+ms):date);
+   return sdate;
 }
 function AbstractToString(obj,l){
    if (typeof obj !== 'object' && typeof obj !== 'function')
@@ -76,22 +82,61 @@ function logCode(code){
       || config.logCode[config.defaultLogCode]
       || {type: 'UNDEFINED ERROR ' + code};
 }
+function appendFile(logPrm,msg){
+   function mkdir(fPath,callback){
+      var dir = path.dirname(fPath);
+      fs.exists(dir,function(exists){
+         if (exists){
+            callback();
+         } else {
+            mkdir(dir,function(){
+               fs.mkdir(dir,function(){ callback(); });
+            });
+         }
+      });
+   }
+   function mkdirSync(fPath){
+      var dir = path.dirname(fPath);
+      if (!fs.existsSync(dir)){
+         mkdirSync(dir);
+         fs.mkdirSync(dir);
+      }
+   }
+   msg += '\n';
+   var fPath = logPrm.path;
+   if (logPrm.DateInPath) {
+      fPath = path.join(
+         path.dirname(fPath),
+         path.basename(fPath,path.extname(fPath))
+            +'_'+DateToString(0,1,0)
+            +path.extname(fPath)
+      );
+   }
+   if (logPrm.sync) {
+      mkdirSync(fPath);
+      fs.appendFileSync(fPath,msg);
+   } else {
+      mkdir(fPath,function(){
+         fs.appendFile(fPath,msg);
+      });
+   }
+}
 exports = module.exports = function(msg,prm){
    if (!msg) return msg;
    prm = prm || {};
    var code = String(prm.type);
    var logPrm = logCode(code);
    if (logPrm.hide) return;
-   var date = DateToString()+' ';
    var title = (prm.title ? (prm.title+' - ') : '');
    var type = logPrm.type+': ';
    if (msg && msg.__isProxy) msg = msg.__getThis;
    if (typeof msg === 'object') msg = AbstractToString(msg,1);
-   msg = date+type+title+msg;
+   msg = type+title+msg;
    if (logPrm.inFile) {
-      fs.appendFile(logPrm.path,msg+'\n');
-      //msg = 'inFile '+DateToString(0,1,0)+' - '+msg;
-      //console.log(msg);
-   } else
+      msg = DateToString(0,0,1,0) + ' ' + msg;
+      appendFile(logPrm,msg);
+   } else {
+      msg = DateToString() + ' ' + msg;
       console.log(msg);
+   }
 };

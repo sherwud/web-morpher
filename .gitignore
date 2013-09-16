@@ -1,5 +1,6 @@
 *local*.bat
 web-morpher/node_modules
+/log/
 *.log
 www/cluster
 /_prog/
