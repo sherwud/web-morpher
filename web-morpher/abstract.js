@@ -1,4 +1,5 @@
 "use strict";
+var wmlog = global.wmlog.init({'title':'abstract'});
 function createAbstract(mod,modPath,modLogic,critical){
    return Proxy.createFunction(
       {
@@ -35,7 +36,7 @@ function createAbstract(mod,modPath,modLogic,critical){
                   if (critical) throw e;
                   mod[name] =
                      createAbstract({},newModPath,newModLogic,critical);
-                  wmlog(e);
+                  wmlog(1,e);
                }
             }
             if (mod[name] && !mod[name].__isProxy) {
@@ -55,12 +56,12 @@ function createAbstract(mod,modPath,modLogic,critical){
             if (typeof mod === 'function'){
                return mod.apply(this,arguments);
             } else {
-               wmlog('"'+modPath+'" не является функцией');
+               wmlog(1,'"'+modPath+'" не является функцией');
             }
          } catch(e){
-            wmlog('Ошибка выполнения "'+modPath+'"');
-            wmlog(mod);
-            wmlog(e);
+            wmlog(1,'Ошибка выполнения "'+modPath+'"');
+            wmlog(1,mod);
+            wmlog(1,e);
             return undefined;
          }
       }
@@ -89,8 +90,8 @@ exports = module.exports = function abstract(modPath,modLogic,critical){
       try { requireLocalPath(); }
       catch(e){
          if (critical) throw [global_e,e];
-         wmlog([global_e,e],{'title':modPath});
-         wmlog('Модуль "'+modLogic+'" не найден');
+         global.wmlog([global_e,e],{'title':modPath,'code':1});
+         wmlog(1,'Модуль "'+modLogic+'" не найден');
          mod = {};
       }
    }

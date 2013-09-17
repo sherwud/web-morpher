@@ -124,7 +124,7 @@ function appendFile(logPrm,msg){
 exports = module.exports = function(msg,prm){
    if (!msg) return msg;
    prm = prm || {};
-   var code = String(prm.type);
+   var code = String(prm.code);
    var logPrm = logCode(code);
    if (logPrm.hide) return;
    var title = (prm.title ? (prm.title+' - ') : '');
@@ -138,5 +138,12 @@ exports = module.exports = function(msg,prm){
    } else {
       msg = DateToString() + ' ' + msg;
       console.log(msg);
+   }
+};
+exports.init = function(prm){
+   prm = prm || {};
+   return function(code,msg){
+      prm.code = code;
+      return exports(msg,prm);
    }
 };

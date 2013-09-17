@@ -14,11 +14,12 @@ var check = {
       return val;
    }
 };
+var wmlog = global.wmlog.init({'title':'wm.config'});
 try{
    exports = module.exports = new config;
 }catch(e){
    exports = module.exports = {};
-   wmlog(e);
+   wmlog(1,e);
 }
 function config(){
    var config = require('../config.json')[global.process.platform];

@@ -9,7 +9,6 @@ function  createVerFile(siteroot){
    },null,'   '),'utf8');
 }
 exports.deploy = function(project,config,callback){
-   var logprm = {'title':'function builder.deploy'};
    var siteroot = config.siteroot;
    function resourceDeploy(callback){
       if (fs.existsSync(project+'/resource')){
@@ -17,10 +16,6 @@ exports.deploy = function(project,config,callback){
       } else {
          callback();
       }
-   }
-   if (!fs.existsSync(path.dirname(siteroot))) {
-      wmlog('Каталог сайта "'+path.dirname(siteroot)+'" не найден!',logprm);
-      return;
    }
    var deploy = false;
    if (!fs.existsSync(siteroot)) {

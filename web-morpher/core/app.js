@@ -7,16 +7,16 @@ var path = wm.ext.path;
  * @returns undefined
  */
 exports = module.exports = function app(way,callback){
-   var logprm = {'title':'function app'};
+   var wmlog = global.wmlog.init({'title':'function app'});
    if (typeof way !== 'string' && way !== '') {
-       wmlog('Файл или каталог запуска не задан!',logprm);
+       wmlog(1,'Файл или каталог запуска не задан!');
        return;
    }
    if (way[0] === '.') {
       way = path.join(wm.path.startupdir,way);
    }
    if (!fs.existsSync(way)) {
-       wmlog('Файл или каталог запуска "'+way+'" не найден!',logprm);
+       wmlog(1,'Файл или каталог запуска "'+way+'" не найден!');
        return;
    }
    var config;
@@ -29,8 +29,8 @@ exports = module.exports = function app(way,callback){
    try {
       config = require(config);
    } catch (e){
-      wmlog('Файл "'+config+'"!',logprm);
-      wmlog(e,logprm);
+      wmlog(1,'Файл "'+config+'"!');
+      wmlog(1,e);
       return;
    }
    var siteroot = path.join(wm.path.startupdir,config.siteroot);

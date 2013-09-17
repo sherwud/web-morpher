@@ -23,8 +23,13 @@
          "type":"SYSTEM",
          "inFile":true,
          "path":"./log/system.log",
-         "DateInPath":true,
-         "sync":false
+         "DateInPath":true
+      },
+      "404":{
+         "type":"NOT FOUND",
+         "inFile":true,
+         "path":"./log/404error.log",
+         "DateInPath":true
       }
    }
 }

@@ -38,6 +38,7 @@ function pathReduce(str,len,space){
    }
 }
 function fsCopy(src, dst, callback){
+   var wmlog = global.wmlog.init({'title':'wm.util.fsCopy'});
    function copyDir(){
       function copyList(){
          var item = list.shift();
@@ -45,7 +46,7 @@ function fsCopy(src, dst, callback){
          fsCopy(path.join(src, item), path.join(dst, item), copyList);
       }
       if (!fs.existsSync(dst)) fs.mkdirSync(dst);
-      wmlog('copied: '+pathReduce(src)+' -> '+pathReduce(dst),{type:3});
+      wmlog(3,pathReduce(src)+' -> '+pathReduce(dst));
       var list = fs.readdirSync(src);
       copyList();
    }
@@ -53,14 +54,14 @@ function fsCopy(src, dst, callback){
       var r = fs.createReadStream(src);
       var w = fs.createWriteStream(dst);
       r.pipe(w).on('finish', function() {
-         wmlog('copied: '+pathReduce(src)+' -> '+pathReduce(dst),{type:3});
+         wmlog(3,pathReduce(src)+' -> '+pathReduce(dst));
          callback();
       });
    }
    function copyLink(){
       var symlink = fs.readlinkSync(src);
       fs.symlinkSync(symlink, dst);
-      wmlog('copied: '+pathReduce(src)+' -> '+pathReduce(dst),{type:3});
+      wmlog(3,pathReduce(src)+' -> '+pathReduce(dst));
       callback();
    }
    var current = fs.lstatSync(src);
