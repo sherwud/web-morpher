@@ -145,5 +145,5 @@ exports.init = function(prm){
    return function(code,msg){
       prm.code = code;
       return exports(msg,prm);
-   }
+   };
 };
