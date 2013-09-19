@@ -66,11 +66,11 @@ function fsCopy(src, dst, callback){
    }
    var current = fs.lstatSync(src);
    if(current.isDirectory()) {
-      copyDir(src, dst, callback);
+      copyDir();
    } else if(current.isSymbolicLink()) {
-      copyLink(src, dst, callback);
+      copyLink();
    } else {
-      copyFile(src, dst, callback);
+      copyFile();
    }
 }
 function fsRemoveSync(rempath){
