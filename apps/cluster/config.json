@@ -1,8 +1,0 @@
-{
-   "apps":{
-      "test":{
-         "path":"./apps/test"
-      }
-   },
-   "autostart":["test"]
-}

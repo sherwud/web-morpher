@@ -1,0 +1,9 @@
+{
+   "description":"Модуль интерфейса кластера",
+   "methods": {
+      "getMainMenu":{
+         "params":{},
+         "body":"return '<div class=\"mainmenu\"></div>'"
+      }
+   }
+}
