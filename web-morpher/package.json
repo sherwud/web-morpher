@@ -7,10 +7,10 @@
       "start": "node app"
    },
    "dependencies": {
-      "express": ">=3.2"
+      "express": ">=3.4.0"
    },
    "engine":{
-      "node":">=0.10"
+      "node":">=0.10.18"
    },
    "readmeFilename": "README.md"
 }

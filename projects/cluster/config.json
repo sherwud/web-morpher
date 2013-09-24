@@ -1,0 +1,18 @@
+{
+   "siteroot":"./www/cluster",
+   "always_deploy":true,
+   "initfile":"init.js",
+   "server":{
+      "dynamicPrefix":"call/",
+      "port":777,
+      "bodyParser":false
+   },
+   "additional":{
+      "apps":{
+         "test":{
+            "path":"./projects/test"
+         }
+      },
+      "autostart":["test"]
+   }
+}
