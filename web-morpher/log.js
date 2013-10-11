@@ -126,7 +126,6 @@ function appendFile(logPrm,msg){
    }
 }
 exports = module.exports = function(msg,prm){
-   if (!msg) return msg;
    prm = prm || {};
    var code = String(prm.code);
    var logPrm = logCode(code);

@@ -15,7 +15,8 @@ exports = module.exports = function(server){
    });
 };
 var modules = wm.modules;
+var r_modules = wm['request-modules'];
 /* подключаем cluster */
 modules.cluster;
-/* подключаем get функцию модуля test */
-modules.test.web_handlers.get.test2;
+/* подключаем get функцию модуля cluster */
+r_modules.cluster.get.test2;
