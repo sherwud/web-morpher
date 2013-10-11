@@ -7,6 +7,7 @@ exports.fsCopy = fsCopy;
 exports.fsRemoveSync = fsRemoveSync;
 exports.fsClearSync = fsClearSync;
 exports.typeis = typeis;
+exports.generateUUID = generateUUID;
 function DateToString(date,rev){
    date = date?date:new Date;
    var y = date.getFullYear();
@@ -97,3 +98,13 @@ function typeis(value,type){
    else
       return false;
 }
+function generateUUID(){
+   var d = new Date().getTime();
+   var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+   .replace(/[xy]/g, function(c) {
+      var r = (d + Math.random()*16)%16 | 0;
+      d = Math.floor(d/16);
+      return (c==='x' ? r : (r&0x7|0x8)).toString(16);
+   });
+   return uuid;
+};
