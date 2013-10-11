@@ -10,6 +10,10 @@ exports = module.exports = {
    proxyServerHandler:proxyServerHandler
 };
 
+/* Задача 1: выделить механизм переадресации в системную библиотеку
+ *    wm.lib.httpproxy
+ */
+
 function proxyServerHandler(req, res){
    var sendError = sendError_setter(req, res);
    var client_ip = req.socket.remoteAddress;
