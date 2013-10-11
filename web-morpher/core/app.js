@@ -38,6 +38,7 @@ exports = module.exports = function app(way,callback){
       config.siteroot = siteroot;
    }
    wm.builder.deploy(way,config,function(){
+      global.wmlog.set_logFilesRoot(config.siteroot);
       wm.server.prepare(config).listen();
       callback();
    });

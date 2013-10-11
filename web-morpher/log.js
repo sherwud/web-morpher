@@ -2,6 +2,8 @@
 var fs = require('fs');
 var path = require('path');
 var config = require('./log.json');
+config.logFilesRoot = config.logFilesRoot || './';
+config.stackTraceLimit = config.stackTraceLimit || 15;
 Error.stackTraceLimit = config.stackTraceLimit;
 function DateToString(date,rev,istime,isdate){
    var sdate = '';
@@ -107,6 +109,7 @@ function appendFile(logPrm,msg){
    var fPath = logPrm.path;
    if (logPrm.DateInPath) {
       fPath = path.join(
+         config.logFilesRoot,
          path.dirname(fPath),
          path.basename(fPath,path.extname(fPath))
             +'_'+DateToString(0,1,0)
@@ -148,4 +151,7 @@ exports.init = function(prm){
       prm.code = code;
       return exports(msg,prm);
    };
+};
+exports.set_logFilesRoot = function(root){
+   config.logFilesRoot = root || config.logFilesRoot;
 };

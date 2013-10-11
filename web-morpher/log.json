@@ -1,4 +1,5 @@
 {
+   "logFilesRoot":"./",
    "stackTraceLimit":15,
    "defaultLogCode":"100",
    "glueDisplayMessages":false,
