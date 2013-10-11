@@ -103,6 +103,7 @@ function appendFile(logPrm,msg){
       }
    }
    msg += '\n';
+   if (!config.glueFileMessages) msg += '\n';
    var fPath = logPrm.path;
    if (logPrm.DateInPath) {
       fPath = path.join(
@@ -137,6 +138,7 @@ exports = module.exports = function(msg,prm){
       appendFile(logPrm,msg);
    } else {
       msg = DateToString() + ' ' + msg;
+      if (!config.glueDisplayMessages) console.log('');
       console.log(msg);
    }
 };

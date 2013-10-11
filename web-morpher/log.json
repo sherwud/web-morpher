@@ -1,6 +1,8 @@
 {
    "stackTraceLimit":15,
    "defaultLogCode":"100",
+   "glueDisplayMessages":false,
+   "glueFileMessages":true,
    "logCode":{
       "0":{
          "type":"DONE"
