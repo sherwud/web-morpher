@@ -104,6 +104,9 @@ function prepare(conf){
    } catch (e){
       dynURL = dynURLpt.replace('{dynamicPrefix}','call/');
    }
+   /* Задача 1: Проверять наличие каталога request-modules.
+    *    если его нет не запускать обработку динамики.
+    */
    modules = wm['request-modules'];
    if (config.initfile) {
       try {
