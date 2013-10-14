@@ -11,15 +11,12 @@ function defineMethod(type,module,method){
    var typeis = wm.util.typeis;
    if (module in modules) {
       var cur_module = modules[module];
-      if (cur_module && 'web_handlers' in cur_module) {
-         var web_handlers = cur_module['web_handlers'];
-         if (web_handlers && type in web_handlers) {
-            var web_type = web_handlers[type];
-            if (web_type && method in web_type) {
-               var handler = web_type[method];
-               if (typeis(handler,'function')) {
-                  return [0,handler];
-               }
+      if (cur_module && type in cur_module) {
+         var web_type = cur_module[type];
+         if (web_type && method in web_type) {
+            var handler = web_type[method];
+            if (typeis(handler,'function')) {
+               return [0,handler];
             }
          }
       }
@@ -48,23 +45,9 @@ function defineMethod(type,module,method){
       }
    } else cur_module = modules[module];
    try {
-      web_handlers = cur_module.web_handlers;
-      if (!typeis(web_handlers,'object')) {
-         wmlog(1,'Модуль "'+module+'": web_handlers is not object');
-         return [404,'Модуль "'+module+'" не содержит внешних методов!'];
-      }
-   } catch(e) {
-      if (iserror(e)) {
-         return [500,'Ошибка загрузки внешних методов модуля "'+module+'"!'];
-      } else {
-         wmlog(404,'Модуль "'+module+'": web_handlers is not defined');
-         return [404,'Модуль "'+module+'" не содержит внешних методов!'];
-      }
-   }
-   try {
-      web_type = web_handlers[type];
+      web_type = cur_module[type];
       if (!typeis(web_type,'object')) {
-         wmlog(1,'Модуль "'+module+'": web_handlers.'+type+' is not object');
+         wmlog(1,'Модуль "'+module+'" "'+type+'" is not object');
          return [404,'Модуль "'+module
                      +'" не содержит обработчиков для метода "'+type+'"!'];
       }
@@ -73,12 +56,12 @@ function defineMethod(type,module,method){
          return [500,'Ошибка загрузки обработчиков метода "'
                      +type+'" из модуля "'+module+'"!'];
       } else {
-         wmlog(404,'Модуль "'+module+'": web_handlers.'+type+' is not defined');
+         wmlog(404,'Модуль "'+module+'": "'+type+'" is not defined');
          return [404,'Модуль "'+module
                      +'" не содержит обработчиков для метода "'+type+'"!'];
       }
    }
-   var handlerName = type+':'+module+'.'+method;
+   var handlerName = module+'.'+type+'.'+method;
    try {
       handler = web_type[method];
       if (!typeis(handler,'function')) {
@@ -121,7 +104,10 @@ function prepare(conf){
    } catch (e){
       dynURL = dynURLpt.replace('{dynamicPrefix}','call/');
    }
-   modules = wm.modules;
+   /* Задача 1: Проверять наличие каталога request-modules.
+    *    если его нет не запускать обработку динамики.
+    */
+   modules = wm['request-modules'];
    if (config.initfile) {
       try {
          var initfile = path.join(config.siteroot,'dynamic',config.initfile);

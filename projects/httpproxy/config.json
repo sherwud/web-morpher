@@ -1,0 +1,13 @@
+{
+   "siteroot":"./www/httpproxy",
+   "always_deploy":true,
+   "initfile":"init.js",
+   "server":{
+      "dynamicPrefix":"call/",
+      "port":777,
+      "bodyParser":false
+   },
+   "additional":{
+      
+   }
+}

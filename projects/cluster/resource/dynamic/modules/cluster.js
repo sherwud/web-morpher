@@ -1,13 +1,9 @@
 /* Модуль кластера */
 "use strict";
 exports = module.exports = {
-   web_handlers:{
-      get:{
-         test1: test1,
-         test2: test2,
-         test3: test3
-      }
-   }
+   test1: test1,
+   test2: test2,
+   test3: test3
 };
 
 function test1(){
