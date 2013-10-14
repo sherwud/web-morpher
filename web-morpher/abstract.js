@@ -1,6 +1,12 @@
 "use strict";
 var wmlog = global.wmlog.init({'title':'abstract'});
 function createAbstract(mod,modPath,modLogic,critical){
+   /*
+    * Задача 1: Запретить set, убрать __getThis
+    * Задача 2: Добавить свойство __isModule
+    *    Указывает что объект взят из отдельного файла(модуля), а не добавлен кодом инициализции
+    *    Если объект не является модулем ему не доступен __addModulePath
+    */
    return Proxy.createFunction(
       {
          has: function hasAbstractProperty(name) {
@@ -67,6 +73,17 @@ function createAbstract(mod,modPath,modLogic,critical){
       }
    );
 }
+/* Задача 1: создавать абстрактный класс по массиву модулей с приоритетом как и по 1му модулю
+ *    newObj = abstract(['путь к модулю 1','путь к модулю 2'])
+ * Задача 2: добавление нового (более приоритетного) пути к уже созданному объекту. и 1 модуль и массив
+ *    newObj.__addModulePath('путь к модулю 3')
+ *    newObj.__addModulePath(['путь к модулю 4','путь к модулю 4'])
+ * Подробно:
+ *    При подключении по массиву берется инициализация из вышестояшего в массиве(приоритетного).
+ *    При подключении файлов свойст объекта также берется логика приоритетного пути.
+ *    Поиск идет по ниспадающей от более приоритетного к менее.
+ *    Ошибки не игнорируются, если модуль упал, не ищется его аналог ниже.
+ */
 exports = module.exports = function abstract(modPath,modLogic,critical){
    var mod = false;
    if (!modLogic) modLogic = modPath;

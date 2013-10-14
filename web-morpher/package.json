@@ -1,8 +1,10 @@
 {
    "name": "web-morpher",
+   "description":"Система управления сайтом",
    "version": "0.0.1",
    "versionName": "pre-alpha",
    "author": "Dr@KoN <maildrakon@gmail.com>",
+   "repository":"git://github.com/IDrakon/web-morpher",
    "scripts": {
       "start": "node app"
    },
@@ -10,7 +12,7 @@
       "express": ">=3.4.0"
    },
    "engine":{
-      "node":">=0.10.18"
+      "node":">=0.10.20"
    },
-   "readmeFilename": "README.md"
+   "readme": "README.md"
 }

@@ -3,4 +3,5 @@ web-morpher/node_modules
 /log/
 *.log
 www/cluster
+www/httpproxy
 /_prog/
