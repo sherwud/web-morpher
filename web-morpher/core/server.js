@@ -1,6 +1,7 @@
 "use strict";
 var path = wm.ext.path;
 var express = wm.ext.express;
+var fs = wm.ext.fs;
 var app = express();
 var modules = {};
 exports = module.exports = {};
@@ -104,9 +105,6 @@ function prepare(conf){
    } catch (e){
       dynURL = dynURLpt.replace('{dynamicPrefix}','call/');
    }
-   /* Задача 1: Проверять наличие каталога request-modules.
-    *    если его нет не запускать обработку динамики.
-    */
    modules = wm['request-modules'];
    if (config.initfile) {
       try {
@@ -125,9 +123,13 @@ function prepare(conf){
          wmlog(e,{'title':'function server.prepare'});
       }
    }
-   app.get(dynURL,handler);
-   app.post(dynURL,handler);
-   app.use(express.static(config.siteroot+'/static'));
+   if (modules !== false) {
+      app.get(dynURL,handler);
+      app.post(dynURL,handler);
+   }
+   if (fs.existsSync(config.siteroot+'/static')) {
+      app.use(express.static(config.siteroot+'/static'));
+   }
    return exports;
 }
 function listen(port){
