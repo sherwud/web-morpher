@@ -19,10 +19,12 @@ function createAbstract(mod,modPath,modLogic,critical){
             return Object.keys(mod);
          },
          set: function setAbstractProperty(self, name, val){
-            mod[name]=val;
+            throw 'ERROR: operator "set" denied for "'
+                     +modLogic + '.'+name + '"';
          },
          delete: function deleteAbstractProperty(name){
-            delete mod[name];
+            throw 'ERROR: operator "delete" denied for "'
+                     +modLogic + '.'+name + '"';
          },
          get: function getAbstractProperty(self, name){
             if (name in mod &&
@@ -66,10 +68,12 @@ function createAbstract(mod,modPath,modLogic,critical){
             if (typeof mod === 'function'){
                return mod.apply(this,arguments);
             } else {
-               wmlog(1,'"'+modPath+'" не является функцией');
+               wmlog(1,'"'+modLogic+'" не является функцией');
+               wmlog(1,modPath);
             }
          } catch(e){
-            wmlog(1,'Ошибка выполнения "'+modPath+'"');
+            wmlog(1,'Ошибка выполнения "'+modLogic+'"');
+            wmlog(1,modPath);
             wmlog(1,mod);
             wmlog(1,e);
             return undefined;
