@@ -25,7 +25,11 @@ function createAbstract(mod,modPath,modLogic,critical){
             delete mod[name];
          },
          get: function getAbstractProperty(self, name){
-            if (name in mod && mod[name].__isProxy) return mod[name];
+            if (name in mod &&
+                  ((typeof mod[name] !== 'object' || mod[name] instanceof Array)
+                     && typeof mod[name] !== 'function'
+                     || mod[name].__isProxy))
+               return mod[name];
             if (name.substr(0,2) === '__') {
                switch (name) {
                   case '__isProxy': return true; break;
@@ -45,14 +49,14 @@ function createAbstract(mod,modPath,modLogic,critical){
                   wmlog(1,e);
                }
             }
-            if (mod[name] && !mod[name].__isProxy) {
-               if (typeof mod[name] === 'function'
-                  || typeof mod[name] === 'object'
-                     && !(mod[name] instanceof Array)) {
-                  newModLogic += '.'+name;
-                  mod[name] =
-                     createAbstract(mod[name],newModPath,newModLogic,critical);
-               }
+            if (mod[name]
+                  && (typeof mod[name] === 'object'
+                     && !(mod[name] instanceof Array)
+                     || typeof mod[name] === 'function')
+                  && !mod[name].__isProxy) {
+               newModLogic += '.'+name;
+               mod[name] =
+                  createAbstract(mod[name],newModPath,newModLogic,critical);
             }
             return mod[name];
          }
@@ -112,6 +116,9 @@ exports = module.exports = function abstract(modPath,modLogic,critical){
          mod = {};
       }
    }
-   if (mod.__isProxy) return mod;
+   if ((typeof mod !== 'object' || mod instanceof Array)
+         && typeof mod !== 'function'
+         || mod.__isProxy)
+      return mod;
    return createAbstract(mod,modPath,modLogic,critical);
 };
