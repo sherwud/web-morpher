@@ -111,8 +111,8 @@ exports = module.exports = function abstract(modPath,modLogic,critical){
       try { requireLocalPath(); }
       catch(e){
          if (critical) throw [global_e,e];
-         global.wmlog([global_e,e],{'title':modPath,'code':1});
          wmlog(1,'Модуль "'+modLogic+'" не найден');
+         global.wmlog([global_e,e],{'title':modPath,'code':1});
          mod = {};
       }
    }
