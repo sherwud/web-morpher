@@ -1,13 +1,14 @@
 //подключаем модуль работы с файловой системой
 var fs = require('fs');
-
-//----------------------------------------------------------------------------------------------------------------------
+exports.post = {};
+//------------------------------------------------------------------------------
 /*
  * функция возвращает объект,
  * свойства которого соответствуют содержимому каталога,
  * путь которого передаем в качестве аргумента
  */
-function nodelist(path){
+function nodelist(req, res){
+   var path = req.body['path'];
    //проверяем что по указанному пути у нас что то есть и что это дирректория
    if(fs.existsSync(path) && !fs.statSync(path).isFile()){
       var list = {};
@@ -25,30 +26,41 @@ function nodelist(path){
          list[templist[i]] = obg;
       }
       list = JSON.stringify(list);
-      return list;
+      //return list;
+      res.end(list);
    }
    else if(fs.existsSync(path) && fs.statSync(path).isFile()) {
       var obg = {content:''}
       obg['content'] = fs.readFileSync(path, 'utf-8');
       obg = JSON.stringify(obg);
-      return obg;
+      //return obg;
+      res.end(obg);
    }
 }
-exports.nodelist = nodelist;                      //так делаем, чтобы было можно использовать функцию во внешнем файле
-//----------------------------------------------------------------------------------------------------------------------
+exports.post.nodelist = nodelist;   //так делаем, чтобы было можно использовать функцию во внешнем файле
+//------------------------------------------------------------------------------
 /*
 * функция проверяет существует ли файл и файл ли находится по указаному пути,
 * и если все ок, то пишет в файл контент
 * принимает путь к файлу
 * возвращает сообщение об успешной записи в случае успеха, либо сообщение об ошибке
  */
-function SaveFile(path, data){
-   if(fs.existsSync(path) && fs.statSync(path).isFile()){
-      fs.writeFileSync(path, data);
-   }
+function SaveFile(req, res){
+   if(req.body['path']){
+      var path = req.body['path'],
+          data = req.body['content'];
+      if(fs.existsSync(path) && fs.statSync(path).isFile()){
+         fs.writeFileSync(path, data);
+      }
+      else {
+         console.error('file not found');
+      }
+      res.end('data has been successfully saved');
+   } 
    else {
-      console.error('file not found');
+      res.end('invalid path');
+      console.error('invalid path');
    }
 }
-exports.SaveFile = SaveFile;
+exports.post.SaveFile = SaveFile;
 //----------------------------------------------------------------------------------------------------------------------

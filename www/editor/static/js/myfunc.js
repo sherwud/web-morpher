@@ -2,7 +2,7 @@ $(document).ready(function(){
    //при загрузке строим дерево из корня проекта
    $.ajax({
       type: 'POST',
-      url: '',
+      url: '/call/read/nodelist',
       data: 'type=List&path=./',
       cache: false,
       success: function(list){
@@ -35,7 +35,7 @@ $(document).ready(function(){
       var path = '.' + $('#editor').attr('name').replace(/-/g, '/');       //из атрибута name берем путь редактируемого файла
       $.ajax({
          type: 'POST',
-         url: '',
+         url: '/call/read/SaveFile',
          data: 'type=SaveFile&path='+path+'&content='+content,
          success: function(message){
             console.log(message);
@@ -54,7 +54,7 @@ function listBuilder(self){
          var path = '.' + $(self).attr('id').replace(/-/g, '/');      //вот так вот сурово работаем с ид элемента
          $.ajax({
             type: 'POST',
-            url: '',
+            url: '/call/read/nodelist',
             data: 'type=List&path='+path,
             cashe: false,
             success: function(list){
@@ -88,7 +88,7 @@ function listBuilder(self){
       var path = '.' + $(self).attr('id').replace(/-/g, '/');          //а то гдеж его потом искать
       $.ajax({
          type: 'POST',
-         url: '',
+         url: '/call/read/nodelist',
          data: 'type=List&path='+path,
          cashe: false,
          success: function(fileContent){

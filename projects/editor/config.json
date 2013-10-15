@@ -1,0 +1,17 @@
+{
+   "siteroot":"./www/editor",
+   "always_deploy":true,
+   "server":{
+      "dynamicPrefix":"call/",
+      "port":777,
+      "bodyParser":true
+   },
+   "additional":{
+      "apps":{
+         "test":{
+            "path":"./projects/test"
+         }
+      },
+      "autostart":["test"]
+   }
+}

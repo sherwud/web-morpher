@@ -1,0 +1,30 @@
+#projectlist {
+   float : left;
+   width: 20%;
+   height: 100%;
+}
+
+#projectlist ul:hover{
+   cursor:pointer;
+}
+
+#editor {
+   position: absolute;
+   top: 60px;
+   right: 0;
+   bottom: 0;
+   left: 22%;
+}
+
+#controlPanel {
+   position: absolute;
+   top: 0;
+   right: 0;
+   bottom: 0;
+   left: 22%;
+   height: 60px;
+}
+
+#saveButton {
+   margin: 19px;
+}
