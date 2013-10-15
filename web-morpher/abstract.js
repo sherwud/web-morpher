@@ -68,8 +68,10 @@ function createAbstract(mod,modPath,modLogic,critical){
             if (typeof mod === 'function'){
                return mod.apply(this,arguments);
             } else {
-               wmlog(1,'"'+modLogic+'" не является функцией');
                wmlog(1,modPath);
+               wmlog(1,
+                  global.wmlog.stackTrace('"'+modLogic+'" не является функцией')
+               );
             }
          } catch(e){
             wmlog(1,'Ошибка выполнения "'+modLogic+'"');
