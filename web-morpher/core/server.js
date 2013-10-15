@@ -120,7 +120,7 @@ function prepare(conf){
             });
          }
       }catch(e){
-         wmlog(e,{'title':'function server.prepare'});
+         wmlog(e,{'title':'function server.prepare.initfile'});
       }
    }
    if (modules !== false) {
