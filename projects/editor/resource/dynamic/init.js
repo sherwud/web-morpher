@@ -10,5 +10,6 @@ exports = module.exports = function(server){
     * к внутренним механизмам модуля сервера
     * Пример добавляет обработчик для get метода
     */
-   server.app.use(server.express.bodyParser());
+   //server.app.use(server.express.bodyParser());
+   wmlog(wm.server.config.additional);
 };

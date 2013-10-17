@@ -15,13 +15,13 @@ $(document).ready(function(){
             else { icon = 'icon-file' }
             $('#projectList ul').append('<li>');
             $('#projectList ul li').last().html('<i class='+icon+'></i> '+list[key]['name']);
-            $('#projectList ul li').last().attr('name', list[key]["name"]);
+            //$('#projectList ul li').last().attr('name', list[key]["name"]);
             $('#projectList ul li').last().attr('folder', list[key]["folder"]);
             $('#projectList ul li').last().attr('node', list[key]["node"]);
-            $('#projectList ul li').last().attr('id', list[key]["path"].substr(1).replace(/\//g, "-")); //к сожалению по другому про ид не обратиться
-         }                                                                                              //ид делаем подмененным путем к элементу, т.к. на нужна уникальность
-         $('#projectList ul li').bind('click', function(){
-            listBuilder(this);                                     //на все построенные элементы так же навесим обработчики
+            $('#projectList ul li').last().attr('path', list[key]["path"]);
+         }
+         $('#projectList ul li').bind('click', function(event){
+            listBuilder(event);                                    //на все построенные элементы так же навесим обработчики
          });
          var editor = ace.edit("editor");                          //подключаем редактор Ace
          editor.setTheme("ace/theme/monokai");                     //устанавливаем оформление
@@ -32,7 +32,7 @@ $(document).ready(function(){
    $('#saveButton').click(function(){
       var editor = ace.edit("editor");
       var content = editor.getValue();
-      var path = '.' + $('#editor').attr('name').replace(/-/g, '/');       //из атрибута name берем путь редактируемого файла
+      var path = $('#editor').attr('path');                        //из атрибута path берем путь редактируемого файла
       $.ajax({
          type: 'POST',
          url: '/call/read/SaveFile',
@@ -45,52 +45,51 @@ $(document).ready(function(){
 });
 
 
-function listBuilder(self){
+function listBuilder(event){
+   var el = $(event.delegateTarget);
    //если элемент - папка
-   if($(self).attr('folder')==='true'){
-      if($(self).children().attr('class') === 'icon-folder-close') {  //меняем иконку при клике
-         $(self).children().attr('class', 'icon-folder-open');
-         $(self).append('<ul class="nav nav-list">');                 //сразу достраиваем, в цикле лишние получим
-         var path = '.' + $(self).attr('id').replace(/-/g, '/');      //вот так вот сурово работаем с ид элемента
+   if(el.attr('folder')==='true'){
+      if(el.children().attr('class') === 'icon-folder-close') {  //меняем иконку при клике
+         el.children().attr('class', 'icon-folder-open');
+         el.append('<ul class="nav nav-list">');                 //сразу достраиваем
+         var path = el.attr('path');
          $.ajax({
             type: 'POST',
             url: '/call/read/nodelist',
             data: 'type=List&path='+path,
-            cashe: false,
             success: function(list){
                list = JSON.parse(list);
                for (var key in list){
                   if(list[key]["folder"]) { var icon = 'icon-folder-close' }
                   else { icon = 'icon-file' }
-                  var node = list[key]['node'].substr(1).replace(/\//g, "-");
-                  $('#'+node).children().last().append('<li>');
-                  $('#'+node).children().last().children().last().html('<i class='+icon+'></i> '+list[key]['name']);
-                  $('#'+node).children().last().children().last().attr('name', list[key]["name"]);
-                  $('#'+node).children().last().children().last().attr('folder', list[key]["folder"]);
-                  $('#'+node).children().last().children().last().attr('id', list[key]["path"].substr(1).replace(/\//g, "-"));
+                  //var node = list[key]['node'].substr(1).replace(/\//g, "-");
+                  el.children().last().append('<li>');
+                  el.children().last().children().last().html('<i class='+icon+'></i> '+list[key]['name']);
+                  //el.children().last().children().last().attr('name', list[key]["name"]);
+                  el.children().last().children().last().attr('folder', list[key]["folder"]);
+                  el.children().last().children().last().attr('path', list[key]["path"]);
                }
-               $('#'+node+' ul').children().bind('click', function(event){
-                  listBuilder(this);                                        //вешаем обработчики рекурсивно
+               el.contents('ul').children().bind('click', function(event){
+                  listBuilder(event);                                        //вешаем обработчики рекурсивно
                   event.stopPropagation();                                  //чтоб событие при всплытии не выполнялось на родителе
                });
             }
          });
       }
       //если кликнули по развернутой папке - поменяем ей стиль и грохним все дочерние элементы списка
-      else if($(self).children().attr('class') === 'icon-folder-open') {
-         $(self).children().attr('class', 'icon-folder-close');
-         $(self).children().last().remove();
+      else if(el.children().attr('class') === 'icon-folder-open') {
+         el.children().attr('class', 'icon-folder-close');
+         el.children().last().remove();
       }
    }
    //если элемент - файл
    else {
-      $('#editor').attr('name', $(self).attr('id'));                   //атрибуту name ставим путь редактируемого файла
-      var path = '.' + $(self).attr('id').replace(/-/g, '/');          //а то гдеж его потом искать
+      var path = el.attr('path');                                   //а то гдеж его потом искать
+      $('#editor').attr('path', path);                              //атрибуту path ставим путь редактируемого файла
       $.ajax({
          type: 'POST',
          url: '/call/read/nodelist',
          data: 'type=List&path='+path,
-         cashe: false,
          success: function(fileContent){
             if(fileContent){
                fileContent = JSON.parse(fileContent);

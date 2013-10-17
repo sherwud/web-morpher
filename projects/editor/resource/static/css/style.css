@@ -2,6 +2,7 @@
    float : left;
    width: 20%;
    height: 100%;
+   overflow: auto;
 }
 
 #projectlist ul:hover{
@@ -13,7 +14,8 @@
    top: 60px;
    right: 0;
    bottom: 0;
-   left: 22%;
+   left: 22.5%;
+   height: 96.5%;
 }
 
 #controlPanel {

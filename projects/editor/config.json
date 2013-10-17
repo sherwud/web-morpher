@@ -1,6 +1,7 @@
 {
    "siteroot":"./www/editor",
    "always_deploy":true,
+   "initfile": "init.js",
    "server":{
       "dynamicPrefix":"call/",
       "port":777,
