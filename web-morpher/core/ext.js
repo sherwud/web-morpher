@@ -1,7 +1,7 @@
 "use strict";
 var system_modules = ['path','fs'];
 var mod ={};
-var wmlog = global.wmlog.init({'title':'wm.ext'});
+var log = wmlog.init({'title':'wm.ext'});
 exports = module.exports = Proxy.createFunction(
    {
       get: function getExtAbstractProperty(self, name){
@@ -21,9 +21,9 @@ exports = module.exports = Proxy.createFunction(
             } catch (global_e){
                try {
                   mod[name] = require(name);
-               } catch (e){
-                  wmlog(1,global_e);
-                  wmlog(1,e);
+               } catch (local_e){
+                  log(1,global_e);
+                  log(1,local_e);
                   mod[name] = undefined;
                }
             }
@@ -32,6 +32,6 @@ exports = module.exports = Proxy.createFunction(
       }
    },
    function callExtAbstract(){
-      wmlog(1,'".core/ext" не является функцией');
+      log(1,'".core/ext" не является функцией');
    }
 );
