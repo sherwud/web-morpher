@@ -1,15 +1,15 @@
 var fs = wm.ext.fs;
 var path = wm.ext.path;
-var wmutil = wm.util;
 exports = module.exports = {};
-function  createVerFile(siteroot){
-   fs.writeFileSync(siteroot+'/ver.json',JSON.stringify({
-      date: wmutil.DateToString(),
-      platform:wm.info()
-   },null,'   '),'utf8');
-}
 exports.deploy = function(project,config,callback){
    var siteroot = config.siteroot;
+   var wmutil = wm.util;
+   function  createVerFile(){
+      fs.writeFileSync(siteroot+'/ver.json',JSON.stringify({
+         date: wmutil.DateToString(),
+         platform:wm.info()
+      },null,'   '),'utf8');
+   }
    function resourceDeploy(callback){
       if (fs.existsSync(project+'/resource')){
          wmutil.fsCopy(project+'/resource',siteroot,callback);
@@ -32,7 +32,7 @@ exports.deploy = function(project,config,callback){
       resourceDeploy(function(e){
          if (e) { throw e; }
          /* тут вызов конвертации source */
-         createVerFile(siteroot);
+         createVerFile();
          callback();
       });
    } else {
