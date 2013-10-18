@@ -13,7 +13,7 @@
       },
       "100":{
          "type":"UNDEFINED ERROR",
-         "inFile":true,
+         "inFile":false,
          "path":"./log/error.log",
          "DateInPath":true,
          "sync":true

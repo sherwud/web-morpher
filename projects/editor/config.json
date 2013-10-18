@@ -8,11 +8,11 @@
       "bodyParser":true
    },
    "additional":{
-      "apps":{
-         "test":{
-            "path":"./projects/test"
-         }
-      },
-      "autostart":["test"]
+      "rootPath":"./projects",
+      "projects": {
+         "cluster":"/cluster",
+         "editor":"/editor",
+         "httpproxy":"/httpproxy"
+      }
    }
 }

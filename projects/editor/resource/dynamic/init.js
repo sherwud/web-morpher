@@ -11,5 +11,5 @@ exports = module.exports = function(server){
     * Пример добавляет обработчик для get метода
     */
    //server.app.use(server.express.bodyParser());
-   wmlog(wm.server.config.additional);
+   wmlog(wm.server.config.additional, {code:0});
 };

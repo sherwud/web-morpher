@@ -2,32 +2,42 @@ $(document).ready(function(){
    //при загрузке строим дерево из корня проекта
    $.ajax({
       type: 'POST',
-      url: '/call/read/nodelist',
-      data: 'type=List&path=./',
-      cache: false,
-      success: function(list){
-         list = JSON.parse(list);
-         //добавляем к html список при первой загрузке страницы
-         $('#projectList').append('<ul>');
-         $('#projectList ul').attr('class', "nav nav-list");
-         for (var key in list){
-            if(list[key]["folder"]) { var icon = 'icon-folder-close' }
-            else { icon = 'icon-file' }
-            $('#projectList ul').append('<li>');
-            $('#projectList ul li').last().html('<i class='+icon+'></i> '+list[key]['name']);
-            //$('#projectList ul li').last().attr('name', list[key]["name"]);
-            $('#projectList ul li').last().attr('folder', list[key]["folder"]);
-            $('#projectList ul li').last().attr('node', list[key]["node"]);
-            $('#projectList ul li').last().attr('path', list[key]["path"]);
-         }
-         $('#projectList ul li').bind('click', function(event){
-            listBuilder(event);                                    //на все построенные элементы так же навесим обработчики
-         });
-         var editor = ace.edit("editor");                          //подключаем редактор Ace
-         editor.setTheme("ace/theme/monokai");                     //устанавливаем оформление
-         editor.getSession().setMode("ace/mode/javascript");
+      url: '/call/read/selectProject',
+      data: 'type=startList',
+      success: function(res) {
+         console.log(res);
       }
    });
+   var a = 5;
+   if(a == 6) {
+      $.ajax({
+         type: 'POST',
+         url: '/call/read/nodelist',
+         data: 'type=List&path=./',
+         success: function(list){
+            list = JSON.parse(list);
+            //добавляем к html список при первой загрузке страницы
+            $('#projectList').append('<ul>');
+            $('#projectList ul').attr('class', "nav nav-list");
+            for (var key in list){
+               if(list[key]["folder"]) { var icon = 'icon-folder-close' }
+               else { icon = 'icon-file' }
+               $('#projectList ul').append('<li>');
+               $('#projectList ul li').last().html('<i class='+icon+'></i> '+list[key]['name']);
+               //$('#projectList ul li').last().attr('name', list[key]["name"]);
+               $('#projectList ul li').last().attr('folder', list[key]["folder"]);
+               $('#projectList ul li').last().attr('node', list[key]["node"]);
+               $('#projectList ul li').last().attr('path', list[key]["path"]);
+            }
+            $('#projectList ul li').bind('click', function(event){
+               listBuilder(event);                                    //на все построенные элементы так же навесим обработчики
+            });
+            var editor = ace.edit("editor");                          //подключаем редактор Ace
+            editor.setTheme("ace/theme/monokai");                     //устанавливаем оформление
+            editor.getSession().setMode("ace/mode/javascript");
+         }
+      });
+   }
    //событие по клику на кнопку Save
    $('#saveButton').click(function(){
       var editor = ace.edit("editor");
@@ -71,7 +81,7 @@ function listBuilder(event){
                }
                el.contents('ul').children().bind('click', function(event){
                   listBuilder(event);                                        //вешаем обработчики рекурсивно
-                  event.stopPropagation();                                  //чтоб событие при всплытии не выполнялось на родителе
+                  event.stopPropagation();                                   //чтоб событие при всплытии не выполнялось на родителе
                });
             }
          });

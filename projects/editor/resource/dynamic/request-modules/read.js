@@ -64,3 +64,16 @@ function SaveFile(req, res){
 }
 exports.post.SaveFile = SaveFile;
 //----------------------------------------------------------------------------------------------------------------------
+function selectProject(req, res) {
+   if(req.body['type'] && req.body['type']==='startList') {
+      wmlog(wm.server.config.additional.projects);
+      var list = {name:'', path:''}
+      for (key in wm.server.config.additional.projects) {
+
+      }
+
+   }
+   res.end('ok');
+}
+exports.post.selectProject = selectProject;
+//----------------------------------------------------------------------------------------------------------------------
