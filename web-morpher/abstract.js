@@ -1,5 +1,5 @@
 "use strict";
-var wmlog = global.wmlog.init({'title':'abstract'});
+var log = wmlog.init({'title':'abstract'});
 function createAbstract(mod,modPath,modLogic,critical){
    /*
     * Задача 1: Запретить set, убрать __getThis
@@ -48,7 +48,7 @@ function createAbstract(mod,modPath,modLogic,critical){
                   if (critical) throw e;
                   mod[name] =
                      createAbstract({},newModPath,newModLogic,critical);
-                  wmlog(1,e);
+                  log(1,e);
                }
             }
             if (mod[name]
@@ -68,16 +68,14 @@ function createAbstract(mod,modPath,modLogic,critical){
             if (typeof mod === 'function'){
                return mod.apply(this,arguments);
             } else {
-               wmlog(1,modPath);
-               wmlog(1,
-                  global.wmlog.stackTrace('"'+modLogic+'" не является функцией')
-               );
+               log(1,modPath);
+               log(1,wmlog.stackTrace('"'+modLogic+'" не является функцией'));
             }
          } catch(e){
-            wmlog(1,'Ошибка выполнения "'+modLogic+'"');
-            wmlog(1,modPath);
-            wmlog(1,mod);
-            wmlog(1,e);
+            log(1,'Ошибка выполнения "'+modLogic+'"');
+            log(1,modPath);
+            log(1,mod);
+            log(1,e);
             return undefined;
          }
       }
@@ -115,10 +113,10 @@ exports = module.exports = function abstract(modPath,modLogic,critical){
    try { requirePath(modPath); }
    catch(global_e){
       try { requireLocalPath(); }
-      catch(e){
-         if (critical) throw [global_e,e];
-         wmlog(1,'Модуль "'+modLogic+'" не найден');
-         global.wmlog([global_e,e],{'title':modPath,'code':1});
+      catch(local_e){
+         if (critical) throw [global_e,local_e];
+         log(1,'Модуль "'+modLogic+'" не найден');
+         wmlog([global_e,local_e],{'title':modPath,'code':1});
          mod = {};
       }
    }
