@@ -1,7 +1,7 @@
 {
    "logFilesRoot":"./",
    "stackTraceLimit":15,
-   "defaultLogCode":"100",
+   "defaultLogCode":"201",
    "glueDisplayMessages":false,
    "glueFileMessages":true,
    "logCode":{
@@ -9,7 +9,11 @@
          "type":"DONE"
       },
       "1":{
-         "type":"ERROR"
+         "type":"ERROR",
+         "inFile":true,
+         "path":"./log/error.log",
+         "DateInPath":true,
+         "sync":true
       },
       "100":{
          "type":"UNDEFINED ERROR",
@@ -20,6 +24,9 @@
       },
       "2":{
          "type":"INFO"
+      },
+      "201":{
+         "type":"DEVLOG"
       },
       "3":{
          "hide": true,

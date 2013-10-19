@@ -5,6 +5,10 @@ var config = require('./log.json');
 config.logFilesRoot = config.logFilesRoot || './';
 config.stackTraceLimit = config.stackTraceLimit || 15;
 Error.stackTraceLimit = config.stackTraceLimit;
+exports = module.exports = log;
+exports.init = init;
+exports.stackTrace = stackTrace;
+exports.set_logFilesRoot = set_logFilesRoot;
 function DateToString(date,rev,istime,isdate){
    var sdate = '';
    date = date?date:new Date;
@@ -79,6 +83,11 @@ function ErrorToString(err){
       stack:err.stack
    },1);
 }
+function stackTrace (msg){
+   var e = new Error(msg);
+   Error.captureStackTrace( e, stackTrace );
+   return e.stack;
+}
 function logCode(code){
    return config.logCode[code]
       || config.logCode[config.defaultLogCode]
@@ -125,7 +134,7 @@ function appendFile(logPrm,msg){
       });
    }
 }
-exports = module.exports = function(msg,prm){
+function log(msg,prm){
    prm = prm || {};
    var code = String(prm.code);
    var logPrm = logCode(code);
@@ -143,14 +152,14 @@ exports = module.exports = function(msg,prm){
       if (!config.glueDisplayMessages) console.log('');
       console.log(msg);
    }
-};
-exports.init = function(prm){
+}
+function init(prm){
    prm = prm || {};
    return function(code,msg){
       prm.code = code;
-      return exports(msg,prm);
+      return log(msg,prm);
    };
-};
-exports.set_logFilesRoot = function(root){
+}
+function set_logFilesRoot(root){
    config.logFilesRoot = root || config.logFilesRoot;
-};
+}

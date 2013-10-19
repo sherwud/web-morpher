@@ -4,22 +4,22 @@ var path = wm.ext.path;
 var configs = ['node_modules'];
 var check = {
    'node_modules':function(val){
-      var wmpath = wm.path.wm;
+      var wmroot = wm.path.wmroot;
       val = String(val);
       if (!fs.existsSync(val))
-         if (fs.existsSync(path.join(wmpath,val)))
-            val = path.join(wmpath,val);
+         if (fs.existsSync(path.join(wmroot,val)))
+            val = path.join(wmroot,val);
          else
             return undefined;
       return val;
    }
 };
-var wmlog = global.wmlog.init({'title':'wm.config'});
+var log = wmlog.init({'title':'wm.config'});
 try{
    exports = module.exports = new config;
 }catch(e){
    exports = module.exports = {};
-   wmlog(1,e);
+   log(1,e);
 }
 function config(){
    var config = require('../config.json')[global.process.platform];

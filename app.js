@@ -7,9 +7,7 @@ for (var i in global.process.argv) {
    }
 }
 require('./web-morpher');
-//wmlog(wm.config,{title:'config',code:2});
 //wmlog(wm.info(),{title:'О системе',code:2});
-//wmlog(wm.path,{title:'Пути',code:2});
 wm.app(args.path,function(){
    wmlog('well done!',{code:0});
 });
