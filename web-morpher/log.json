@@ -1,7 +1,7 @@
 {
    "logFilesRoot":"./",
    "stackTraceLimit":15,
-   "defaultLogCode":"500",
+   "defaultLogCode":"201",
    "glueDisplayMessages":false,
    "glueFileMessages":true,
    "logCode":{
@@ -25,6 +25,9 @@
       "2":{
          "type":"INFO"
       },
+      "201":{
+         "type":"DEVLOG"
+      },
       "3":{
          "hide": true,
          "type":"SYSTEM",
@@ -37,9 +40,6 @@
          "inFile":true,
          "path":"./log/404error.log",
          "DateInPath":true
-      },
-      "500":{
-         "type":"DEVLOG"
       }
    }
 }
