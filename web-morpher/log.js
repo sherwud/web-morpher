@@ -1,14 +1,53 @@
 "use strict";
+module.exports = log;
+log.init = init;
+log.stackTrace = stackTrace;
+log.set_logFilesRoot = set_logFilesRoot;
 var fs = require('fs');
 var path = require('path');
 var config = require('./log.json');
 config.logFilesRoot = config.logFilesRoot || './';
 config.stackTraceLimit = config.stackTraceLimit || 15;
 Error.stackTraceLimit = config.stackTraceLimit;
-exports = module.exports = log;
-exports.init = init;
-exports.stackTrace = stackTrace;
-exports.set_logFilesRoot = set_logFilesRoot;
+function log(msg,prm){
+   prm = prm || {};
+   var code = String(prm.code);
+   var logPrm = logCode(code);
+   if (logPrm.hide) return;
+   var title = (prm.title ? (prm.title+' - ') : '');
+   var type = logPrm.type+': ';
+   if (msg && msg.__isProxy) msg = msg.__getThis;
+   if (typeof msg === 'object') msg = AbstractToString(msg,1);
+   msg = type+title+msg;
+   if (logPrm.inFile) {
+      msg = DateToString(0,0,1,0) + ' ' + msg;
+      appendFile(logPrm,msg);
+   } else {
+      msg = DateToString() + ' ' + msg;
+      if (!config.glueDisplayMessages) console.log('');
+      console.log(msg);
+   }
+}
+function init(prm){
+   prm = prm || {};
+   return function(code,msg){
+      prm.code = code;
+      return log(msg,prm);
+   };
+}
+function stackTrace (msg){
+   var e = new Error(msg);
+   Error.captureStackTrace( e, stackTrace );
+   return e.stack;
+}
+function set_logFilesRoot(root){
+   config.logFilesRoot = root || config.logFilesRoot;
+}
+function logCode(code){
+   return config.logCode[code]
+      || config.logCode[config.defaultLogCode]
+      || {type: 'UNDEFINED ERROR ' + code};
+}
 function DateToString(date,rev,istime,isdate){
    var sdate = '';
    date = date?date:new Date;
@@ -83,16 +122,6 @@ function ErrorToString(err){
       stack:err.stack
    },1);
 }
-function stackTrace (msg){
-   var e = new Error(msg);
-   Error.captureStackTrace( e, stackTrace );
-   return e.stack;
-}
-function logCode(code){
-   return config.logCode[code]
-      || config.logCode[config.defaultLogCode]
-      || {type: 'UNDEFINED ERROR ' + code};
-}
 function appendFile(logPrm,msg){
    function mkdir(fPath,callback){
       var dir = path.dirname(fPath);
@@ -133,33 +162,4 @@ function appendFile(logPrm,msg){
          fs.appendFile(fPath,msg);
       });
    }
-}
-function log(msg,prm){
-   prm = prm || {};
-   var code = String(prm.code);
-   var logPrm = logCode(code);
-   if (logPrm.hide) return;
-   var title = (prm.title ? (prm.title+' - ') : '');
-   var type = logPrm.type+': ';
-   if (msg && msg.__isProxy) msg = msg.__getThis;
-   if (typeof msg === 'object') msg = AbstractToString(msg,1);
-   msg = type+title+msg;
-   if (logPrm.inFile) {
-      msg = DateToString(0,0,1,0) + ' ' + msg;
-      appendFile(logPrm,msg);
-   } else {
-      msg = DateToString() + ' ' + msg;
-      if (!config.glueDisplayMessages) console.log('');
-      console.log(msg);
-   }
-}
-function init(prm){
-   prm = prm || {};
-   return function(code,msg){
-      prm.code = code;
-      return log(msg,prm);
-   };
-}
-function set_logFilesRoot(root){
-   config.logFilesRoot = root || config.logFilesRoot;
 }
