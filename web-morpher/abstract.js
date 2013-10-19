@@ -1,5 +1,51 @@
 "use strict";
+module.exports = abstract;
 var log = wmlog.init({'title':'abstract'});
+/* Задача 1: создавать абстрактный класс по массиву модулей с приоритетом как и по 1му модулю
+ *    newObj = abstract(['путь к модулю 1','путь к модулю 2'])
+ * Задача 2: добавление нового (более приоритетного) пути к уже созданному объекту. и 1 модуль и массив
+ *    newObj.__addModulePath('путь к модулю 3')
+ *    newObj.__addModulePath(['путь к модулю 4','путь к модулю 4'])
+ * Подробно:
+ *    При подключении по массиву берется инициализация из вышестояшего в массиве(приоритетного).
+ *    При подключении файлов свойст объекта также берется логика приоритетного пути.
+ *    Поиск идет по ниспадающей от более приоритетного к менее.
+ *    Ошибки не игнорируются, если модуль упал, не ищется его аналог ниже.
+ */
+function abstract(modPath,modLogic,critical){
+   var mod = false;
+   if (!modLogic) modLogic = modPath;
+   function requirePath(way){
+      try { mod = require(way); }
+      catch(e){
+         var fs = wm.ext.fs;
+         if (e.code === 'MODULE_NOT_FOUND'){
+            if (fs.existsSync(way) && fs.statSync(way).isDirectory()) mod = {};
+            else throw e;
+         } else throw e;
+      }
+   }
+   function requireLocalPath(){
+      var path = wm.ext.path;
+      var way = path.join(path.dirname(module.filename),modPath);
+      requirePath(way);
+   }
+   try { requirePath(modPath); }
+   catch(global_e){
+      try { requireLocalPath(); }
+      catch(local_e){
+         if (critical) throw [global_e,local_e];
+         log(1,'Модуль "'+modLogic+'" не найден');
+         wmlog([global_e,local_e],{'title':modPath,'code':1});
+         mod = {};
+      }
+   }
+   if ((typeof mod !== 'object' || mod instanceof Array)
+         && typeof mod !== 'function'
+         || mod.__isProxy)
+      return mod;
+   return createAbstract(mod,modPath,modLogic,critical);
+}
 function createAbstract(mod,modPath,modLogic,critical){
    /*
     * Задача 1: Запретить set, убрать __getThis
@@ -43,7 +89,7 @@ function createAbstract(mod,modPath,modLogic,critical){
             if (!(name in mod)) {
                newModLogic += '/'+name;
                try {
-                  mod[name] = exports(newModPath,newModLogic,critical);
+                  mod[name] = abstract(newModPath,newModLogic,critical);
                } catch (e){
                   if (critical) throw e;
                   mod[name] =
@@ -81,48 +127,3 @@ function createAbstract(mod,modPath,modLogic,critical){
       }
    );
 }
-/* Задача 1: создавать абстрактный класс по массиву модулей с приоритетом как и по 1му модулю
- *    newObj = abstract(['путь к модулю 1','путь к модулю 2'])
- * Задача 2: добавление нового (более приоритетного) пути к уже созданному объекту. и 1 модуль и массив
- *    newObj.__addModulePath('путь к модулю 3')
- *    newObj.__addModulePath(['путь к модулю 4','путь к модулю 4'])
- * Подробно:
- *    При подключении по массиву берется инициализация из вышестояшего в массиве(приоритетного).
- *    При подключении файлов свойст объекта также берется логика приоритетного пути.
- *    Поиск идет по ниспадающей от более приоритетного к менее.
- *    Ошибки не игнорируются, если модуль упал, не ищется его аналог ниже.
- */
-exports = module.exports = function abstract(modPath,modLogic,critical){
-   var mod = false;
-   if (!modLogic) modLogic = modPath;
-   function requirePath(way){
-      try { mod = require(way); }
-      catch(e){
-         var fs = wm.ext.fs;
-         if (e.code === 'MODULE_NOT_FOUND'){
-            if (fs.existsSync(way) && fs.statSync(way).isDirectory()) mod = {};
-            else throw e;
-         } else throw e;
-      }
-   }
-   function requireLocalPath(){
-      var path = wm.ext.path;
-      var way = path.join(path.dirname(module.filename),modPath);
-      requirePath(way);
-   }
-   try { requirePath(modPath); }
-   catch(global_e){
-      try { requireLocalPath(); }
-      catch(local_e){
-         if (critical) throw [global_e,local_e];
-         log(1,'Модуль "'+modLogic+'" не найден');
-         wmlog([global_e,local_e],{'title':modPath,'code':1});
-         mod = {};
-      }
-   }
-   if ((typeof mod !== 'object' || mod instanceof Array)
-         && typeof mod !== 'function'
-         || mod.__isProxy)
-      return mod;
-   return createAbstract(mod,modPath,modLogic,critical);
-};
