@@ -5,39 +5,19 @@ $(document).ready(function(){
       url: '/call/read/selectProject',
       data: 'type=startList',
       success: function(res) {
-         console.log(res);
+         res = JSON.parse(res);
+         //строим оптионы с именами проектов
+         for (var key in res) {
+            $('#projectSelect').append('<option path='+res[key]+'>'+key+'</option>');
+         }
+         //вешаем обработчики на выбор каждого из оптионов
+         $('#projectSelect').children().bind('click', function(event) {
+            var el = $(event.delegateTarget);
+            var path = el.attr('path');
+            OpenProject(path);
+         });
       }
    });
-   var a = 5;
-   if(a == 6) {
-      $.ajax({
-         type: 'POST',
-         url: '/call/read/nodelist',
-         data: 'type=List&path=./',
-         success: function(list){
-            list = JSON.parse(list);
-            //добавляем к html список при первой загрузке страницы
-            $('#projectList').append('<ul>');
-            $('#projectList ul').attr('class', "nav nav-list");
-            for (var key in list){
-               if(list[key]["folder"]) { var icon = 'icon-folder-close' }
-               else { icon = 'icon-file' }
-               $('#projectList ul').append('<li>');
-               $('#projectList ul li').last().html('<i class='+icon+'></i> '+list[key]['name']);
-               //$('#projectList ul li').last().attr('name', list[key]["name"]);
-               $('#projectList ul li').last().attr('folder', list[key]["folder"]);
-               $('#projectList ul li').last().attr('node', list[key]["node"]);
-               $('#projectList ul li').last().attr('path', list[key]["path"]);
-            }
-            $('#projectList ul li').bind('click', function(event){
-               listBuilder(event);                                    //на все построенные элементы так же навесим обработчики
-            });
-            var editor = ace.edit("editor");                          //подключаем редактор Ace
-            editor.setTheme("ace/theme/monokai");                     //устанавливаем оформление
-            editor.getSession().setMode("ace/mode/javascript");
-         }
-      });
-   }
    //событие по клику на кнопку Save
    $('#saveButton').click(function(){
       var editor = ace.edit("editor");
@@ -53,8 +33,7 @@ $(document).ready(function(){
       });
    });
 });
-
-
+//----------------------------------------------------------------------------------------------------------------------
 function listBuilder(event){
    var el = $(event.delegateTarget);
    //если элемент - папка
@@ -72,10 +51,8 @@ function listBuilder(event){
                for (var key in list){
                   if(list[key]["folder"]) { var icon = 'icon-folder-close' }
                   else { icon = 'icon-file' }
-                  //var node = list[key]['node'].substr(1).replace(/\//g, "-");
                   el.children().last().append('<li>');
                   el.children().last().children().last().html('<i class='+icon+'></i> '+list[key]['name']);
-                  //el.children().last().children().last().attr('name', list[key]["name"]);
                   el.children().last().children().last().attr('folder', list[key]["folder"]);
                   el.children().last().children().last().attr('path', list[key]["path"]);
                }
@@ -116,4 +93,35 @@ function listBuilder(event){
       });
    }
 }
-
+//----------------------------------------------------------------------------------------------------------------------
+function OpenProject(path) {
+   $.ajax({
+      type: 'POST',
+      url: '/call/read/nodelist',
+      data: 'type=List&path='+path,
+      success: function(list){
+         list = JSON.parse(list);
+         $('#projectList').children().remove();
+         //добавляем к html список при первой загрузке страницы
+         $('#projectList').append('<ul>');
+         $('#projectList ul').attr('class', "nav nav-list");
+         for (var key in list){
+            if(list[key]["folder"]) { var icon = 'icon-folder-close' }
+            else { icon = 'icon-file' }
+            $('#projectList ul').append('<li>');
+            $('#projectList ul li').last().html('<i class='+icon+'></i> '+list[key]['name']);
+            //$('#projectList ul li').last().attr('name', list[key]["name"]);
+            $('#projectList ul li').last().attr('folder', list[key]["folder"]);
+            $('#projectList ul li').last().attr('node', list[key]["node"]);
+            $('#projectList ul li').last().attr('path', list[key]["path"]);
+         }
+         $('#projectList ul li').bind('click', function(event){
+            listBuilder(event);                                    //на все построенные элементы так же навесим обработчики
+         });
+         var editor = ace.edit("editor");                          //подключаем редактор Ace
+         editor.setTheme("ace/theme/monokai");                     //устанавливаем оформление
+         editor.getSession().setMode("ace/mode/javascript");
+      }
+   });
+}
+//----------------------------------------------------------------------------------------------------------------------
