@@ -55,10 +55,20 @@ function listBuilder(event){
                   el.children().last().children().last().html('<i class='+icon+'></i> '+list[key]['name']);
                   el.children().last().children().last().attr('folder', list[key]["folder"]);
                   el.children().last().children().last().attr('path', list[key]["path"]);
+                  //на все построенные элементы так же навесим обработчики, папка - на клик, файл - даблклик
+                  if(list[key]["folder"]) {
+                     el.children().last().children().last().bind('click', function(event){
+                        listBuilder(event);
+                     });
+                  } else {
+                     el.children().last().children().last().bind('dblclick', function(event){
+                        listBuilder(event);
+                     });
+                  }
                }
+               //чтоб событие при всплытии не выполнялось на родителе
                el.contents('ul').children().bind('click', function(event){
-                  listBuilder(event);                                        //вешаем обработчики рекурсивно
-                  event.stopPropagation();                                   //чтоб событие при всплытии не выполнялось на родителе
+                  event.stopPropagation();
                });
             }
          });
@@ -110,14 +120,20 @@ function OpenProject(path) {
             else { icon = 'icon-file' }
             $('#projectList ul').append('<li>');
             $('#projectList ul li').last().html('<i class='+icon+'></i> '+list[key]['name']);
-            //$('#projectList ul li').last().attr('name', list[key]["name"]);
             $('#projectList ul li').last().attr('folder', list[key]["folder"]);
             $('#projectList ul li').last().attr('node', list[key]["node"]);
             $('#projectList ul li').last().attr('path', list[key]["path"]);
+            //на все построенные элементы так же навесим обработчики, папка - на клик, файл - даблклик
+            if(list[key]["folder"]) {
+               $('#projectList ul li').last().bind('click', function(event){
+                  listBuilder(event);                                    //на все построенные элементы так же навесим обработчики
+               });
+            } else {
+               $('#projectList ul li').last().bind('dblclick', function(event){
+                  listBuilder(event);                                    //на все построенные элементы так же навесим обработчики
+               });
+            }
          }
-         $('#projectList ul li').bind('click', function(event){
-            listBuilder(event);                                    //на все построенные элементы так же навесим обработчики
-         });
          var editor = ace.edit("editor");                          //подключаем редактор Ace
          editor.setTheme("ace/theme/monokai");                     //устанавливаем оформление
          editor.getSession().setMode("ace/mode/javascript");
