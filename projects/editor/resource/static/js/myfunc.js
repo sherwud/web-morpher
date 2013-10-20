@@ -8,7 +8,7 @@ $(document).ready(function(){
          res = JSON.parse(res);
          //строим оптионы с именами проектов
          for (var key in res) {
-            $('#projectSelect').append('<option path='+res[key]+'>'+key+'</option>');
+            $('#projectSelect').append('<option id='+key.toUpperCase()+' path='+res[key]+'>'+key+'</option>');
          }
          //вешаем обработчики на выбор каждого из оптионов
          $('#projectSelect').children().bind('click', function(event) {
@@ -16,6 +16,13 @@ $(document).ready(function(){
             var path = el.attr('path');
             OpenProject(path);
          });
+         //проверим нет ли чего в куках
+         var userdata = getCookie();
+         if(userdata) {
+            userdata = userdata.split('&');
+            OpenProject(userdata[0]);
+            $('#'+userdata[1].toUpperCase()).attr('selected', 'true');
+         }
       }
    });
    //событие по клику на кнопку Save
@@ -147,6 +154,12 @@ function OpenProject(path) {
          var editor = ace.edit("editor");                          //подключаем редактор Ace
          editor.setTheme("ace/theme/monokai");                     //устанавливаем оформление
          editor.getSession().setMode("ace/mode/text");             //по умолчанию открываем пустой текстовый документ
+         //обновим куку при открытии нового проекта
+         var session = 'editorLastOpenProgect';
+         if($('#projectSelect').val() !== 'Выберите проект') {
+            var data = path + '&' + $('#projectSelect').val();
+            setCookie(session, data);
+         }
       }
    });
 }
