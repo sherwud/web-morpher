@@ -1,11 +1,11 @@
-#projectlist {
+#project {
    float : left;
    width: 20%;
    height: 100%;
    overflow: auto;
 }
 
-#projectlist ul:hover{
+#project ul:hover{
    cursor:pointer;
 }
 
@@ -29,4 +29,8 @@
 
 #saveButton {
    margin: 19px;
+}
+
+#projectSelect {
+   width: 100%;
 }

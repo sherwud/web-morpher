@@ -65,15 +65,22 @@ function SaveFile(req, res){
 exports.post.SaveFile = SaveFile;
 //----------------------------------------------------------------------------------------------------------------------
 function selectProject(req, res) {
+   var rootPath = wm.server.config.additional.rootPath;
    if(req.body['type'] && req.body['type']==='startList') {
-      wmlog(wm.server.config.additional.projects);
-      var list = {name:'', path:''}
-      for (key in wm.server.config.additional.projects) {
-
+      var list = {}
+      for(var key in wm.server.config.additional.projects) {
+         list[key] = wm.server.config.additional.projects[key];
       }
-
+      //склеим пути к проектам с относительным путем корневой дирректории
+      for (var j in list) {
+         var prpath = list[j];
+         list[j] = rootPath + prpath;
+      }
+      list = JSON.stringify(list);
+      res.send(list);
    }
-   res.end('ok');
+   res.end('ne popal');
+
 }
 exports.post.selectProject = selectProject;
 //----------------------------------------------------------------------------------------------------------------------
