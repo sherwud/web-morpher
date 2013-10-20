@@ -2,7 +2,7 @@
 var fs = require('fs');
 exports.post = {};
 //------------------------------------------------------------------------------
-/*
+/**
  * функция возвращает объект,
  * свойства которого соответствуют содержимому каталога,
  * путь которого передаем в качестве аргумента
@@ -26,20 +26,18 @@ function nodelist(req, res){
          list[templist[i]] = obg;
       }
       list = JSON.stringify(list);
-      //return list;
       res.end(list);
    }
    else if(fs.existsSync(path) && fs.statSync(path).isFile()) {
       var obg = {content:''}
       obg['content'] = fs.readFileSync(path, 'utf-8');
       obg = JSON.stringify(obg);
-      //return obg;
       res.end(obg);
    }
 }
 exports.post.nodelist = nodelist;   //так делаем, чтобы было можно использовать функцию во внешнем файле
 //------------------------------------------------------------------------------
-/*
+/**
 * функция проверяет существует ли файл и файл ли находится по указаному пути,
 * и если все ок, то пишет в файл контент
 * принимает путь к файлу
@@ -64,6 +62,11 @@ function SaveFile(req, res){
 }
 exports.post.SaveFile = SaveFile;
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Функция для получения списка проектов и пути к ним
+ * принимает пока что 1 параметр "startList"
+ * возвращает JSON
+ */
 function selectProject(req, res) {
    var rootPath = wm.server.config.additional.rootPath;
    if(req.body['type'] && req.body['type']==='startList') {
@@ -80,7 +83,6 @@ function selectProject(req, res) {
       res.send(list);
    }
    res.end('ne popal');
-
 }
 exports.post.selectProject = selectProject;
 //----------------------------------------------------------------------------------------------------------------------

@@ -81,7 +81,7 @@ function listBuilder(event){
    }
    //если элемент - файл
    else {
-      var path = el.attr('path');                                   //а то гдеж его потом искать
+      var path = el.attr('path');
       $('#editor').attr('path', path);                              //атрибуту path ставим путь редактируемого файла
       $.ajax({
          type: 'POST',
@@ -93,11 +93,20 @@ function listBuilder(event){
                var editor = ace.edit("editor");
                editor.setValue(fileContent["content"]);
                editor.gotoLine(0); // переходим на линию #lineNumber (нумерация с нуля)
+               //настроим режим подсветки синтаксиса в зависимости от типа открываемого файла
+               var filetype = el.text().split('.')[1];
+               if (filetype === 'js') editor.getSession().setMode("ace/mode/javascript");
+               else if (filetype === 'html') editor.getSession().setMode("ace/mode/html");
+               else if (filetype === 'json') editor.getSession().setMode("ace/mode/json");
+               else if (filetype === 'css') editor.getSession().setMode("ace/mode/css");
+               else if (filetype === 'php') editor.getSession().setMode("ace/mode/php");
+               else if (filetype === 'py') editor.getSession().setMode("ace/mode/python");
+               else editor.getSession().setMode("ace/mode/text");
             }
            else {
                var editor = ace.edit("editor");
                editor.setValue('File can not be open');
-               editor.gotoLine(0); // переходим на линию #lineNumber (нумерация с нуля)
+               editor.gotoLine(0);
            }
          }
       });
@@ -134,9 +143,10 @@ function OpenProject(path) {
                });
             }
          }
+         //Настраиваем наш редактор Ace
          var editor = ace.edit("editor");                          //подключаем редактор Ace
          editor.setTheme("ace/theme/monokai");                     //устанавливаем оформление
-         editor.getSession().setMode("ace/mode/javascript");
+         editor.getSession().setMode("ace/mode/text");             //по умолчанию открываем пустой текстовый документ
       }
    });
 }
