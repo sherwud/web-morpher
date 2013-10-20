@@ -9,9 +9,9 @@
    cursor:pointer;
 }
 
-#editor {
+.editor {
    position: absolute;
-   top: 60px;
+   top: 50px;
    right: 0;
    bottom: 0;
    left: 22.5%;
@@ -20,10 +20,10 @@
 
 #controlPanel {
    position: absolute;
-   top: 0;
+   top: 7px;
    right: 0;
    bottom: 0;
-   left: 22%;
+   left: 22.5%;
    height: 60px;
 }
 

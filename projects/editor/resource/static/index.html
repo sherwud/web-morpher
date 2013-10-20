@@ -25,10 +25,14 @@
          <div id='projectList'></div>
       </div>
    <div id='controlPanel'>
-      <input type="button" class="btn-primary" id='saveButton' value='Save'>
+      <!--<input type="button" class="btn-primary" id='saveButton' value='Save'>-->
+      <ul class="nav nav-tabs">
+         <li><a href="#editor" data-toggle="tab">Несохраненный</a></li>
+      </ul>
    </div>
-   <div id='editor'></div>
-
+   <div id='editFiles' class="tab-content">
+      <div id='editor' class="editor tab-pane"></div>
+   </div>
 </body>
 
 </html>

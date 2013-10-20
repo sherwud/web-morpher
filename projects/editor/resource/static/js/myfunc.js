@@ -1,4 +1,6 @@
 $(document).ready(function(){
+   //нужен счетчик вкладок мне в окне, поэтному ввожу глобальный идентификатор
+   document.tabcount = 1;
    //при загрузке строим дерево из корня проекта
    $.ajax({
       type: 'POST',
@@ -97,7 +99,10 @@ function listBuilder(event){
          success: function(fileContent){
             if(fileContent){
                fileContent = JSON.parse(fileContent);
-               var editor = ace.edit("editor");
+               var tabid = 'efile'+document.tabcount;
+               $('#editFiles').append('<div class="editor tab-pane" id='+tabid+'></div>')
+               $('#controlPanel ul').append('<li><a data-toggle="tab" href="#'+tabid+'">'+el.text().slice(1)+'</a></li>');
+               var editor = ace.edit(tabid);
                editor.setValue(fileContent["content"]);
                editor.gotoLine(0); // переходим на линию #lineNumber (нумерация с нуля)
                //настроим режим подсветки синтаксиса в зависимости от типа открываемого файла
@@ -111,7 +116,7 @@ function listBuilder(event){
                else editor.getSession().setMode("ace/mode/text");
             }
            else {
-               var editor = ace.edit("editor");
+               var editor = ace.edit("tabid");
                editor.setValue('File can not be open');
                editor.gotoLine(0);
            }
@@ -163,4 +168,6 @@ function OpenProject(path) {
       }
    });
 }
+//----------------------------------------------------------------------------------------------------------------------
+
 //----------------------------------------------------------------------------------------------------------------------
