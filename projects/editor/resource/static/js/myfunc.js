@@ -20,7 +20,7 @@ $(document).ready(function(){
          });
          //проверим нет ли чего в куках
          var userdata = getCookie();
-         userdata = false;
+         //userdata = false;
          if(userdata) {
             userdata = userdata.split('&');
             OpenProject(userdata[0]);
@@ -122,10 +122,18 @@ function listBuilder(event){
                editor.setValue('File can not be open');
                editor.gotoLine(0);
            }
-           $('#controlPanel ul').append('<li class="active"><a data-toggle="tab" href="#'+tabid+'">'+el.text().slice(1)+' <i class="icon-remove-sign closetab"></i></a></li>');
+           $('#controlPanel ul').append('<li class="active"><a data-toggle="tab" href="#'+tabid+'">'+el.text().slice(1)+' <i class="icon-remove-sign closetab" linkedFile='+tabid+'></i></a></li>');
            $('#'+tabid).toggleClass('active');
            $('.closetab').bind('click', function() {
-               f = 5;
+              //удалим вкладку и связанный див с эдитором
+               var linkedFile  = $(this).attr('linkedFile');
+              $(this).parent().parent().remove();
+              $('#'+linkedFile).remove();
+              //проверим, если был закрыт не активный таб, то продолжаем работать, в противном случае активным сделаем последний
+              if(!$('#controlPanel ul li.active').attr('class')) {
+                 $('#controlPanel ul li').last().toggleClass('active');
+                 $('#editFiles').children().last().toggleClass('active');
+              }
             });
          }
       });
