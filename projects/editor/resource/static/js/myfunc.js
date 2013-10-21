@@ -1,6 +1,6 @@
 $(document).ready(function(){
    //нужен счетчик вкладок мне в окне, поэтному ввожу глобальный идентификатор
-   document.tabcount = 1;
+   document.tabcount = 0;
    //при загрузке строим дерево из корня проекта
    $.ajax({
       type: 'POST',
@@ -20,6 +20,7 @@ $(document).ready(function(){
          });
          //проверим нет ли чего в куках
          var userdata = getCookie();
+         userdata = false;
          if(userdata) {
             userdata = userdata.split('&');
             OpenProject(userdata[0]);
@@ -91,7 +92,7 @@ function listBuilder(event){
    //если элемент - файл
    else {
       var path = el.attr('path');
-      $('#editor').attr('path', path);                              //атрибуту path ставим путь редактируемого файла
+      //$('#editor').attr('path', path);
       $.ajax({
          type: 'POST',
          url: '/call/read/nodelist',
@@ -99,9 +100,10 @@ function listBuilder(event){
          success: function(fileContent){
             if(fileContent){
                fileContent = JSON.parse(fileContent);
+               document.tabcount++;
                var tabid = 'efile'+document.tabcount;
-               $('#editFiles').append('<div class="editor tab-pane" id='+tabid+'></div>')
-               $('#controlPanel ul').append('<li><a data-toggle="tab" href="#'+tabid+'">'+el.text().slice(1)+'</a></li>');
+               $('#editFiles').append('<div class="editor tab-pane " id='+tabid+' path='+path+'></div>');
+               $('.active').toggleClass('active');
                var editor = ace.edit(tabid);
                editor.setValue(fileContent["content"]);
                editor.gotoLine(0); // переходим на линию #lineNumber (нумерация с нуля)
@@ -120,6 +122,11 @@ function listBuilder(event){
                editor.setValue('File can not be open');
                editor.gotoLine(0);
            }
+           $('#controlPanel ul').append('<li class="active"><a data-toggle="tab" href="#'+tabid+'">'+el.text().slice(1)+' <i class="icon-remove-sign closetab"></i></a></li>');
+           $('#'+tabid).toggleClass('active');
+           $('.closetab').bind('click', function() {
+               f = 5;
+            });
          }
       });
    }
@@ -155,10 +162,6 @@ function OpenProject(path) {
                });
             }
          }
-         //Настраиваем наш редактор Ace
-         var editor = ace.edit("editor");                          //подключаем редактор Ace
-         editor.setTheme("ace/theme/monokai");                     //устанавливаем оформление
-         editor.getSession().setMode("ace/mode/text");             //по умолчанию открываем пустой текстовый документ
          //обновим куку при открытии нового проекта
          var session = 'editorLastOpenProgect';
          if($('#projectSelect').val() !== 'Выберите проект') {
@@ -168,6 +171,4 @@ function OpenProject(path) {
       }
    });
 }
-//----------------------------------------------------------------------------------------------------------------------
-
 //----------------------------------------------------------------------------------------------------------------------

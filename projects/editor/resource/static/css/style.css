@@ -1,3 +1,7 @@
+* {
+    outline: medium none;
+}
+
 #project {
    float : left;
    width: 20%;
@@ -11,11 +15,15 @@
 
 .editor {
    position: absolute;
-   top: 50px;
+   top: 40px;
    right: 0;
    bottom: 0;
    left: 22.5%;
    height: 96.5%;
+}
+
+.closetab {
+    margin: 0 -7px -3px 3px;
 }
 
 #controlPanel {
@@ -33,4 +41,13 @@
 
 #projectSelect {
    width: 100%;
+}
+
+#controlPanel ul li:FIRST-CHILD {
+    margin-left: 4px;
+}
+
+#controlPanel ul > li > a {
+    line-height: 7px;
+    outline: medium none;
 }
