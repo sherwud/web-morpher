@@ -40,6 +40,6 @@ exports = module.exports = function app(way,callback){
    wm.builder.deploy(way,config,function(){
       global.wmlog.set_logFilesRoot(config.siteroot);
       wm.server.prepare(config).listen();
-      callback();
+      if (typeof callback === 'function') callback();
    });
 };
