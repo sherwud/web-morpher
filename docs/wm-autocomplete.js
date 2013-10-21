@@ -5,6 +5,16 @@
  */
 var wm = {
    /**
+    * @description Выполняет запуск переданного в параметре way проекта.
+    * @description Может принимать путь к конфигу проекта,
+    * если в проекте используется несколько конфигураций.
+    * @syntax wm.app(way,callback)
+    * @param {string} way - файл или каталог запуска
+    * @param {function} callback функция которая вызовется после запуска сайта
+    * @example wm.app('./projects/cluster')
+    */
+   app:function(way,callback){},
+   /**
     * @description Глобальный конфиг системы web-morpher.
     * @syntax wm.config
     */
@@ -28,6 +38,5 @@ var wmlog = function(msg,prm){};
  * @example global.wm = wmabstract('./core','wm');
  * @example var myObj.myOpt = wmabstract('./myDir','myObj.myOpt');
  * @example var myObj = wmabstract(['./m1','./m2'],'myObj');
- * @name namePath
  */
 var wmabstract = function(modPath,modLogic,critical){};
