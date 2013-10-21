@@ -26,6 +26,14 @@
     margin: 0 -7px -3px 3px;
 }
 
+.noselect {
+   -moz-user-select: -moz-none;
+   -o-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   user-select: none;
+}
+
 #controlPanel {
    position: absolute;
    top: 7px;

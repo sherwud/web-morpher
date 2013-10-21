@@ -91,8 +91,31 @@ function listBuilder(event){
    }
    //если элемент - файл
    else {
+      //проверим,если такой файл уже открыт, то откроем нужную вкладку и не будем слать запрос
+      if ($('#controlPanel ul li').attr('class') || $('#controlPanel ul li').attr('class')=='') {
+         //имя файла который пытаемся открыть
+         var name = el.text().split(' ')[1];
+         //циклом пробегаемся по всем табам, проверяем открыт ли такой файл
+         for (var i=0; i < $('#controlPanel ul li').length; i++){
+            //имя таба который проверяем на текущей итерации
+            var curtabname = $($('#controlPanel ul li')[i]).text().split(' ')[0];
+            if (name == curtabname) {
+               //проверяем не этот ли таб с файлом сичас активен и если нет перейдем на него
+               if ($($('#controlPanel ul li')[i]).attr('class') != 'active') {
+                  //если есть активный таб, то снимем с него эти привелегии
+                  if ($('#controlPanel ul li.active').attr('class')) {
+                     $('#'+$('#controlPanel ul li.active i').attr('linkedFile')).toggleClass('active');
+                     $('#controlPanel ul li.active').toggleClass('active');
+                  }
+                  //переходим к уже открытому файлу
+                  $($('#controlPanel ul li')[i]).toggleClass('active');
+                  $('#'+$($('#controlPanel ul li')[i]).children().children().attr('linkedFile')).toggleClass('active');
+               }
+               return;
+            }
+         }
+      }
       var path = el.attr('path');
-      //$('#editor').attr('path', path);
       $.ajax({
          type: 'POST',
          url: '/call/read/nodelist',
