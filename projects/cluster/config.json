@@ -12,7 +12,8 @@
       "cookieParser":true,
       "cookieSecret":"Secret",
       "cookieSession":true,
-      "cookieSessionKey":"sid"
+      "cookieSessionKey":"sid",
+      "cookieSessionMaxAge":86400000
    },
    "additional":{
       "apps":{

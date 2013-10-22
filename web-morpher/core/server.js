@@ -104,7 +104,10 @@ function prepare(conf){
    if (config.express.cookieParser)
       app.use(express.cookieParser(config.express.cookieSecret));
    if (config.express.cookieSession) {
-      app.use(express.cookieSession({key:config.express.cookieSessionKey}));
+      app.use(express.cookieSession({
+         key:config.express.cookieSessionKey
+        ,cookie:{maxAge:config.express.cookieSessionMaxAge}
+      }));
       app.all('/*',function(req,res,next){
          req.session.id = req.session.id?req.session.id:util.generateUUID();
          next();
