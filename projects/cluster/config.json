@@ -4,8 +4,14 @@
    "initfile":"init.js",
    "server":{
       "dynamicPrefix":"call/",
-      "port":777,
-      "bodyParser":false
+      "port":777
+   },
+   "express":{
+      "bodyParser":false,
+      "cookieParser":true,
+      "cookieSecret":"Secret",
+      "cookieSession":true,
+      "cookieSessionKey":"sid"
    },
    "additional":{
       "apps":{

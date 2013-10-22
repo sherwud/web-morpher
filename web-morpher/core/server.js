@@ -96,8 +96,12 @@ function handler(req,res){
 }
 function prepare(conf){
    config = __server.config = conf;
-   if (config.server.bodyParser)
+   if (config.express.bodyParser)
       app.use(express.bodyParser());
+   if (config.express.cookieParser)
+      app.use(express.cookieParser(config.express.cookieSecret));
+   if (config.express.cookieSession)
+      app.use(express.cookieSession({key:config.express.cookieSessionKey}));
    var dynURLpt = '/{dynamicPrefix}:module/:method';
    var dynURL = '';
    try {
