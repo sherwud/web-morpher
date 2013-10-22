@@ -96,6 +96,8 @@ function handler(req,res){
 }
 function prepare(conf){
    config = __server.config = conf;
+   if (config.express.compress)
+      app.use(express.compress());
    if (config.express.bodyParser)
       app.use(express.bodyParser());
    if (config.express.cookieParser)
