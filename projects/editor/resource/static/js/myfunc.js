@@ -10,7 +10,7 @@ $(document).ready(function(){
          res = JSON.parse(res);
          //строим оптионы с именами проектов
          for (var key in res) {
-            $('#projectSelect').append('<option id='+key.toUpperCase()+' path='+res[key]+'>'+key+'</option>');
+            $('#projectSelect').append('<option id='+key+' path='+res[key]+'>'+key+'</option>');
          }
          //вешаем обработчики на выбор каждого из оптионов
          $('#projectSelect').children().bind('click', function(event) {
@@ -24,7 +24,7 @@ $(document).ready(function(){
          if(userdata) {
             userdata = userdata.split('&');
             OpenProject(userdata[0]);
-            $('#'+userdata[1].toUpperCase()).attr('selected', 'true');
+            $('#'+userdata[1]).attr('selected', 'true');
          }
       }
    });
@@ -95,6 +95,10 @@ function listBuilder(event){
       if ($('#controlPanel ul li').attr('class') || $('#controlPanel ul li').attr('class')=='') {
          //имя файла который пытаемся открыть
          var name = el.text().split(' ')[1];
+         var ul = $('#controlPanel ul');
+         var li = $('#controlPanel ul li');
+         var liA = $(li, '.active');              //$('.active', ul)   находит активный элемент
+         var liAi = $(liA, 'i');
          //циклом пробегаемся по всем табам, проверяем открыт ли такой файл
          for (var i=0; i < $('#controlPanel ul li').length; i++){
             //имя таба который проверяем на текущей итерации

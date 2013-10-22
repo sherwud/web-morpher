@@ -6,7 +6,7 @@
 // возвращает cookie, если есть, если нет, то undefined
 //todo над дописать функцию - дополнить регуляркой и поиском по name
 function getCookie() {
-   var matches = document.cookie;
+   var matches = document.cookie.split(';')[0];
    return matches ? decodeURIComponent(matches).split('=')[1] : undefined;
 }
 //----------------------------------------------------------------------------------------------------------------------

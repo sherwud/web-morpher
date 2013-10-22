@@ -2,6 +2,53 @@
     outline: medium none;
 }
 
+.editor {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    bottom: 0;
+    left: 22.5%;
+    height: 96.5%;
+}
+
+.closetab {
+    margin: 0 -7px -3px 3px !important;
+}
+
+.closetab:hover {
+    background-position: -168px -96px;
+    cursor: pointer;
+}
+
+.noselect {
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.configuration {
+    top: 7px;
+    left: 90%;
+    right: 0;
+    height: 33px;
+    position: absolute;
+
+}
+
+.configuration a img {
+    float: right;
+    padding: 0 17px;
+    height: 27px;
+    display: block;
+    margin: 0 20px 0 0;
+}
+
+.configuration a img:hover {
+    cursor: pointer;
+}
+
 #project {
    float : left;
    width: 20%;
@@ -13,38 +60,13 @@
    cursor:pointer;
 }
 
-.editor {
-   position: absolute;
-   top: 40px;
-   right: 0;
-   bottom: 0;
-   left: 22.5%;
-   height: 96.5%;
-}
-
-.closetab {
-    margin: 0 -7px -3px 3px;
-}
-
-.noselect {
-   -moz-user-select: -moz-none;
-   -o-user-select: none;
-   -khtml-user-select: none;
-   -webkit-user-select: none;
-   user-select: none;
-}
-
 #controlPanel {
    position: absolute;
    top: 7px;
-   right: 0;
+   right: 10%;
    bottom: 0;
    left: 22.5%;
-   height: 60px;
-}
-
-#saveButton {
-   margin: 19px;
+   height: 33px;
 }
 
 #projectSelect {
