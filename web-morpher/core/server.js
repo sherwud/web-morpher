@@ -1,5 +1,6 @@
 "use strict";
 var path = wm.ext.path;
+var util = wm.util;
 var express = wm.ext.express;
 var fs = wm.ext.fs;
 var app = express();
@@ -102,8 +103,13 @@ function prepare(conf){
       app.use(express.bodyParser());
    if (config.express.cookieParser)
       app.use(express.cookieParser(config.express.cookieSecret));
-   if (config.express.cookieSession)
+   if (config.express.cookieSession) {
       app.use(express.cookieSession({key:config.express.cookieSessionKey}));
+      app.all('/*',function(req,res,next){
+         req.session.id = req.session.id?req.session.id:util.generateUUID();
+         next();
+      });
+   }
    var dynURLpt = '/{dynamicPrefix}:module/:method';
    var dynURL = '';
    try {
