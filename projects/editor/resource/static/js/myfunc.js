@@ -28,6 +28,15 @@ $(document).ready(function(){
          }
       }
    });
+   //вешаем обработчики для конфига эдитора
+   $('#lang li').bind('click', function(){
+      if($('#controlPanel ul li.active').attr('class')) {
+         var syntax = $(this).text().toLowerCase();
+         var el =  $('#controlPanel ul li.active a i').attr('linkedFile');
+         var editor = ace.edit(el);
+         editor.getSession().setMode("ace/mode/"+syntax);
+      }
+   })
    //событие по клику на кнопку Save
    $('#saveButton').click(function(){
       var editor = ace.edit("editor");

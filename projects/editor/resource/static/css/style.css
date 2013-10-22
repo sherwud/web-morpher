@@ -49,6 +49,10 @@
     cursor: pointer;
 }
 
+#lang {
+   margin-left: 0px !important;
+}
+
 #project {
    float : left;
    width: 20%;
