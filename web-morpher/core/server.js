@@ -4,10 +4,10 @@ var express = wm.ext.express;
 var fs = wm.ext.fs;
 var app = express();
 var modules = {};
-exports = module.exports = {};
-var config = exports.config = {};
-exports.prepare = prepare;
-exports.listen = listen;
+var __server = module.exports = {};
+var config = __server.config = {};
+__server.prepare = prepare;
+__server.listen = listen;
 function defineMethod(type,module,method){
    var typeis = wm.util.typeis;
    if (module in modules) {
@@ -95,7 +95,7 @@ function handler(req,res){
       res.send(200,result);
 }
 function prepare(conf){
-   config = exports.config = conf;
+   config = __server.config = conf;
    if (config.server.bodyParser)
       app.use(express.bodyParser());
    var dynURLpt = '/{dynamicPrefix}:module/:method';
@@ -130,7 +130,7 @@ function prepare(conf){
    if (fs.existsSync(config.siteroot+'/static')) {
       app.use(express.static(config.siteroot+'/static'));
    }
-   return exports;
+   return __server;
 }
 function listen(port){
    var wmlog = global.wmlog.init();

@@ -6,7 +6,7 @@ var path = wm.ext.path;
  * @param {string} way - файл или каталог запуска
  * @returns undefined
  */
-exports = module.exports = function app(way,callback){
+module.exports = function app(way,callback){
    var wmlog = global.wmlog.init({'title':'function app'});
    if (typeof way !== 'string' && way !== '') {
        wmlog(1,'Файл или каталог запуска не задан!');
