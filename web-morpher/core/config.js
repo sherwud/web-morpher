@@ -16,9 +16,9 @@ var check = {
 };
 var log = wmlog.init({'title':'wm.config'});
 try{
-   exports = module.exports = new config;
+   module.exports = new config;
 }catch(e){
-   exports = module.exports = {};
+   module.exports = {};
    log(1,e);
 }
 function config(){

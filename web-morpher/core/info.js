@@ -5,7 +5,7 @@ var packageInfo = require('../package.json');
 * @param {string} name - имя параметра для получения
 * @returns {any} - значение параметра, или стандартный набор
 */
-exports = module.exports = function info(name){
+module.exports = function info(name){
    if (name) {
       return packageInfo[name]?packageInfo[name]:null;
    } else {
