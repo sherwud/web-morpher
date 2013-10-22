@@ -1,2 +1,2 @@
 "use strict";
-exports = module.exports = wmabstract('./lib');
+module.exports = wmabstract('./lib');

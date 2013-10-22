@@ -2,7 +2,7 @@
 var system_modules = ['path','fs'];
 var mod ={};
 var log = wmlog.init({'title':'wm.ext'});
-exports = module.exports = Proxy.createFunction(
+module.exports = Proxy.createFunction(
    {
       get: function getExtAbstractProperty(self, name){
          if (name in mod) return mod[name];

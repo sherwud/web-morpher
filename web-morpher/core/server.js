@@ -1,13 +1,14 @@
 "use strict";
 var path = wm.ext.path;
+var util = wm.util;
 var express = wm.ext.express;
 var fs = wm.ext.fs;
 var app = express();
 var modules = {};
-exports = module.exports = {};
-var config = exports.config = {};
-exports.prepare = prepare;
-exports.listen = listen;
+var __server = module.exports = {};
+var config = __server.config = {};
+__server.prepare = prepare;
+__server.listen = listen;
 function defineMethod(type,module,method){
    var typeis = wm.util.typeis;
    if (module in modules) {
@@ -95,9 +96,23 @@ function handler(req,res){
       res.send(200,result);
 }
 function prepare(conf){
-   config = exports.config = conf;
-   if (config.server.bodyParser)
+   config = __server.config = conf;
+   if (config.express.compress)
+      app.use(express.compress());
+   if (config.express.bodyParser)
       app.use(express.bodyParser());
+   if (config.express.cookieParser)
+      app.use(express.cookieParser(config.express.cookieSecret));
+   if (config.express.cookieSession) {
+      app.use(express.cookieSession({
+         key:config.express.cookieSessionKey
+        ,cookie:{maxAge:config.express.cookieSessionMaxAge}
+      }));
+      app.all('/*',function(req,res,next){
+         req.session.id = req.session.id?req.session.id:util.generateUUID();
+         next();
+      });
+   }
    var dynURLpt = '/{dynamicPrefix}:module/:method';
    var dynURL = '';
    try {
@@ -130,7 +145,7 @@ function prepare(conf){
    if (fs.existsSync(config.siteroot+'/static')) {
       app.use(express.static(config.siteroot+'/static'));
    }
-   return exports;
+   return __server;
 }
 function listen(port){
    var wmlog = global.wmlog.init();

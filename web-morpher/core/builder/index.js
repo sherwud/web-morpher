@@ -1,7 +1,9 @@
+"use strict";
 var fs = wm.ext.fs;
 var path = wm.ext.path;
-exports = module.exports = {};
-exports.deploy = function(project,config,callback){
+var __builder = module.exports = {};
+__builder.deploy = deploy;
+function deploy(project,config,callback){
    var siteroot = config.siteroot;
    var wmutil = wm.util;
    function  createVerFile(){

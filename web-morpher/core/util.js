@@ -1,13 +1,13 @@
 var fs = wm.ext.fs;
 var path = wm.ext.path;
-exports = module.exports = {__isProxy:true};
-exports.DateToString = DateToString;
-exports.pathReduce = pathReduce;
-exports.fsCopy = fsCopy;
-exports.fsRemoveSync = fsRemoveSync;
-exports.fsClearSync = fsClearSync;
-exports.typeis = typeis;
-exports.generateUUID = generateUUID;
+var __util = module.exports = {__isProxy:true};
+__util.DateToString = DateToString;
+__util.pathReduce = pathReduce;
+__util.fsCopy = fsCopy;
+__util.fsRemoveSync = fsRemoveSync;
+__util.fsClearSync = fsClearSync;
+__util.typeis = typeis;
+__util.generateUUID = generateUUID;
 function DateToString(date,rev){
    date = date?date:new Date;
    var y = date.getFullYear();
