@@ -97,13 +97,15 @@ function handler(req,res){
 }
 function prepare(conf){
    config = __server.config = conf;
+   var tmpConf = {};
+   try { tmpConf = require(config.siteroot+'/config.json'); } catch (e){}
    if (config.server.contentCompression)
       app.use(express.compress());
    app.use(express.json());
    app.use(express.urlencoded());
    if (config.server.fileUpload)
       app.use(express.multipart());
-   app.use(express.cookieParser(util.generateUUID()));
+   app.use(express.cookieParser(tmpConf.sessionSecret || util.generateUUID()));
    app.use(express.cookieSession({
       key:config.server.sessionKey,
       cookie:{maxAge:config.server.sessionMaxAge}
