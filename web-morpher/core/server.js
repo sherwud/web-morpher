@@ -97,22 +97,21 @@ function handler(req,res){
 }
 function prepare(conf){
    config = __server.config = conf;
-   if (config.express.compress)
+   if (config.server.contentCompression)
       app.use(express.compress());
-   if (config.express.bodyParser)
-      app.use(express.bodyParser());
-   if (config.express.cookieParser)
-      app.use(express.cookieParser(config.express.cookieSecret));
-   if (config.express.cookieSession) {
-      app.use(express.cookieSession({
-         key:config.express.cookieSessionKey
-        ,cookie:{maxAge:config.express.cookieSessionMaxAge}
-      }));
-      app.all('/*',function(req,res,next){
-         req.session.id = req.session.id?req.session.id:util.generateUUID();
-         next();
-      });
-   }
+   app.use(express.json());
+   app.use(express.urlencoded());
+   if (config.server.fileUpload)
+      app.use(express.multipart());
+   app.use(express.cookieParser(util.generateUUID()));
+   app.use(express.cookieSession({
+      key:config.server.sessionKey,
+      cookie:{maxAge:config.server.sessionMaxAge}
+   }));
+   app.all('/*',function(req,res,next){
+      req.session.uuid = req.session.uuid?req.session.uuid:util.generateUUID();
+      next();
+   });
    var dynURLpt = '/{dynamicPrefix}:module/:method';
    var dynURL = '';
    try {
