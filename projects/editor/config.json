@@ -5,7 +5,11 @@
    "server":{
       "dynamicPrefix":"call/",
       "port":777,
-      "bodyParser":true
+      "bodyParser":true,
+      "contentCompression":false,
+      "fileUpload":false,
+      "sessionKey":"ss",
+      "sessionMaxAge":86400000
    },
    "additional":{
       "rootPath":"./projects",

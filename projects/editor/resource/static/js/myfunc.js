@@ -16,16 +16,20 @@ $(document).ready(function(){
          $('#projectSelect').children().bind('click', function(event) {
             var el = $(event.delegateTarget);
             var path = el.attr('path');
-            OpenProject(path);
+            setCookie(path, OpenProject(path));
          });
-         //проверим нет ли чего в куках
-         var userdata = getCookie();
-         //userdata = false;
-         if(userdata) {
-            userdata = userdata.split('&');
-            OpenProject(userdata[0]);
-            $('#'+userdata[1]).attr('selected', 'true');
-         }
+         //проверим нет ли чего в куках, если есть поставим в зависимости от содержимого проект
+         $.ajax({
+            type: 'POST',
+            url: '/call/session/defaultProject',
+            success: function(res) {
+               if(res !== 'default'){
+                  res = JSON.parse(res);
+                  $('#'+res['name']).attr('selected', 'true');
+                  OpenProject(res['path']);
+               }
+            }
+         });
       }
    });
    //вешаем обработчики для конфига эдитора
@@ -177,42 +181,39 @@ function listBuilder(event){
 }
 //----------------------------------------------------------------------------------------------------------------------
 function OpenProject(path) {
-   $.ajax({
-      type: 'POST',
-      url: '/call/read/nodelist',
-      data: 'type=List&path='+path,
-      success: function(list){
-         list = JSON.parse(list);
-         $('#projectList').children().remove();
-         //добавляем к html список при первой загрузке страницы
-         $('#projectList').append('<ul>');
-         $('#projectList ul').attr('class', "nav nav-list");
-         for (var key in list){
-            if(list[key]["folder"]) { var icon = 'icon-folder-close' }
-            else { icon = 'icon-file' }
-            $('#projectList ul').append('<li>');
-            $('#projectList ul li').last().html('<i class='+icon+'></i> '+list[key]['name']);
-            $('#projectList ul li').last().attr('folder', list[key]["folder"]);
-            $('#projectList ul li').last().attr('node', list[key]["node"]);
-            $('#projectList ul li').last().attr('path', list[key]["path"]);
-            //на все построенные элементы так же навесим обработчики, папка - на клик, файл - даблклик
-            if(list[key]["folder"]) {
-               $('#projectList ul li').last().bind('click', function(event){
-                  listBuilder(event);                                    //на все построенные элементы так же навесим обработчики
-               });
-            } else {
-               $('#projectList ul li').last().bind('dblclick', function(event){
-                  listBuilder(event);                                    //на все построенные элементы так же навесим обработчики
-               });
+   //обновим куку при открытии нового проекта
+   if($('#projectSelect').val() !== 'Выберите проект') {
+      $.ajax({
+         type: 'POST',
+         url: '/call/read/nodelist',
+         data: 'type=List&path='+path,
+         success: function(list){
+            list = JSON.parse(list);
+            $('#projectList').children().remove();
+            //добавляем к html список при первой загрузке страницы
+            $('#projectList').append('<ul>');
+            $('#projectList ul').attr('class', "nav nav-list");
+            for (var key in list){
+               if(list[key]["folder"]) { var icon = 'icon-folder-close' }
+               else { icon = 'icon-file' }
+               $('#projectList ul').append('<li>');
+               $('#projectList ul li').last().html('<i class='+icon+'></i> '+list[key]['name']);
+               $('#projectList ul li').last().attr('folder', list[key]["folder"]);
+               $('#projectList ul li').last().attr('node', list[key]["node"]);
+               $('#projectList ul li').last().attr('path', list[key]["path"]);
+               //на все построенные элементы так же навесим обработчики, папка - на клик, файл - даблклик
+               if(list[key]["folder"]) {
+                  $('#projectList ul li').last().bind('click', function(event){
+                     listBuilder(event);                                    //на все построенные элементы так же навесим обработчики
+                  });
+               } else {
+                  $('#projectList ul li').last().bind('dblclick', function(event){
+                     listBuilder(event);
+                  });
+               }
             }
          }
-         //обновим куку при открытии нового проекта
-         var session = 'editorLastOpenProgect';
-         if($('#projectSelect').val() !== 'Выберите проект') {
-            var data = path + '&' + $('#projectSelect').val();
-            setCookie(session, data);
-         }
-      }
-   });
+      });
+   }
 }
 //----------------------------------------------------------------------------------------------------------------------
