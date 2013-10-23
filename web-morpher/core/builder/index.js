@@ -7,19 +7,27 @@ __builder.deploy = deploy;
 function deploy(project,config,callback){
    var siteroot = config.siteroot;
    function  createVerFile(){
-      fs.writeFileSync(siteroot+'/ver.json',JSON.stringify({
+      var verFile = path.join(siteroot, 'ver.json');
+      var ver = {};
+      try { ver = require(verFile); }catch(e){}
+      fs.writeFileSync(verFile,JSON.stringify({
          date: util.DateToString(),
+         build: ver.build?(++ver.build):1,
          platform:wm.info()
       },null,'   '),'utf8');
    }
    function createConfigFile(){
-      fs.writeFileSync(siteroot+'/config.json',JSON.stringify({
-         sessionSecret: util.generateUUID()
+      var configFile = path.join(siteroot, 'config.json');
+      var config = {};
+      try { config = require(configFile); }catch(e){}
+      fs.writeFileSync(configFile,JSON.stringify({
+         sessionSecret: config.sessionSecret || util.generateUUID()
       },null,'   '),'utf8');
    }
    function resourceDeploy(callback){
-      if (fs.existsSync(project+'/resource')){
-         util.fsCopy(project+'/resource',siteroot,callback);
+      var resource = path.join(project, 'resource');
+      if (fs.existsSync(resource)){
+         util.fsCopy(resource,siteroot,callback);
       } else {
          callback();
       }
@@ -28,12 +36,14 @@ function deploy(project,config,callback){
    if (!fs.existsSync(siteroot)) {
       deploy = true;
       fs.mkdirSync(siteroot);
-   } else if (!fs.existsSync(siteroot+'/ver.json')) {
+   } else if (!fs.existsSync(path.join(siteroot, 'ver.json'))) {
       deploy = true;
-      util.fsClearSync(siteroot);
+      util.fsClearSync(path.join(siteroot, 'dynamic'));
+      util.fsClearSync(path.join(siteroot, 'static'));
    } else if (config.always_deploy) {
       deploy = true;
-      util.fsClearSync(siteroot);
+      util.fsClearSync(path.join(siteroot, 'dynamic'));
+      util.fsClearSync(path.join(siteroot, 'static'));
    }
    if (deploy) {
       resourceDeploy(function(e){
