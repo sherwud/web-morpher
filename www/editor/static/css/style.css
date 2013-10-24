@@ -1,3 +1,58 @@
+* {
+    outline: medium none;
+}
+
+.editor {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    bottom: 0;
+    left: 22.5%;
+    height: 96.5%;
+}
+
+.closetab {
+    margin: 0 -7px -3px 7px !important;
+}
+
+.closetab:hover {
+    background-position: -168px -96px;
+    cursor: pointer;
+}
+
+.noselect {
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.configuration {
+    top: 7px;
+    left: 90%;
+    right: 0;
+    height: 33px;
+    position: absolute;
+
+}
+
+.configuration a img {
+    float: right;
+    padding: 0 17px;
+    height: 27px;
+    display: block;
+    margin: 0 20px 0 0;
+}
+
+.configuration a img:hover {
+    cursor: pointer;
+}
+
+#lang {
+   margin-left: 0px !important;
+}
+
 #project {
    float : left;
    width: 20%;
@@ -9,28 +64,24 @@
    cursor:pointer;
 }
 
-#editor {
-   position: absolute;
-   top: 60px;
-   right: 0;
-   bottom: 0;
-   left: 22.5%;
-   height: 96.5%;
-}
-
 #controlPanel {
    position: absolute;
-   top: 0;
-   right: 0;
+   top: 7px;
+   right: 10%;
    bottom: 0;
-   left: 22%;
-   height: 60px;
-}
-
-#saveButton {
-   margin: 19px;
+   left: 22.5%;
+   height: 33px;
 }
 
 #projectSelect {
    width: 100%;
+}
+
+#controlPanel ul li:FIRST-CHILD {
+    margin-left: 4px;
+}
+
+#controlPanel ul > li > a {
+    line-height: 7px;
+    outline: medium none;
 }

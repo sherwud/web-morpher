@@ -21,7 +21,7 @@ $(document).ready(function(){
          //проверим нет ли чего в куках, если есть поставим в зависимости от содержимого проект
          $.ajax({
             type: 'POST',
-            url: '/call/session/defaultProject',
+            url: '/call/session/getDefaultProject',
             success: function(res) {
                if(res !== 'default'){
                   res = JSON.parse(res);
@@ -162,7 +162,7 @@ function listBuilder(event){
                editor.setValue('File can not be open');
                editor.gotoLine(0);
            }
-           $('#controlPanel ul').append('<li class="active"><a data-toggle="tab" href="#'+tabid+'">'+el.text().slice(1)+' <i class="icon-remove-sign closetab" linkedFile='+tabid+'></i></a></li>');
+           $('#controlPanel ul').append('<li class="active"><a data-toggle="tab" href="#'+tabid+'">'+el.text().slice(1)+'<i class="icon-remove-sign closetab" linkedFile='+tabid+'></i></a></li>');
            $('#'+tabid).toggleClass('active');
            $('.closetab').bind('click', function() {
               //удалим вкладку и связанный див с эдитором

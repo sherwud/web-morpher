@@ -7,27 +7,44 @@
    <link type="text/css" rel="stylesheet" href="css/bootstrap.css">
    <link type="text/css" rel="stylesheet" href="css/bootstrap-responsive.css">
 
-   <script src="js/jquery-1.9.1.js"></script>
-   <script src="js/bootstrap.js"></script>
+   <script src="js/vendor/jquery-2.0.3.min.js"></script>
+   <script src="js/vendor/bootstrap.js"></script>
    <script src="js/myfunc.js"></script>
+   <script src="js/help.js"></script>
 
    <script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 </head>
 
 <body>
-      <div id='project' class='well'>
-         <div>
-            <select id='projectSelect'>
-               <option>Выберите проект</option>
-            </select>
-         </div>
-         <div id='projectList'></div>
+   <div id='project' class='well'>
+      <div>
+         <select id='projectSelect'>
+            <option>Выберите проект</option>
+         </select>
       </div>
-   <div id='controlPanel'>
-      <input type="button" class="btn-primary" id='saveButton' value='Save'>
+      <div id='projectList' class='noselect'></div>
    </div>
-   <div id='editor'></div>
-
+   <div id='controlPanel'>
+      <ul class="nav nav-tabs"></ul>
+   </div>
+   <div id='configuration' class='configuration'>
+      <!--<input type="button" class="btn btn-primary" id='saveButton' value='Save Changes'>-->
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="img/setting2.png"></a>
+      <ul class="dropdown-menu">
+         <li class="dropdown-submenu pull-left">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-pencil"></i> Синтаксис</a>
+            <ul id="lang" class="dropdown-menu">
+               <li><a href="#">JavaScript</a></li>
+               <li><a href="#">HTML</a></li>
+               <li><a href="#">JSON</a></li>
+               <li><a href="#">CSS</a></li>
+               <li><a href="#">PHP</a></li>
+               <li><a href="#">Python</a></li>
+            </ul>
+         </li>
+      </ul>
+   </div>
+   <div id='editFiles' class="tab-content"></div>
 </body>
 
 </html>
