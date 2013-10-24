@@ -1,7 +1,8 @@
 //подключаем модуль работы с файловой системой
 var fs = require('fs');
+//var httperror = require('projects/editor/resource/dynamic/request-modules/httperror');
 exports.post = {};
-//------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 /**
  * функция возвращает объект,
  * свойства которого соответствуют содержимому каталога,
@@ -34,9 +35,12 @@ function nodelist(req, res){
       obg = JSON.stringify(obg);
       res.end(obg);
    }
+   else {
+      httperror.incorrectPath(req.body['path'], res);
+   }
 }
 exports.post.nodelist = nodelist;   //так делаем, чтобы было можно использовать функцию во внешнем файле
-//------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 /**
 * функция проверяет существует ли файл и файл ли находится по указаному пути,
 * и если все ок, то пишет в файл контент
@@ -54,10 +58,9 @@ function SaveFile(req, res){
          console.error('file not found');
       }
       res.end('data has been successfully saved');
-   } 
+   }
    else {
-      res.end('invalid path');
-      console.error('invalid path');
+      httperror.incorrectPath(req.body['path'], res);
    }
 }
 exports.post.SaveFile = SaveFile;

@@ -108,10 +108,6 @@ function listBuilder(event){
       if ($('#controlPanel ul li').attr('class') || $('#controlPanel ul li').attr('class')=='') {
          //имя файла который пытаемся открыть
          var name = el.text().split(' ')[1];
-         var ul = $('#controlPanel ul');
-         var li = $('#controlPanel ul li');
-         var liA = $(li, '.active');              //$('.active', ul)   находит активный элемент
-         var liAi = $(liA, 'i');
          //циклом пробегаемся по всем табам, проверяем открыт ли такой файл
          for (var i=0; i < $('#controlPanel ul li').length; i++){
             //имя таба который проверяем на текущей итерации
@@ -162,6 +158,8 @@ function listBuilder(event){
                editor.setValue('File can not be open');
                editor.gotoLine(0);
            }
+            var remtab = {"path":path, "name":el.text().slice(1)}
+            setCookie(remtab);
            $('#controlPanel ul').append('<li class="active"><a data-toggle="tab" href="#'+tabid+'">'+el.text().slice(1)+'<i class="icon-remove-sign closetab" linkedFile='+tabid+'></i></a></li>');
            $('#'+tabid).toggleClass('active');
            $('.closetab').bind('click', function() {
@@ -181,7 +179,6 @@ function listBuilder(event){
 }
 //----------------------------------------------------------------------------------------------------------------------
 function OpenProject(path) {
-   //обновим куку при открытии нового проекта
    if($('#projectSelect').val() !== 'Выберите проект') {
       $.ajax({
          type: 'POST',
@@ -212,8 +209,60 @@ function OpenProject(path) {
                   });
                }
             }
+            //закроем все вкладки
+            $('#controlPanel ul').children().remove();
+            $('#editFiles').children().remove();
          }
       });
    }
+}
+//----------------------------------------------------------------------------------------------------------------------
+function OpenFile(path, name) {
+   $.ajax({
+      type: 'POST',
+      url: '/call/read/nodelist',
+      data: 'type=List&path='+path,
+      success: function(fileContent){
+         if(fileContent){
+            fileContent = JSON.parse(fileContent);
+            document.tabcount++;
+            var tabid = 'efile'+document.tabcount;
+            $('#editFiles').append('<div class="editor tab-pane " id='+tabid+' path='+path+'></div>');
+            $('.active').toggleClass('active');
+            var editor = ace.edit(tabid);
+            editor.setValue(fileContent["content"]);
+            editor.gotoLine(0); // переходим на линию #lineNumber (нумерация с нуля)
+            //настроим режим подсветки синтаксиса в зависимости от типа открываемого файла
+            var filetype = name.split('.')[1];
+            if (filetype === 'js') editor.getSession().setMode("ace/mode/javascript");
+            else if (filetype === 'html') editor.getSession().setMode("ace/mode/html");
+            else if (filetype === 'json') editor.getSession().setMode("ace/mode/json");
+            else if (filetype === 'css') editor.getSession().setMode("ace/mode/css");
+            else if (filetype === 'php') editor.getSession().setMode("ace/mode/php");
+            else if (filetype === 'py') editor.getSession().setMode("ace/mode/python");
+            else editor.getSession().setMode("ace/mode/text");
+         }
+         else {
+            var editor = ace.edit("tabid");
+            editor.setValue('File can not be open');
+            editor.gotoLine(0);
+         }
+         var remtab = {"path":path, "name":name}
+         setCookie(remtab);
+         $('#controlPanel ul').append('<li class="active"><a data-toggle="tab" href="#'+tabid+'">'+name+'<i class="icon-remove-sign closetab" linkedFile='+tabid+'></i></a></li>');
+         $('#'+tabid).toggleClass('active');
+         $('.closetab').bind('click', function() {
+            //удалим вкладку и связанный див с эдитором
+            var linkedFile  = $(this).attr('linkedFile');
+            $(this).parent().parent().remove();
+            $('#'+linkedFile).remove();
+            //проверим, если был закрыт не активный таб, то продолжаем работать, в противном случае активным сделаем последний
+            if(!$('#controlPanel ul li.active').attr('class')) {
+               $('#controlPanel ul li').last().toggleClass('active');
+               $('#editFiles').children().last().toggleClass('active');
+            }
+         });
+      }
+   });
 }
 //----------------------------------------------------------------------------------------------------------------------

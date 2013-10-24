@@ -22,7 +22,7 @@ function setCookie(path, callback) {
       $.ajax({
          type: 'POST',
          url: '/call/session/setDefaultTabs',
-         data:"",
+         data:"path="+path['path']+"&name="+path['name'],
          success: callback
       });
    }
