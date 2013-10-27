@@ -27,6 +27,16 @@ $(document).ready(function(){
                   res = JSON.parse(res);
                   $('#'+res['name']).attr('selected', 'true');
                   OpenProject(res['path']);
+                  $.ajax({
+                     type: 'POST',
+                     url: '/call/session/getDefaultTabs',
+                     success: function(result) {
+                        result = JSON.parse(result);
+                        for (var key in result) {
+                           OpenFile(result[key], key);
+                        }
+                     }
+                  })
                }
             }
          });

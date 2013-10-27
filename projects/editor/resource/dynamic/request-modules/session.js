@@ -1,6 +1,6 @@
 /**
  * Здесь собираем функции для работы с cookie, session, авторизацией
- * crreated: sherwud
+ * created: sherwud
  */
 var fs = require('fs');
 //var httperror = require('httperror');
@@ -70,7 +70,9 @@ exports.post.setDefaultProject = setDefaultProject;
 function getDefaultTabs(req, res) {
    if (req.session && req.session.uuid) {
       if (req.session.projectTabs) {
-         //спааааааааааааать
+         var list = req.session.projectTabs;
+         list = JSON.stringify(list);
+         res.end(list);
       }
       else {
          res.end('default');
