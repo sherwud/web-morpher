@@ -108,3 +108,26 @@ function setDefaultTabs(req, res) {
 }
 exports.post.setDefaultTabs = setDefaultTabs;
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Функция удаляет из куки информацию о закрываемом табе
+ * Принимает путь к вкладке, и имя закрываемого файла
+ * Возвращает true в случае успеха
+ * В случае неудачи false
+ * В остальных случаях ошибку
+ */
+function delDefaultTabs(req, res) {
+   if (req.body['path'] && req.body['name']) {
+      var path = req.body['path'];
+      var name = req.body['name'];
+      if(fs.existsSync(path) && fs.statSync(path).isFile()) {
+         delete req.session.projectTabs[name];
+         res.send(true);
+      }
+      res.send(false);
+   }
+   else {
+      httperror.incorrectPath(req.body['path'], res);
+   }
+}
+exports.post.delDefaultTabs = delDefaultTabs;
+//----------------------------------------------------------------------------------------------------------------------

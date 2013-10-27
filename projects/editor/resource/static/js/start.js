@@ -19,26 +19,19 @@ $(document).ready(function(){
             setCookie(path, OpenProject(path));
          });
          //проверим нет ли чего в куках, если есть поставим в зависимости от содержимого проект
-         $.ajax({
-            type: 'POST',
-            url: '/call/session/getDefaultProject',
-            success: function(res) {
-               if(res !== 'default'){
-                  res = JSON.parse(res);
-                  $('#'+res['name']).attr('selected', 'true');
-                  OpenProject(res['path']);
-                  $.ajax({
-                     type: 'POST',
-                     url: '/call/session/getDefaultTabs',
-                     success: function(result) {
-                        result = JSON.parse(result);
-                        for (var key in result) {
-                           OpenFile(result[key], key);
-                        }
-                     }
-                  })
-               }
+         getCookie('project', function(res){
+            if(res !== 'default'){
+               res = JSON.parse(res);
+               OpenProject(res['path'], res['name']);
             }
+            getCookie('tabs', function(result){
+               if(res !== 'default'){
+                  result = JSON.parse(result);
+                  for (var key in result) {
+                     OpenFile(result[key], key);
+                  }
+               }
+            });
          });
       }
    });
@@ -139,6 +132,7 @@ function listBuilder(event){
          }
       }
       var path = el.attr('path');
+      var name = el.text().slice(1);
       $.ajax({
          type: 'POST',
          url: '/call/read/nodelist',
@@ -172,9 +166,12 @@ function listBuilder(event){
             setCookie(remtab);
            $('#controlPanel ul').append('<li class="active"><a data-toggle="tab" href="#'+tabid+'">'+el.text().slice(1)+'<i class="icon-remove-sign closetab" linkedFile='+tabid+'></i></a></li>');
            $('#'+tabid).toggleClass('active');
-           $('.closetab').bind('click', function() {
-              //удалим вкладку и связанный див с эдитором
+            //вешаем обработчик на закрытие вкладки
+            $('#controlPanel ul li.active i').bind('click', function() {
                var linkedFile  = $(this).attr('linkedFile');
+              //удалим информацию о вкладке из куков
+              delCookie({'path':$('#'+linkedFile).attr('path'), 'name':$(this).parent().text()});
+              //удалим вкладку и связанный див с эдитором
               $(this).parent().parent().remove();
               $('#'+linkedFile).remove();
               //проверим, если был закрыт не активный таб, то продолжаем работать, в противном случае активным сделаем последний
@@ -188,7 +185,8 @@ function listBuilder(event){
    }
 }
 //----------------------------------------------------------------------------------------------------------------------
-function OpenProject(path) {
+function OpenProject(path, name) {
+   $('#'+name).attr('selected', 'true');
    if($('#projectSelect').val() !== 'Выберите проект') {
       $.ajax({
          type: 'POST',
@@ -261,9 +259,11 @@ function OpenFile(path, name) {
          setCookie(remtab);
          $('#controlPanel ul').append('<li class="active"><a data-toggle="tab" href="#'+tabid+'">'+name+'<i class="icon-remove-sign closetab" linkedFile='+tabid+'></i></a></li>');
          $('#'+tabid).toggleClass('active');
-         $('.closetab').bind('click', function() {
-            //удалим вкладку и связанный див с эдитором
+         $('#controlPanel ul li.active i').bind('click', function() {
             var linkedFile  = $(this).attr('linkedFile');
+            //удалим информацию о вкладке из куков
+            delCookie({'path':$('#'+linkedFile).attr('path'), 'name':$(this).parent().text()});
+            //удалим вкладку и связанный див с эдитором
             $(this).parent().parent().remove();
             $('#'+linkedFile).remove();
             //проверим, если был закрыт не активный таб, то продолжаем работать, в противном случае активным сделаем последний

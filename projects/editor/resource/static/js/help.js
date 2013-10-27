@@ -26,5 +26,42 @@ function setCookie(path, callback) {
          success: callback
       });
    }
+   else {
+      console.error('method: setCookie, path is not defined');
+   }
+}
+//----------------------------------------------------------------------------------------------------------------------
+function getCookie(target, callback) {
+   if (target === 'project') {
+      $.ajax({
+         type: 'POST',
+         url: '/call/session/getDefaultProject',
+         success: callback
+      });
+   }
+   else if (target === 'tabs') {
+      $.ajax({
+         type: 'POST',
+         url: '/call/session/getDefaultTabs',
+         success: callback
+      });
+   }
+   else {
+      console.error('method: getCookie, target is not defined');
+   }
+}
+//----------------------------------------------------------------------------------------------------------------------
+function delCookie(target, callback) {
+   if (typeof(target) === 'object') {
+      $.ajax({
+         type: 'POST',
+         url: '/call/session/delDefaultTabs',
+         data:"path="+target['path']+"&name="+target['name'],
+         success: callback
+      });
+   }
+   else {
+      console.error('method: setCookie, path is not defined');
+   }
 }
 //----------------------------------------------------------------------------------------------------------------------
