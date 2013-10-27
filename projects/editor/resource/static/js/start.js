@@ -58,6 +58,16 @@ $(document).ready(function(){
          }
       });
    });
+   //событие по клику на пункты подменю, раздела File
+   $('#file ul li').bind('click', function(){
+      var linkedfile = $('#controlPanel ul li.active a i').attr('linkedfile');
+      var method = $(this).text();
+      var name = $('#controlPanel ul li.active').text();
+      var node = $('#'+linkedfile).attr('path');
+      deleteDirectory('test2', './projects/editor', function(res){
+         console.log(res);
+      })
+   });
 });
 //----------------------------------------------------------------------------------------------------------------------
 /**

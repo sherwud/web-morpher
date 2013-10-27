@@ -89,3 +89,79 @@ function selectProject(req, res) {
 }
 exports.post.selectProject = selectProject;
 //----------------------------------------------------------------------------------------------------------------------
+function createFile (req, res) {
+   if(req.body['name'] && req.body['node']) {
+      var filename = req.body['node'] + '/' + req.body['name'];
+      var data = req.body['data'] ? req.body['data'] : '';
+      fs.appendFile(filename, data, function(err){
+         if(err) { res.send(500, err); }
+         else { res.send(200, 'File has been created'); }
+      });
+   }
+   else { res.send(400, 'Bad Request'); }
+}
+exports.post.createFile = createFile;
+//----------------------------------------------------------------------------------------------------------------------
+function editFile (req, res) {
+   if(req.body['name'] && req.body['node'] && req.body['data']) {
+      var filename = req.body['node'] + '/' + req.body['name'];
+      var data = req.body['data'];
+      fs.writeFile (filename, data, function(err) {
+         if(err) { res.end(500, err); }
+         else { res.send(200, 'File has been recorded'); }
+      });
+   }
+   else { res.send(400, 'Bad Request'); }
+}
+exports.post.editFile = editFile;
+//----------------------------------------------------------------------------------------------------------------------
+function deleteFile (req, res) {
+   if (req.body['name'] && req.body['node']) {
+      var path = req.body['node'] + '/' + req.body['name'];
+      fs.unlink(path, function(err) {
+         if (err) { res.send(500, err); }
+         else { res.send(200, 'File has been deleted'); }
+      });
+   }
+   else { res.send(400, 'Bad Request'); }
+}
+exports.post.deleteFile = deleteFile;
+//----------------------------------------------------------------------------------------------------------------------
+function createDirectory (req, res) {
+   if(req.body['name'] && req.body['node']) {
+      var path = req.body['node'] + '/' + req.body['name'];
+      fs.mkdir(path, function(err) {
+         if (err) { res.send(500, err); }
+         else  { res.send(200, 'Directory has benn created'); }
+      });
+   }
+   else { res.send(400, 'Bad request'); }
+}
+exports.post.createDirectory = createDirectory;
+//----------------------------------------------------------------------------------------------------------------------
+//эта функция удаляет только пустые дирректории, над поправить
+function deleteDirectory (req, res) {
+   if(req.body['name'] && req.body['node']) {
+      var path = req.body['node'] + '/' + req.body['name'];
+      fs.rmdir(path, function(err) {
+         if (err) { res.send(500, err); }
+         else { res.send(200, 'Directory has benn deleted'); }
+      });
+   }
+   else { res.send(400, 'Bad request'); }
+}
+exports.post.deleteDirectory = deleteDirectory;
+//----------------------------------------------------------------------------------------------------------------------
+function rename (req, res) {
+   if(req.body['name'] && req.body['node'] && req.body['curname']) {
+      var filename = req.body['node'] + '/' + req.body['name'];
+      var curname = req.body['node'] + '/' + req.body['curname'];
+      fs.rename(curname, filename, function(err) {
+         if(err) { res.send(500, err); }
+         else { res.send(200, 'File has been recorded'); }
+      });
+   }
+   else { res.send(400, 'Bad Request'); }
+}
+exports.post.rename = rename;
+//----------------------------------------------------------------------------------------------------------------------

@@ -80,3 +80,87 @@ function delCookie(target, callback) {
    }
 }
 //----------------------------------------------------------------------------------------------------------------------
+function createFile (name, node, data, callback) {
+   if(name && node) {
+      $.ajax({
+         type: 'POST',
+         url: '/call/read/createFile',
+         data: 'name='+name+'&node='+node+'&data='+data,
+         success: callback
+      });
+   }
+   else {
+      console.error('method: createFile, node or name is not defined');
+   }
+}
+//----------------------------------------------------------------------------------------------------------------------
+function editFile (name, node, data, callback) {
+   if(name && node && data) {
+      $.ajax({
+         type: 'POST',
+         url: '/call/read/editFile',
+         data: 'name='+name+'&node='+node+'&data='+data,
+         success: callback
+      });
+   }
+   else {
+      console.error('method: createFile, node, name or data is not defined');
+   }
+}
+//----------------------------------------------------------------------------------------------------------------------
+function deleteFile (name, node, callback) {
+   if(name && node) {
+      $.ajax({
+         type: 'POST',
+         url: '/call/read/deleteFile',
+         data: 'name='+name+'&node='+node,
+         success: callback
+      });
+   }
+   else {
+      console.error('method: createFile, node or name is not defined');
+   }
+}
+//----------------------------------------------------------------------------------------------------------------------
+function createDirectory (name, node, callback) {
+   if(name && node) {
+      $.ajax({
+         type: 'POST',
+         url: '/call/read/createDirectory',
+         data: 'name='+name+'&node='+node,
+         success: callback
+      });
+   }
+   else {
+      console.error('method: createFile, node or name is not defined');
+   }
+}
+//----------------------------------------------------------------------------------------------------------------------
+function deleteDirectory (name, node, callback) {
+   if(name && node) {
+      $.ajax({
+         type: 'POST',
+         url: '/call/read/deleteDirectory',
+         data: 'name='+name+'&node='+node,
+         success: callback
+      });
+   }
+   else {
+      console.error('method: createFile, node or name is not defined');
+   }
+}
+//----------------------------------------------------------------------------------------------------------------------
+function rename (name, node, curname, callback) {
+   if(name && node && curname) {
+      $.ajax({
+         type: 'POST',
+         url: '/call/read/rename',
+         data: 'name='+name+'&node='+node+'&curname='+curname,
+         success: callback
+      });
+   }
+   else {
+      console.error('method: createFile, node, name or curname is not defined');
+   }
+}
+//----------------------------------------------------------------------------------------------------------------------

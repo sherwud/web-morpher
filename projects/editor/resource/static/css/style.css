@@ -49,6 +49,56 @@
     cursor: pointer;
 }
 
+.projectSelect {
+   width: 95%;
+   padding: 10px;
+}
+
+.projectSelect select {
+   width: 100%;
+}
+
+.menuButton {
+   background-color: #333333;
+}
+
+.menuButton div {
+   padding: 7px 13px 5px 13px;
+   min-width: 30px;
+   width: 30px;
+   min-height: 20px;
+   height: 20px;
+   color: #ffffff;
+}
+
+.menuButton div:hover {
+   cursor: pointer;
+   color: #333333;
+   background-color: #8bc84b;
+}
+
+.menuButton div ul {
+   width: 200px;
+   margin: 5px 0 0 -13px;
+   list-style: none outside none;
+   display: none;
+}
+
+.menuButton div:hover ul {
+   position: absolute;
+   background-color: #ffffff;
+   display: block;
+}
+
+.menuButton div ul li {
+   line-height: 27px;
+}
+
+.menuButton div ul li:hover {
+   background-color: #8bc84b;
+   color: #333333;
+}
+
 #lang {
    margin-left: 0px !important;
 }
@@ -58,6 +108,7 @@
    width: 20%;
    height: 100%;
    overflow: auto;
+   padding: 0px !important;
 }
 
 #project ul:hover{
@@ -71,10 +122,6 @@
    bottom: 0;
    left: 22.5%;
    height: 33px;
-}
-
-#projectSelect {
-   width: 100%;
 }
 
 #controlPanel ul li:FIRST-CHILD {

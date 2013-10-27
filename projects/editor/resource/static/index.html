@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN" "http://www.w3.org/TR/REC-html40/frameset.dtd">
 <html>
 <head>
    <title>Web IDE</title>
@@ -18,7 +17,18 @@
 
 <body>
    <div id='project' class='well'>
-      <div>
+      <div class="menuButton" id="projectControlPanel">
+         <div id="file"><b>File</b>
+            <ul>
+               <li>Create File</li>
+               <li>Rename</li>
+               <li>Delete file</li>
+               <li>Create Directory</li>
+               <li>Save</li>
+            </ul>
+         </div>
+      </div>
+      <div class="projectSelect">
          <select id='projectSelect'>
             <option>Выберите проект</option>
          </select>
