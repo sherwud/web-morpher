@@ -1,5 +1,6 @@
 //подключаем модуль работы с файловой системой
 var fs = wm.ext.fs;
+var path = wm.ext.path;
 var httperror = wm.modules.httperror;
 exports.post = {};
 //----------------------------------------------------------------------------------------------------------------------
@@ -141,9 +142,10 @@ exports.post.createDirectory = createDirectory;
 //----------------------------------------------------------------------------------------------------------------------
 //эта функция удаляет только пустые дирректории, над поправить
 function deleteDirectory (req, res) {
+   debugger;
    if(req.body['name'] && req.body['node']) {
       var path = req.body['node'] + '/' + req.body['name'];
-      fs.rmdir(path, function(err) {
+      fsRemove(path, function(err) {
          if (err) { res.send(500, err); }
          else { res.send(200, 'Directory has benn deleted'); }
       });
@@ -164,4 +166,60 @@ function rename (req, res) {
    else { res.send(400, 'Bad Request'); }
 }
 exports.post.rename = rename;
+//----------------------------------------------------------------------------------------------------------------------
+//наброски
+function fsRemove(rempath, callback){
+   try {
+      fsClear(rempath, function(err) {
+         if(err) { console.log('fsclear: error 1: '+err); return err; }
+         else {
+            fs.rmdir(rempath, function(err){
+               if (err) { console.log('rmdir: error 2:' +err); return err; }
+            });
+         }
+      });
+      callback;
+   }
+   catch(exception) {
+      callback(exception);
+   }
+}
+//----------------------------------------------------------------------------------------------------------------------
+function fsClear(rempath, callback){
+   try {
+         fs.readdir(rempath, function(err, files) {
+         if(err) { console.log('readdir: error 3: '+err); return err; }
+         else {
+            var list = files;
+            for(var i = 0; i < list.length; i++) {
+               var rem = path.join(rempath, list[i]);
+               fs.stat(rem, function(err, stat) {
+                  if(err) { console.log('stat: error 4: '+err); return err; }
+                  else {
+                     var current = stat;
+                     if(current.isDirectory()) {
+                        fsClear(rem, function(err) {
+                           if(err) { console.log('fsclear: error 5: '+err); return err; }
+                           else {
+                              fs.rmdir(rem, function(err) {
+                                 if(err) { console.log('rmdir: error 6: '+err); return err; }
+                              });
+                           }
+                        });
+                     } else {
+                        fs.unlink(rem, function(err) {
+                           if(err) { console.log('unlink: error 7: '+err); return err; }
+                        });
+                     }
+                  }
+               });
+            }
+         }
+      });
+      callback;
+   }
+   catch(e) {
+      if (e) { callback(e); }
+   }
+}
 //----------------------------------------------------------------------------------------------------------------------

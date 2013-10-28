@@ -64,7 +64,7 @@ $(document).ready(function(){
       var method = $(this).text();
       var name = $('#controlPanel ul li.active').text();
       var node = $('#'+linkedfile).attr('path');
-      deleteDirectory('test2', './projects/editor', function(res){
+      deleteDirectory('test', './projects/editor', function(res){
          console.log(res);
       })
    });
