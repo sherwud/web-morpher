@@ -1,6 +1,6 @@
 //подключаем модуль работы с файловой системой
-var fs = require('fs');
-//var httperror = require('projects/editor/resource/dynamic/request-modules/httperror');
+var fs = wm.ext.fs;
+var httperror = wm.modules.httperror;
 exports.post = {};
 //----------------------------------------------------------------------------------------------------------------------
 /**

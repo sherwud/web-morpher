@@ -17,5 +17,5 @@ function incorrectPath(path, res) {
       res.send(400, 'Bad Request');
    }
 }
-exports.post.incorrectPath = incorrectPath;
+exports.incorrectPath = incorrectPath;
 //----------------------------------------------------------------------------------------------------------------------
