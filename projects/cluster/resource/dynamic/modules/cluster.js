@@ -1,9 +1,10 @@
 /* Модуль кластера */
 "use strict";
-exports = module.exports = {
+module.exports = {
    test1: test1,
    test2: test2,
-   test3: test3
+   test3: test3,
+   md5:md5
 };
 
 function test1(){
@@ -14,4 +15,10 @@ function test2(req,res){
 }
 function test3(){
    return false;
+}
+function md5(req,res){
+   var crypto = require('crypto');
+   var md5 = crypto.createHash('md5');
+   md5.update(req.query.s || '');
+   res.send(200,md5.digest('hex'));
 }
