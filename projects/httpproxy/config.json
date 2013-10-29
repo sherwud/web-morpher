@@ -8,7 +8,13 @@
       "contentCompression":true,
       "fileUpload":false,
       "sessionKey":"sid",
-      "sessionMaxAge":86400000
+      "sessionMaxAge":86400000,
+      "root":{
+         "use":true,
+         "login":"root",
+         "password":"202cb962ac59075b964b07152d234b70",
+         "hash":"md5"
+      }
    },
    "additional":{
       
