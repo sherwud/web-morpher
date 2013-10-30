@@ -2,7 +2,7 @@
    "siteroot":"./www/cluster",
    "always_deploy":true,
    "initfile":"init.js",
-   "dynamicPrefix":"call/",
+   "dynamicPrefix":"call",
    "port":777,
    "contentCompression":true,
    "fileUpload":false,

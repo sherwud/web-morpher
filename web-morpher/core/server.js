@@ -96,6 +96,7 @@ function handler(req,res){
       res.send(200,result);
 }
 function prepare(conf){
+   var log = wmlog.init({'title':'function server.prepare'});
    config = __server.config = conf;
    var tmpConf = {};
    try { tmpConf = require(config.siteroot+'/config.json'); } catch (e){}
@@ -111,34 +112,29 @@ function prepare(conf){
       cookie:{maxAge:config.sessionMaxAge}
    }));
    app.use(wm.lib.user);
-   var dynURLpt = '/{dynamicPrefix}:module/:method';
-   var dynURL = '';
-   try {
-      dynURL = dynURLpt.replace('{dynamicPrefix}',config.dynamicPrefix);
-   } catch (e){
-      dynURL = dynURLpt.replace('{dynamicPrefix}','call/');
-   }
-   modules = wm['request-modules'];
    if (config.initfile) {
       try {
          var initfile = path.join(config.siteroot,'dynamic',config.initfile);
          initfile = require(initfile);
          if (typeof initfile === 'function') {
             initfile({
-               dynURLpt:dynURLpt,
-               dynURL:dynURL,
-               handler:handler,
-               defineMethod:defineMethod,
-               app:app
+               express:express,
+               app:app,
+               config:config,
+               tmpConf:tmpConf
             });
          }
       }catch(e){
-         wmlog(e,{'title':'function server.prepare.initfile'});
+         log(1,e);
       }
    }
+   var pref = config.dynamicPrefix || '/call/';
+   pref = String(pref).replace(/(^[^/])/,'/$1').replace(/([^/]$)/,'$1/');
+   var URL = pref + ':module/:method';
+   modules = wm['request-modules'];
    if (modules !== false) {
-      app.get(dynURL,handler);
-      app.post(dynURL,handler);
+      app.get(URL,handler);
+      app.post(URL,handler);
    }
    if (fs.existsSync(config.siteroot+'/static')) {
       app.use(express.static(config.siteroot+'/static'));
