@@ -99,25 +99,22 @@ function prepare(conf){
    config = __server.config = conf;
    var tmpConf = {};
    try { tmpConf = require(config.siteroot+'/config.json'); } catch (e){}
-   if (config.server.contentCompression)
+   if (config.contentCompression)
       app.use(express.compress());
    app.use(express.json());
    app.use(express.urlencoded());
-   if (config.server.fileUpload)
+   if (config.fileUpload)
       app.use(express.multipart());
    app.use(express.cookieParser(tmpConf.sessionSecret || util.generateUUID()));
    app.use(express.cookieSession({
-      key:config.server.sessionKey,
-      cookie:{maxAge:config.server.sessionMaxAge}
+      key:config.sessionKey,
+      cookie:{maxAge:config.sessionMaxAge}
    }));
-   app.all('/*',function(req,res,next){
-      req.session.uuid = req.session.uuid?req.session.uuid:util.generateUUID();
-      next();
-   });
+   app.use(wm.lib.user);
    var dynURLpt = '/{dynamicPrefix}:module/:method';
    var dynURL = '';
    try {
-      dynURL = dynURLpt.replace('{dynamicPrefix}',config.server.dynamicPrefix);
+      dynURL = dynURLpt.replace('{dynamicPrefix}',config.dynamicPrefix);
    } catch (e){
       dynURL = dynURLpt.replace('{dynamicPrefix}','call/');
    }
@@ -150,7 +147,7 @@ function prepare(conf){
 }
 function listen(port){
    var wmlog = global.wmlog.init();
-   app.listen(port||config.server.port);
+   app.listen(port||config.port);
    wmlog(0,'Сайт: '+config.siteroot);
-   wmlog(0,'Запущен на порту: '+(port||config.server.port));
+   wmlog(0,'Запущен на порту: '+(port||config.port));
 }
