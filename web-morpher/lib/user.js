@@ -1,5 +1,7 @@
 "use strict";
+var path = wm.ext.path;
 var util = wm.util;
+var shared = path.join(wm.path.wmroot,'front-end','shared');
 module.exports = userAuth;
 module.exports.__isProxy = true;
 var users = {};
@@ -17,7 +19,8 @@ function userAuth(req, res, next) {
          /*
           * Добавить переадресацию на форму авторизации
           */
-         res.send(401, '401 Unauthorized');
+         res.sendfile(path.join(shared,'login.html'))
+         //res.send(401, '401 Unauthorized');
          return;
       }
    }
