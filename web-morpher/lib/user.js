@@ -7,24 +7,24 @@ module.exports.__isProxy = true;
 var users = {};
 var config = wm.server.config.users;
 function userAuth(req, res, next) {
-   var uuid = req.session.uuid;
-   if (!(uuid in users)) {
-      uuid = req.session.uuid = uuid || util.generateUUID();
-      /*
-       * Добавить проверку логина и пароля
-       */
-      if (config.guest) {
-         users[uuid] = {name: 'Гость', role: 'guest'};
-      } else {
-         /*
-          * Добавить переадресацию на форму авторизации
-          */
-         res.sendfile(path.join(shared,'login.html'))
-         //res.send(401, '401 Unauthorized');
-         return;
+   function auth(){
+      function verify(isAuth){
+         if (isAuth === true) return success(users[uuid]);
+         if (isAuth === false) return res.send(403,'403 Forbidden');
+         if (config.guest) {
+            return success(users[uuid] = {name: 'Гость', role: 'guest'});
+         }
+         return res.sendfile(path.join(shared,'login.html'));
       }
+      return verify();
    }
-   req.user = users[uuid];
-   req.user.lastLogin = new Date;
-   next();
+   function success(user){
+      req.user = user;
+      req.user.lastLogin = new Date;
+      next();
+   }
+   var uuid = req.session.uuid;
+   if (uuid in users) { return success(users[uuid]); }
+   uuid = req.session.uuid = uuid || util.generateUUID();
+   auth();
 }
