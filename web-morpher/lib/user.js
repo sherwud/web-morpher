@@ -1,7 +1,7 @@
 "use strict";
 var path = wm.ext.path;
 var util = wm.util;
-var shared = path.join(wm.path.wmroot, 'front-end', 'shared');
+var embedded = path.join(wm.path.wmroot, 'front-end', 'embedded');
 module.exports = userAuth;
 module.exports.__isProxy = true;
 var users = {};
@@ -18,7 +18,7 @@ function userAuth(req, res, next) {
          if (config.guest) {
             return success(users[uuid] = {name: 'Гость', role: 'guest'});
          }
-         return res.sendfile(path.join(shared, 'login.html'));
+         return res.sendfile(path.join(embedded, 'login.html'));
       }
       return verify();
    }
