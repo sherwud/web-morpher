@@ -25,11 +25,32 @@ function deploy(project,config,callback){
       },null,'   '),'utf8');
    }
    function resourceDeploy(callback){
+      function coreDeploy(){
+         var coredir = config.wmcoredir;
+         if (!coredir) {
+            return callback();
+         }
+         var staticdir = path.join(siteroot, 'static');
+         if (!fs.existsSync(staticdir)) fs.mkdirSync(staticdir);
+         coredir = path.join(staticdir, coredir);
+         var shared = path.join(wm.path.wmroot, 'front-end', 'shared');
+         util.fsCopy(shared,coredir,callback);
+      }
       var resource = path.join(project, 'resource');
       if (fs.existsSync(resource)){
-         util.fsCopy(resource,siteroot,callback);
+         util.fsCopy(resource,siteroot,coreDeploy);
       } else {
          callback();
+      }
+   }
+   function resourceClear(){
+      var dir = path.join(siteroot, 'dynamic');
+      if (fs.existsSync(dir)){
+         util.fsClearSync(path.join(dir));
+      }
+      dir = path.join(siteroot, 'static');
+      if (fs.existsSync(dir)){
+         util.fsClearSync(dir);
       }
    }
    var deploy = false;
@@ -38,12 +59,10 @@ function deploy(project,config,callback){
       fs.mkdirSync(siteroot);
    } else if (!fs.existsSync(path.join(siteroot, 'ver.json'))) {
       deploy = true;
-      util.fsClearSync(path.join(siteroot, 'dynamic'));
-      util.fsClearSync(path.join(siteroot, 'static'));
+      resourceClear();
    } else if (config.always_deploy) {
       deploy = true;
-      util.fsClearSync(path.join(siteroot, 'dynamic'));
-      util.fsClearSync(path.join(siteroot, 'static'));
+      resourceClear();
    }
    if (deploy) {
       resourceDeploy(function(e){

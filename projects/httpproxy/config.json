@@ -1,5 +1,6 @@
 {
    "siteroot": "./www/httpproxy",
+   "wmcoredir": "core",
    "always_deploy": true,
    "initfile": "init.js",
    "dynamicPrefix": "call",
