@@ -91,6 +91,63 @@ function fsClearSync(rempath){
       }
    }
 }
+//----------------------------------------------------------------------------------------------------------------------
+function fsRemove(path, callback) {
+   fs.stat(path, function(err, stats) {
+      if (err) { callback(err); }
+      else if (stats.isFile()) {
+         fs.unlink(path, function(err){
+            if (err) { callback(err); }
+            else { callback() }
+         });
+      }
+      else {
+         fsClear(path, function(err){
+            if (err) { callback(err); }
+            else {
+               fs.exists(path, function(isit){
+                  if(isit) {
+                     fs.rmdir(path, function(err){
+                        if(err) { callback(err); }
+                        else { callback() }
+                     });
+                  }
+                  else {
+                     callback();
+                  }
+               });
+            }
+         });
+      }
+   });
+}
+//----------------------------------------------------------------------------------------------------------------------
+function fsClear(rempath, callback){
+   var i = 0;
+   fs.readdir(rempath, function(err, files) {
+      if (err) { callback(err) }
+      else {
+         if(files.length > 0) {
+            for (var key in files) {
+               var path = rempath + '/' + files[key];
+               fsRemove(path, function(err){
+                  if (err) { callback(err);}
+                  else {
+                     i++;
+                     if(i==files.length) {callback();}
+                  }
+               });
+            }
+         } else {
+            fs.rmdir(rempath, function(err){
+               if(err) { callback(err); }
+               else { callback() }
+            });
+         }
+      }
+   });
+}
+//----------------------------------------------------------------------------------------------------------------------
 function typeis(value,type){
    if (typeof value === type
          || value && value.__isProxy && typeof value.__getThis === type)
