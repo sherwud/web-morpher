@@ -120,8 +120,8 @@ function createAbstract(mod,modPath,modLogic,critical){
          } catch(e){
             log(1,'Ошибка выполнения "'+modLogic+'"');
             log(1,modPath);
-            log(1,mod);
             log(1,e);
+            if (!(e instanceof Error)) { log(1,wmlog.stackTrace()); }
             return undefined;
          }
       }

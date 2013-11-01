@@ -1,16 +1,23 @@
 {
-   "siteroot":"./www/httpproxy",
-   "always_deploy":true,
-   "initfile":"init.js",
-   "server":{
-      "dynamicPrefix":"call/",
-      "port":777,
-      "contentCompression":true,
-      "fileUpload":false,
-      "sessionKey":"sid",
-      "sessionMaxAge":86400000
+   "siteroot": "./www/httpproxy",
+   "wmcoredir": "core",
+   "always_deploy": true,
+   "initfile": "init.js",
+   "dynamicPrefix": "call",
+   "port": 777,
+   "contentCompression": true,
+   "fileUpload": false,
+   "sessionKey": "sid",
+   "sessionMaxAge": 86400000,
+   "users": {
+      "guest": true,
+      "root": {
+         "use": true,
+         "login": "root",
+         "password": "202cb962ac59075b964b07152d234b70",
+         "hash": "md5"
+      }
    },
-   "additional":{
-      
+   "additional": {
    }
 }
