@@ -1,8 +1,8 @@
 {
-   "win32":{
-      "node_modules":"C:/Program Files/nodejs/node_modules"
-   },
-   "all":{
-      "node_modules":"./node_modules"
-   }
+    "win32": {
+        "node_modules": "C:/Program Files/nodejs/node_modules"
+    },
+    "all": {
+        "node_modules": "./node_modules"
+    }
 }
