@@ -4,4 +4,6 @@ web-morpher/node_modules
 *.log
 www/cluster
 www/httpproxy
+www/editor
+.idea
 /_prog/

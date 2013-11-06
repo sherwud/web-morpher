@@ -77,40 +77,45 @@ function AbstractToString(obj,l){
    else if (typeof obj !== 'object'){
       return obj+'';
    } else {
-      var space = '';
-      for (var i=0; i<l; i++){space+='   ';}
-      l+=1;
-      var ds = '{';
-      var de = '}';
-      if (obj instanceof Array) {ds = '['; de = ']';};
-      var str = ds+'\n';
-      for (i in obj) {
-         if (obj[i] && obj[i].__isProxy) {
-            if (l<5)
-               str+=space+i+': '+AbstractToString(obj[i],l)+'\n';
-            else
-               str+=space+i+': [Proxy]\n';
-         } else {
-            var val;
-            switch (typeof obj[i]) {
-               case 'string': val = '\''+obj[i]+'\''; break;
-               case 'function': val = '[function]'; break;
-               case 'object':
-                  if (l<5)
-                     val = AbstractToString(obj[i],l);
-                  else {
-                     var type = typeof obj[i];
-                     if (obj[i] instanceof Array) type = 'Array';
-                     if (obj[i] instanceof Error) type = 'Error';
-                     val = '['+type+']';
-                  }
-               break;
-               default: val = obj[i]+'';
+      var str = '';
+      if (obj instanceof Date) {
+         str = obj.toString();
+      } else {
+         var space = '';
+         for (var i=0; i<l; i++){space+='   ';}
+         l+=1;
+         var ds = '{';
+         var de = '}';
+         if (obj instanceof Array) {ds = '['; de = ']';};
+         str = ds+'\n';
+         for (i in obj) {
+            if (obj[i] && obj[i].__isProxy) {
+               if (l<5)
+                  str+=space+i+': '+AbstractToString(obj[i],l)+'\n';
+               else
+                  str+=space+i+': [Proxy]\n';
+            } else {
+               var val;
+               switch (typeof obj[i]) {
+                  case 'string': val = '\''+obj[i]+'\''; break;
+                  case 'function': val = '[function]'; break;
+                  case 'object':
+                     if (l<5)
+                        val = AbstractToString(obj[i],l);
+                     else {
+                        var type = typeof obj[i];
+                        if (obj[i] instanceof Array) type = 'Array';
+                        if (obj[i] instanceof Error) type = 'Error';
+                        val = '['+type+']';
+                     }
+                  break;
+                  default: val = obj[i]+'';
+               }
+               str+=space+i+': '+val+'\n';
             }
-            str+=space+i+': '+val+'\n';
          }
+         str+=space.substr(0,space.length-3)+de;
       }
-      str+=space.substr(0,space.length-3)+de;
       return str;
    }
 }
