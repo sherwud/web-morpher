@@ -6,6 +6,8 @@ __util.pathReduce = pathReduce;
 __util.fsCopy = fsCopy;
 __util.fsRemoveSync = fsRemoveSync;
 __util.fsClearSync = fsClearSync;
+__util.fsRemove = fsRemove;
+__util.fsClear = fsClear;
 __util.typeis = typeis;
 __util.generateUUID = generateUUID;
 function DateToString(date,rev){
@@ -92,6 +94,12 @@ function fsClearSync(rempath){
    }
 }
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Рекурсивная, асинхронная функция удаления дирректории и всего ее содержимого
+ * Работает в паре с функцией fsClear
+ * path - путь к удаляемой дирректории
+ * callback - функция которую необходимо выполнить после того как отработает fsRemove
+ */
 function fsRemove(path, callback) {
    fs.stat(path, function(err, stats) {
       if (err) { callback(err); }
@@ -122,6 +130,12 @@ function fsRemove(path, callback) {
    });
 }
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Рекурсивная, асинхронная функция удаления дирректории и всего ее содержимого
+ * Работает в паре с функцией fsRemove
+ * rempath - путь к удаляемой дирректории
+ * callback - функция которую необходимо выполнить после того как отработает fsClear
+ */
 function fsClear(rempath, callback){
    var i = 0;
    fs.readdir(rempath, function(err, files) {
