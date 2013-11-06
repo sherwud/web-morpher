@@ -1,5 +1,5 @@
 {
-   "siteroot": "./www/httpproxy",
+   "siteroot": "./www/sharemusic",
    "wmcoredir": "core",
    "always_deploy": true,
    "initfile": "init.js",
