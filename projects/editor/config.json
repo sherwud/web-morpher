@@ -1,15 +1,22 @@
 {
-   "siteroot":"./www/editor",
-   "always_deploy":true,
+   "siteroot": "./www/editor",
+   "wmcoredir": "core",
+   "always_deploy": true,
    "initfile": "init.js",
-   "server":{
-      "dynamicPrefix":"call/",
-      "port":777,
-      "bodyParser":true,
-      "contentCompression":false,
-      "fileUpload":false,
-      "sessionKey":"ss",
-      "sessionMaxAge":86400000
+   "dynamicPrefix": "call",
+   "port": 777,
+   "contentCompression": true,
+   "fileUpload": false,
+   "sessionKey": "sid",
+   "sessionMaxAge": 86400000,
+   "users": {
+      "guest": true,
+      "root": {
+         "use": true,
+         "login": "root",
+         "password": "202cb962ac59075b964b07152d234b70",
+         "hash": "md5"
+      }
    },
    "additional":{
       "rootPath":"./projects",

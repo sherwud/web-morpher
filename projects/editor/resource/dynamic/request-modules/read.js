@@ -44,7 +44,7 @@ exports.post.nodelist = nodelist;   //так делаем, чтобы было �
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Функция для получения списка проектов и пути к ним
- * принимает пока что 1 параметр "startList"
+ * принимает пока что test параметр "startList"
  * возвращает JSON
  */
 function selectProject(req, res) {
@@ -166,7 +166,7 @@ function deleteDirectory (req, res) {
    debugger;
    if(req.body['name'] && req.body['node']) {
       var path = req.body['node'] + '/' + req.body['name'];
-      fs.fsRemove(path, function(err) {
+      wm.util.fsRemove(path, function(err) {
          if (err) { res.send(500, err); }
          else { res.send(200, 'Directory has benn deleted'); }
       });
