@@ -4,7 +4,7 @@
    "always_deploy": true,
    "initfile": "init.js",
    "dynamicPrefix": "call",
-   "port": 777,
+   "port": 1234,
    "contentCompression": true,
    "fileUpload": false,
    "sessionKey": "sid",
