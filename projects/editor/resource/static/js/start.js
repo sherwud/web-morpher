@@ -52,13 +52,18 @@ $(document).ready(function(){
    });
    //событие по клику на пункты подменю, раздела File
    $('#file ul li').bind('click', function(){
-      var linkedfile = $('#controlPanel ul li.active a i').attr('linkedfile');
-      var method = $(this).text();
-      var name = $('#controlPanel ul li.active').text();
-      var node = $('#'+linkedfile).attr('path');
-      deleteDirectory('test', './projects/editor', function(res){
-         console.log(res);
-      })
+      var method = $(this).attr('method');
+      //если хотим сохранить изменения, то работаем с текущим открытым файлом
+      if (method == 'editFile') {
+         var linkedfile = $('#controlPanel ul li.active a i').attr('linkedfile');
+         var node = $('#'+linkedfile).attr('path');
+         var name = $('#controlPanel ul li.active').text();
+         var editor = ace.edit(linkedfile);
+         var data = editor.getValue();
+         editFile(name, node, data, function(result) {
+            console.log(result);
+         });
+      }
    });
 });
 //----------------------------------------------------------------------------------------------------------------------

@@ -113,7 +113,8 @@ function editFile (name, node, data, callback) {
       $.ajax({
          type: 'POST',
          url: '/call/read/editFile',
-         data: 'name='+name+'&node='+node+'&data='+data,
+         //data: 'name='+name+'&node='+node+'&data='+data,
+         data: {name:name, node:node, data:data},
          success: callback
       });
    }

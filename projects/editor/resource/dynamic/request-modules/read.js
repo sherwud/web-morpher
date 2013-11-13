@@ -111,9 +111,8 @@ exports.post.createFile = createFile;
  */
 function editFile (req, res) {
    if(req.body['name'] && req.body['node'] && req.body['data']) {
-      var filename = req.body['node'] + '/' + req.body['name'];
-      var data = req.body['data'];
-      fs.writeFile (filename, data, function(err) {
+      //в моем случае в node приходит путь к файлу включая его имя
+      fs.writeFile (req.body['node'], data, function(err) {
          if(err) { res.end(500, err); }
          else { res.send(200, 'File has been recorded'); }
       });
