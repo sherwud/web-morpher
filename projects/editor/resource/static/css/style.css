@@ -1,0 +1,134 @@
+* {
+    outline: medium none;
+}
+
+.editor {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    bottom: 0;
+    left: 22.5%;
+    height: 96.5%;
+}
+
+.closetab {
+    margin: 0 -7px -3px 7px !important;
+}
+
+.closetab:hover {
+    background-position: -168px -96px;
+    cursor: pointer;
+}
+
+.noselect {
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.configuration {
+    top: 7px;
+    left: 90%;
+    right: 0;
+    height: 33px;
+    position: absolute;
+
+}
+
+.configuration a img {
+    float: right;
+    padding: 0 17px;
+    height: 27px;
+    display: block;
+    margin: 0 20px 0 0;
+}
+
+.configuration a img:hover {
+    cursor: pointer;
+}
+
+.projectSelect {
+   width: 95%;
+   padding: 10px;
+}
+
+.projectSelect select {
+   width: 100%;
+}
+
+.menuButton {
+   background-color: #333333;
+}
+
+.menuButton div {
+   padding: 7px 13px 5px 13px;
+   min-width: 30px;
+   width: 30px;
+   min-height: 20px;
+   height: 20px;
+   color: #ffffff;
+}
+
+.menuButton div:hover {
+   cursor: pointer;
+   color: #333333;
+   background-color: #8bc84b;
+}
+
+.menuButton div ul {
+   width: 200px;
+   margin: 5px 0 0 -13px;
+   list-style: none outside none;
+   display: none;
+}
+
+.menuButton div:hover ul {
+   position: absolute;
+   background-color: #ffffff;
+   display: block;
+}
+
+.menuButton div ul li {
+   line-height: 27px;
+}
+
+.menuButton div ul li:hover {
+   background-color: #8bc84b;
+   color: #333333;
+}
+
+#lang {
+   margin-left: 0px !important;
+}
+
+#project {
+   float : left;
+   width: 20%;
+   height: 100%;
+   overflow: auto;
+   padding: 0px !important;
+}
+
+#project ul:hover{
+   cursor:pointer;
+}
+
+#controlPanel {
+   position: absolute;
+   top: 7px;
+   right: 10%;
+   bottom: 0;
+   left: 22.5%;
+   height: 33px;
+}
+
+#controlPanel ul li:FIRST-CHILD {
+    margin-left: 4px;
+}
+
+#controlPanel ul > li > a {
+    line-height: 7px;
+    outline: medium none;
+}

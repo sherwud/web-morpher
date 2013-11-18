@@ -18,7 +18,25 @@ var wm = {
     * @description Глобальный конфиг системы web-morpher.
     * @syntax wm.config
     */
-   config:{}
+   config:{},
+   util:{
+      /**
+       * @description Рекурсивная, асинхронная функция удаления дирректории и всего ее содержимого
+       * @description Работает в паре с функцией fsClear
+       * @syntax fsRemove(./www,function(err){ if(err) {alert(err);} else {alert('ok');} });
+       * @param {string} path путь к удаляемой дирректории
+       * @param {function} callback функция которую необходимо выполнить после того как отработает fsRemove
+       */
+      fsRemove:function(path, callback){},
+      /**
+       * @description Рекурсивная, асинхронная функция удаления дирректории и всего ее содержимого
+       * @description Работает в паре с функцией fsRemove
+       * @syntax fsRemove(./www,function(err){ if(err) {alert(err);} else {alert('ok');} });
+       * @param {string} path путь к удаляемой дирректории
+       * @param {function} callback функция которую необходимо выполнить после того как отработает fsClear
+       */
+      fsClear:function(path, callback){}
+   }
 };
 /**
  * @description Общий системный метод логирования.
@@ -40,3 +58,4 @@ var wmlog = function(msg,prm){};
  * @example var myObj = wmabstract(['./m1','./m2'],'myObj');
  */
 var wmabstract = function(modPath,modLogic,critical){};
+
