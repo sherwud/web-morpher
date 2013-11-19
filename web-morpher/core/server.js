@@ -86,7 +86,7 @@ function defineMethod(type, module, method) {
    }
    return [0, handler];
 }
-function handler(req, res) {
+function handler(req, res, next) {
    var module = req.params.module;
    var method = req.params.method;
    var type = req.route.method;
@@ -97,7 +97,7 @@ function handler(req, res) {
    } else {
       handler = handler[1];
    }
-   var result = handler(req, res);
+   var result = handler(req, res, next);
    if (result === false) {
       res.send(500, 'Ошибка выполнения метода "' + type + ':' + module + '.' + method + '"');
    } else if (result !== true && result !== undefined) {
